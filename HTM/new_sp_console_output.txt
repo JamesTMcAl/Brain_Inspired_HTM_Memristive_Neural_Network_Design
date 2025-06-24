@@ -1,0 +1,535 @@
+Logging started at 01-Jun-2025 12:06:04
+[DEBUG] After split_data: train_data shape [32 32 40000], val_data shape [32 32 10000]
+[DEBUG] train_label: 40000, val_label: 10000
+[DEBUG] optimize_hyperparameters: potential_radius=8
+[DEBUG] optimize_hyperparameters: pca_coeff size=[8 8]
+Worker 0 evaluating params: [{"base_area_density":0.49736840724565928,"syn_inc_base":0.055504042309713918,"syn_dec_base":0.0079422037345651189,"decay_scaling":16127.244041574491,"endurance_rate":874442.184995586}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.4974, LTP=0.0555, LTD=0.0079, decay=1.61e+04, endurance=8.74e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
+[EARLY-STOP] 25 consecutive violations at 51
+[EARLY-STOP] 25 consecutive violations at 76
+[DEBUG] Iter 100: Mean Overlap=26.8586
+[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 101
+|==================================================================================================================================================|
+| Iter | Eval   | Objective   | Objective   | BestSoFar   | BestSoFar   | base_area_de-| syn_inc_base | syn_dec_base | decay_scaling| endurance_ra-|
+|      | result |             | runtime     | (observed)  | (estim.)    | nsity        |              |              |              | te           |
+|==================================================================================================================================================|
+|    1 | Best   |       -0.06 |       6.433 |       -0.06 |       -0.06 |      0.49737 |     0.055504 |    0.0079422 |        16127 |   8.7444e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.31127067761107491,"syn_inc_base":0.097491538794040017,"syn_dec_base":0.0040354718622913916,"decay_scaling":5796.8110992945467,"endurance_rate":179338.52797837849}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.3113, LTP=0.0975, LTD=0.0040, decay=5.80e+03, endurance=1.79e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
+[EARLY-STOP] 25 consecutive violations at 51
+[EARLY-STOP] 25 consecutive violations at 76
+[DEBUG] Iter 100: Mean Overlap=26.8369
+[ENERGY] Iter 100: Avg Energy=2.62e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 101
+|    2 | Accept |       -0.06 |       3.495 |       -0.06 |       -0.06 |      0.31127 |     0.097492 |    0.0040355 |       5796.8 |   1.7934e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.31233258719091889,"syn_inc_base":0.10497663761507212,"syn_dec_base":0.015333924339091781,"decay_scaling":14810.750594365074,"endurance_rate":362577.69780017127}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.3123, LTP=0.1050, LTD=0.0153, decay=1.48e+04, endurance=3.63e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
+[EARLY-STOP] 25 consecutive violations at 51
+[EARLY-STOP] 25 consecutive violations at 76
+[DEBUG] Iter 100: Mean Overlap=26.8505
+[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 101
+|    3 | Accept |       -0.06 |      2.8437 |       -0.06 |       -0.06 |      0.31233 |      0.10498 |     0.015334 |        14811 |   3.6258e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.46636782719751507,"syn_inc_base":0.1124775747321817,"syn_dec_base":0.0089023293855644142,"decay_scaling":12441.069699932847,"endurance_rate":129346.16995960794}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.4664, LTP=0.1125, LTD=0.0089, decay=1.24e+04, endurance=1.29e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
+[EARLY-STOP] 25 consecutive violations at 51
+[EARLY-STOP] 25 consecutive violations at 76
+[DEBUG] Iter 100: Mean Overlap=26.8249
+[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 101
+|    4 | Accept |       -0.06 |      2.8272 |       -0.06 |       -0.06 |      0.46637 |      0.11248 |    0.0089023 |        12441 |   1.2935e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.30828712891393767,"syn_inc_base":0.19308526139290622,"syn_dec_base":0.0048720123557738368,"decay_scaling":13554.306296650468,"endurance_rate":323366.13453956693}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.3083, LTP=0.1931, LTD=0.0049, decay=1.36e+04, endurance=3.23e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
+[EARLY-STOP] 25 consecutive violations at 51
+[EARLY-STOP] 25 consecutive violations at 76
+[DEBUG] Iter 100: Mean Overlap=26.8659
+[ENERGY] Iter 100: Avg Energy=2.65e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 101
+|    5 | Accept |       -0.06 |      2.6709 |       -0.06 |       -0.06 |      0.30829 |      0.19309 |     0.004872 |        13554 |   3.2337e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.30828712891393767,"syn_inc_base":0.19308526139290622,"syn_dec_base":0.0048720123557738368,"decay_scaling":13554.306296650468,"endurance_rate":323366.13453956693}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.3083, LTP=0.1931, LTD=0.0049, decay=1.36e+04, endurance=3.23e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
+[EARLY-STOP] 25 consecutive violations at 51
+[EARLY-STOP] 25 consecutive violations at 76
+[DEBUG] Iter 100: Mean Overlap=26.8613
+[ENERGY] Iter 100: Avg Energy=2.64e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 101
+|    6 | Accept |       -0.06 |      2.5543 |       -0.06 |       -0.06 |      0.30829 |      0.19309 |     0.004872 |        13554 |   3.2337e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.30828712891393767,"syn_inc_base":0.19308526139290622,"syn_dec_base":0.0048720123557738368,"decay_scaling":13554.306296650468,"endurance_rate":323366.13453956693}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.3083, LTP=0.1931, LTD=0.0049, decay=1.36e+04, endurance=3.23e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
+[EARLY-STOP] 25 consecutive violations at 51
+[EARLY-STOP] 25 consecutive violations at 76
+{Operation terminated by user during <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('im2col>parse_inputs', 'C:\Program Files\MATLAB\R2024b\toolbox\images\images\im2col.m', 138)" style="font-weight:bold">im2col>parse_inputs</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\images\images\im2col.m',138,0)">line 138</a>)
+
+
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('im2col', 'C:\Program Files\MATLAB\R2024b\toolbox\images\images\im2col.m', 51)" style="font-weight:bold">im2col</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\images\images\im2col.m',51,0)">line 51</a>)
+[a, block, kind, padval] = parse_inputs(varargin{:});
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('compute_overlap', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\compute_overlap.m', 99)" style="font-weight:bold">compute_overlap</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\compute_overlap.m',99,0)">line 99</a>)
+            patch_cols = im2col(slice_double(:,:,j), [p, p], 'sliding');  % [p*p x outH*outW]
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('train_spatial_pooler', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\train_spatial_pooler.m', 114)" style="font-weight:bold">train_spatial_pooler</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\train_spatial_pooler.m',114,0)">line 114</a>)
+            compute_overlap(train_data, w_permanence, overlap_dimension, ...
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('evaluate_hyperparams', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\evaluate_hyperparams.m', 81)" style="font-weight:bold">evaluate_hyperparams</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\evaluate_hyperparams.m',81,0)">line 81</a>)
+            [best_weights, ~, ~,  ~, ~, ~, ~, ~, ~,~, ~, ~, ~] = train_spatial_pooler( ...
+                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('optimize_hyperparameters/safeEvaluate', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m', 47)" style="font-weight:bold">optimize_hyperparameters/safeEvaluate</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m',47,0)">line 47</a>)
+        loss = evaluate_hyperparams( ...
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/callObjNormally', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjNormally.m', 13)" style="font-weight:bold">BayesianOptimization/callObjNormally</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjNormally.m',13,0)">line 13</a>)
+            Objective = this.ObjectiveFcn(conditionalizeX(this, X));
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/callObjFcn', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjFcn.m', 11)" style="font-weight:bold">BayesianOptimization/callObjFcn</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjFcn.m',11,0)">line 11</a>)
+        = callObjNormally(this, X);
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/runSerial', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\runSerial.m', 24)" style="font-weight:bold">BayesianOptimization/runSerial</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\runSerial.m',24,0)">line 24</a>)
+        ObjectiveFcnObjectiveEvaluationTime, ObjectiveNargout] = callObjFcn(this, this.XNext);
+                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/run', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\run.m', 9)" style="font-weight:bold">BayesianOptimization/run</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\run.m',9,0)">line 9</a>)
+    this = runSerial(this);
+           ^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\BayesianOptimization.m', 187)" style="font-weight:bold">BayesianOptimization</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\BayesianOptimization.m',187,0)">line 187</a>)
+                this = run(this);
+                       ^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('bayesopt', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\bayesopt.m', 323)" style="font-weight:bold">bayesopt</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\bayesopt.m',323,0)">line 323</a>)
+Results = BayesianOptimization(Options);
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('optimize_hyperparameters', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m', 65)" style="font-weight:bold">optimize_hyperparameters</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m',65,0)">line 65</a>)
+        results = bayesopt(@safeEvaluate, param_ranges, ...
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('new_sp', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m', 96)" style="font-weight:bold">new_sp</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m',96,0)">line 96</a>)
+        [best_params, adjusted_potential_radius] = optimize_hyperparameters(train_data, train_label, val_data, val_label, dataset, potential_radius, pca_coeff);
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_all', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m', 40)" style="font-weight:bold">run_all</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m',40,0)">line 40</a>)
+     new_sp(dataset, train_data, train_label);
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+} 
+toTxt
+All files have been merged into: C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\All_MATLAB_Files.txt
+run_all
+Starting HTM Spatial Pooler Training...
+No training results found. Starting training process...
+[Warning: File not found or permission denied] 
+[> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('new_sp', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m', 15)" style="font-weight:bold">new_sp</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m',15,0)">line 15</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_all', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m', 40)" style="font-weight:bold">run_all</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m',40,0)">line 40</a>)] 
+Logging started at 01-Jun-2025 13:25:50
+[DEBUG] After split_data: train_data shape [32 32 4000], val_data shape [32 32 1000]
+[DEBUG] train_label: 4000, val_label: 1000
+[DEBUG] optimize_hyperparameters: potential_radius=8
+[DEBUG] optimize_hyperparameters: pca_coeff size=[8 8]
+Worker 0 evaluating params: [{"base_area_density":0.49736840724565928,"syn_inc_base":0.055504042309713918,"syn_dec_base":0.0079422037345651189,"decay_scaling":16127.244041574491,"endurance_rate":874442.184995586}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.4974, LTP=0.0555, LTD=0.0079, decay=1.61e+04, endurance=8.74e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 70
+[EARLY-STOP] 25 consecutive violations at 95
+[DEBUG] Iter 100: Mean Overlap=0.1107
+[ENERGY] Iter 100: Avg Energy=2.62e-04, Scaling=0.50
+|==================================================================================================================================================|
+| Iter | Eval   | Objective   | Objective   | BestSoFar   | BestSoFar   | base_area_de-| syn_inc_base | syn_dec_base | decay_scaling| endurance_ra-|
+|      | result |             | runtime     | (observed)  | (estim.)    | nsity        |              |              |              | te           |
+|==================================================================================================================================================|
+|    1 | Best   |       -0.06 |      2.9058 |       -0.06 |       -0.06 |      0.49737 |     0.055504 |    0.0079422 |        16127 |   8.7444e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.31127067761107491,"syn_inc_base":0.097491538794040017,"syn_dec_base":0.0040354718622913916,"decay_scaling":5796.8110992945467,"endurance_rate":179338.52797837849}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.3113, LTP=0.0975, LTD=0.0040, decay=5.80e+03, endurance=1.79e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 70
+[EARLY-STOP] 25 consecutive violations at 95
+[DEBUG] Iter 100: Mean Overlap=0.1107
+[ENERGY] Iter 100: Avg Energy=2.62e-04, Scaling=0.50
+|    2 | Accept |       -0.06 |      2.6429 |       -0.06 |       -0.06 |      0.31127 |     0.097492 |    0.0040355 |       5796.8 |   1.7934e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.31233258719091889,"syn_inc_base":0.10497663761507212,"syn_dec_base":0.015333924339091781,"decay_scaling":14810.750594365074,"endurance_rate":362577.69780017127}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.3123, LTP=0.1050, LTD=0.0153, decay=1.48e+04, endurance=3.63e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 70
+[EARLY-STOP] 25 consecutive violations at 95
+[DEBUG] Iter 100: Mean Overlap=0.1106
+[ENERGY] Iter 100: Avg Energy=2.64e-04, Scaling=0.50
+|    3 | Accept |       -0.06 |       2.882 |       -0.06 |       -0.06 |      0.31233 |      0.10498 |     0.015334 |        14811 |   3.6258e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.46636782719751507,"syn_inc_base":0.1124775747321817,"syn_dec_base":0.0089023293855644142,"decay_scaling":12441.069699932847,"endurance_rate":129346.16995960794}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.4664, LTP=0.1125, LTD=0.0089, decay=1.24e+04, endurance=1.29e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[DEBUG] Iter 100: Mean Overlap=0.0991
+[ENERGY] Iter 100: Avg Energy=2.64e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 159
+|    4 | Accept |       -0.06 |       3.269 |       -0.06 |       -0.06 |      0.46637 |      0.11248 |    0.0089023 |        12441 |   1.2935e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.4601914395204047,"syn_inc_base":0.040347475776343525,"syn_dec_base":0.0042631021259919993,"decay_scaling":5813.0417051887171,"endurance_rate":729628.83332270652}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.4602, LTP=0.0403, LTD=0.0043, decay=5.81e+03, endurance=7.30e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 92
+[DEBUG] Iter 100: Mean Overlap=0.1003
+[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 117
+|    5 | Accept |       -0.06 |      3.3247 |       -0.06 |       -0.06 |      0.46019 |     0.040347 |    0.0042631 |         5813 |   7.2963e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.45016460093817795,"syn_inc_base":0.16342337919026811,"syn_dec_base":0.011581068379430064,"decay_scaling":11724.589238011418,"endurance_rate":170079.76426975441}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.4502, LTP=0.1634, LTD=0.0116, decay=1.17e+04, endurance=1.70e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 91
+[DEBUG] Iter 100: Mean Overlap=0.1060
+[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 139
+|    6 | Accept |       -0.06 |       3.126 |       -0.06 |       -0.06 |      0.45016 |      0.16342 |     0.011581 |        11725 |   1.7008e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.43729777517657753,"syn_inc_base":0.10331106859719133,"syn_dec_base":0.0038619156422860807,"decay_scaling":15704.824356144081,"endurance_rate":428974.55244744872}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.4373, LTP=0.1033, LTD=0.0039, decay=1.57e+04, endurance=4.29e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[DEBUG] Iter 100: Mean Overlap=0.0991
+[ENERGY] Iter 100: Avg Energy=2.62e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 100
+[EARLY-STOP] 25 consecutive violations at 149
+|    7 | Accept |       -0.06 |      3.1049 |       -0.06 |       -0.06 |       0.4373 |      0.10331 |    0.0038619 |        15705 |   4.2897e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.45213703562485641,"syn_inc_base":0.13251420774851538,"syn_dec_base":0.010401954973584038,"decay_scaling":7425.52567618355,"endurance_rate":178791.39961853792}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.4521, LTP=0.1325, LTD=0.0104, decay=7.43e+03, endurance=1.79e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 70
+[DEBUG] Iter 100: Mean Overlap=0.1329
+[ENERGY] Iter 100: Avg Energy=2.64e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 120
+|    8 | Accept |       -0.06 |      2.9295 |       -0.06 |       -0.06 |      0.45214 |      0.13251 |     0.010402 |       7425.5 |   1.7879e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.32240776530533777,"syn_inc_base":0.069654624190873357,"syn_dec_base":0.0028236196732907221,"decay_scaling":6056.4492198889748,"endurance_rate":604225.576235651}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.3224, LTP=0.0697, LTD=0.0028, decay=6.06e+03, endurance=6.04e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 70
+[EARLY-STOP] 25 consecutive violations at 95
+[DEBUG] Iter 100: Mean Overlap=0.1107
+[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
+|    9 | Accept |       -0.06 |      2.7592 |       -0.06 |       -0.06 |      0.32241 |     0.069655 |    0.0028236 |       6056.4 |   6.0423e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.30903257622672708,"syn_inc_base":0.07113660722256894,"syn_dec_base":0.0024486194701804406,"decay_scaling":7524.4772048024106,"endurance_rate":230501.71948853682}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.3090, LTP=0.0711, LTD=0.0024, decay=7.52e+03, endurance=2.31e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 70
+[DEBUG] Iter 100: Mean Overlap=0.1327
+[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 119
+{Operation terminated by user during <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('compute_overlap', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\compute_overlap.m', 106)" style="font-weight:bold">compute_overlap</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\compute_overlap.m',106,0)">line 106</a>)
+
+
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('infer_labels', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\infer_labels.m', 57)" style="font-weight:bold">infer_labels</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\infer_labels.m',57,0)">line 57</a>)
+            compute_overlap(train_data, w_permanence, overlap_dimension, potential_radius, i:i, syn_connected_thresh, false, i, batch_size, threshold_tracker);
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('evaluate_hyperparams', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\evaluate_hyperparams.m', 112)" style="font-weight:bold">evaluate_hyperparams</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\evaluate_hyperparams.m',112,0)">line 112</a>)
+            preds = infer_labels( ...
+                    ^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('optimize_hyperparameters/safeEvaluate', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m', 47)" style="font-weight:bold">optimize_hyperparameters/safeEvaluate</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m',47,0)">line 47</a>)
+        loss = evaluate_hyperparams( ...
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/callObjNormally', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjNormally.m', 13)" style="font-weight:bold">BayesianOptimization/callObjNormally</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjNormally.m',13,0)">line 13</a>)
+            Objective = this.ObjectiveFcn(conditionalizeX(this, X));
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/callObjFcn', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjFcn.m', 11)" style="font-weight:bold">BayesianOptimization/callObjFcn</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjFcn.m',11,0)">line 11</a>)
+        = callObjNormally(this, X);
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/runSerial', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\runSerial.m', 24)" style="font-weight:bold">BayesianOptimization/runSerial</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\runSerial.m',24,0)">line 24</a>)
+        ObjectiveFcnObjectiveEvaluationTime, ObjectiveNargout] = callObjFcn(this, this.XNext);
+                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/run', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\run.m', 9)" style="font-weight:bold">BayesianOptimization/run</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\run.m',9,0)">line 9</a>)
+    this = runSerial(this);
+           ^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\BayesianOptimization.m', 187)" style="font-weight:bold">BayesianOptimization</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\BayesianOptimization.m',187,0)">line 187</a>)
+                this = run(this);
+                       ^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('bayesopt', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\bayesopt.m', 323)" style="font-weight:bold">bayesopt</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\bayesopt.m',323,0)">line 323</a>)
+Results = BayesianOptimization(Options);
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('optimize_hyperparameters', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m', 65)" style="font-weight:bold">optimize_hyperparameters</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m',65,0)">line 65</a>)
+        results = bayesopt(@safeEvaluate, param_ranges, ...
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('new_sp', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m', 86)" style="font-weight:bold">new_sp</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m',86,0)">line 86</a>)
+        [best_params, adjusted_potential_radius] = optimize_hyperparameters(train_data, train_label, val_data, val_label, dataset, potential_radius, pca_coeff);
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_all', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m', 40)" style="font-weight:bold">run_all</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m',40,0)">line 40</a>)
+     new_sp(dataset, train_data, train_label);
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+} 
+toTxt
+All files have been merged into: C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\All_MATLAB_Files.txt
+run_all
+Starting HTM Spatial Pooler Training...
+No training results found. Starting training process...
+[Warning: File not found or permission denied] 
+[> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('new_sp', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m', 15)" style="font-weight:bold">new_sp</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m',15,0)">line 15</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_all', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m', 40)" style="font-weight:bold">run_all</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m',40,0)">line 40</a>)] 
+Logging started at 01-Jun-2025 13:36:26
+[DEBUG] After split_data: train_data shape [28 28 800], val_data shape [28 28 200]
+[DEBUG] train_label: 800, val_label: 200
+[DEBUG] optimize_hyperparameters: potential_radius=7
+[DEBUG] optimize_hyperparameters: pca_coeff size=[7 7]
+Worker 0 evaluating params: [{"base_area_density":0.44802630543424449,"syn_inc_base":0.055504042309713918,"syn_dec_base":0.0079422037345651189,"decay_scaling":16127.244041574491,"endurance_rate":874442.184995586}]
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4566 | Min=0.3231 | Max=0.5844 | Size=[7 7 22 22]
+[DEBUG] train_data_subset size: [28 28 200] | train_label_subset size: [1 200]
+[DEBUG] val_data_subset size: [28 28 50] | val_label_subset size: [1 50]
+[DEBUG] SP call with: density=0.4480, LTP=0.0555, LTD=0.0079, decay=1.61e+04, endurance=8.74e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.3030, Sparsity=5.56%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 70
+[EARLY-STOP] 25 consecutive violations at 95
+[DEBUG] Iter 100: Mean Overlap=11.0510
+[ENERGY] Iter 100: Avg Energy=3.80e-04, Scaling=0.50
+|==================================================================================================================================================|
+| Iter | Eval   | Objective   | Objective   | BestSoFar   | BestSoFar   | base_area_de-| syn_inc_base | syn_dec_base | decay_scaling| endurance_ra-|
+|      | result |             | runtime     | (observed)  | (estim.)    | nsity        |              |              |              | te           |
+|==================================================================================================================================================|
+|    1 | Best   |        -0.7 |      2.6022 |        -0.7 |        -0.7 |      0.44803 |     0.055504 |    0.0079422 |        16127 |   8.7444e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.30845300820830618,"syn_inc_base":0.097491538794040017,"syn_dec_base":0.0040354718622913916,"decay_scaling":5796.8110992945467,"endurance_rate":179338.52797837849}]
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4566 | Min=0.3231 | Max=0.5844 | Size=[7 7 22 22]
+[DEBUG] train_data_subset size: [28 28 200] | train_label_subset size: [1 200]
+[DEBUG] val_data_subset size: [28 28 50] | val_label_subset size: [1 50]
+[DEBUG] SP call with: density=0.3085, LTP=0.0975, LTD=0.0040, decay=5.80e+03, endurance=1.79e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.3030, Sparsity=5.56%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 70
+[EARLY-STOP] 25 consecutive violations at 95
+[DEBUG] Iter 100: Mean Overlap=11.0493
+[ENERGY] Iter 100: Avg Energy=3.83e-04, Scaling=0.50
+|    2 | Accept |       -0.68 |      2.2656 |        -0.7 |    -0.69896 |      0.30845 |     0.097492 |    0.0040355 |       5796.8 |   1.7934e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.30924944039318919,"syn_inc_base":0.10497663761507212,"syn_dec_base":0.015333924339091781,"decay_scaling":14810.750594365074,"endurance_rate":362577.69780017127}]
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4566 | Min=0.3231 | Max=0.5844 | Size=[7 7 22 22]
+[DEBUG] train_data_subset size: [28 28 200] | train_label_subset size: [1 200]
+[DEBUG] val_data_subset size: [28 28 50] | val_label_subset size: [1 50]
+[DEBUG] SP call with: density=0.3092, LTP=0.1050, LTD=0.0153, decay=1.48e+04, endurance=3.63e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.3030, Sparsity=5.56%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 70
+[EARLY-STOP] 25 consecutive violations at 95
+[DEBUG] Iter 100: Mean Overlap=11.0453
+[ENERGY] Iter 100: Avg Energy=3.80e-04, Scaling=0.50
+|    3 | Accept |       -0.68 |      2.6254 |        -0.7 |        -0.7 |      0.30925 |      0.10498 |     0.015334 |        14811 |   3.6258e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.4247758703981363,"syn_inc_base":0.1124775747321817,"syn_dec_base":0.0089023293855644142,"decay_scaling":12441.069699932847,"endurance_rate":129346.16995960794}]
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4566 | Min=0.3231 | Max=0.5844 | Size=[7 7 22 22]
+[DEBUG] train_data_subset size: [28 28 200] | train_label_subset size: [1 200]
+[DEBUG] val_data_subset size: [28 28 50] | val_label_subset size: [1 50]
+[DEBUG] SP call with: density=0.4248, LTP=0.1125, LTD=0.0089, decay=1.24e+04, endurance=1.29e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.3030, Sparsity=5.56%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 70
+[EARLY-STOP] 25 consecutive violations at 95
+[DEBUG] Iter 100: Mean Overlap=11.0438
+[ENERGY] Iter 100: Avg Energy=3.80e-04, Scaling=0.50
+|    4 | Accept |       -0.68 |       2.696 |        -0.7 |        -0.7 |      0.42478 |      0.11248 |    0.0089023 |        12441 |   1.2935e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.32356046295402313,"syn_inc_base":0.040014381646966073,"syn_dec_base":0.0081853667624984354,"decay_scaling":8976.2666591817269,"endurance_rate":995395.95289735927}]
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4566 | Min=0.3231 | Max=0.5844 | Size=[7 7 22 22]
+[DEBUG] train_data_subset size: [28 28 200] | train_label_subset size: [1 200]
+[DEBUG] val_data_subset size: [28 28 50] | val_label_subset size: [1 50]
+[DEBUG] SP call with: density=0.3236, LTP=0.0400, LTD=0.0082, decay=8.98e+03, endurance=9.95e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.3030, Sparsity=5.56%
+[EARLY-STOP] 25 consecutive violations at 45
+<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\parallel\gpu\gpu\@gpuArray\mean.m',40,1)">40  </a>end
+if system_dependent('IsDebugMode')==1, dbquit all; end
+run_all
+Starting HTM Spatial Pooler Training...
+No training results found. Starting training process...
+[Warning: File not found or permission denied] 
+[> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('new_sp', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m', 15)" style="font-weight:bold">new_sp</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m',15,0)">line 15</a>)
+In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_all', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m', 40)" style="font-weight:bold">run_all</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m',40,0)">line 40</a>)] 
+Logging started at 01-Jun-2025 13:37:21
+[DEBUG] After split_data: train_data shape [32 32 4000], val_data shape [32 32 1000]
+[DEBUG] train_label: 4000, val_label: 1000
+[DEBUG] optimize_hyperparameters: potential_radius=8
+[DEBUG] optimize_hyperparameters: pca_coeff size=[8 8]
+Worker 0 evaluating params: [{"base_area_density":0.49736840724565928,"syn_inc_base":0.055504042309713918,"syn_dec_base":0.0079422037345651189,"decay_scaling":16127.244041574491,"endurance_rate":874442.184995586}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.4974, LTP=0.0555, LTD=0.0079, decay=1.61e+04, endurance=8.74e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 91
+[DEBUG] Iter 100: Mean Overlap=0.1059
+[ENERGY] Iter 100: Avg Energy=2.64e-04, Scaling=0.50
+[EARLY-STOP] 25 consecutive violations at 127
+|==================================================================================================================================================|
+| Iter | Eval   | Objective   | Objective   | BestSoFar   | BestSoFar   | base_area_de-| syn_inc_base | syn_dec_base | decay_scaling| endurance_ra-|
+|      | result |             | runtime     | (observed)  | (estim.)    | nsity        |              |              |              | te           |
+|==================================================================================================================================================|
+|    1 | Best   |       -0.06 |      3.0641 |       -0.06 |       -0.06 |      0.49737 |     0.055504 |    0.0079422 |        16127 |   8.7444e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.31127067761107491,"syn_inc_base":0.097491538794040017,"syn_dec_base":0.0040354718622913916,"decay_scaling":5796.8110992945467,"endurance_rate":179338.52797837849}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.3113, LTP=0.0975, LTD=0.0040, decay=5.80e+03, endurance=1.79e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 70
+[EARLY-STOP] 25 consecutive violations at 95
+[DEBUG] Iter 100: Mean Overlap=0.1106
+[ENERGY] Iter 100: Avg Energy=2.64e-04, Scaling=0.50
+|    2 | Accept |       -0.06 |       2.383 |       -0.06 |       -0.06 |      0.31127 |     0.097492 |    0.0040355 |       5796.8 |   1.7934e+05 |
+Worker 0 evaluating params: [{"base_area_density":0.31233258719091889,"syn_inc_base":0.10497663761507212,"syn_dec_base":0.015333924339091781,"decay_scaling":14810.750594365074,"endurance_rate":362577.69780017127}]
+[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
+[DEBUG] w_permanence size: [8 8 25 25]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
+[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
+[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
+[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
+[DEBUG] SP call with: density=0.3123, LTP=0.1050, LTD=0.0153, decay=1.48e+04, endurance=3.63e+05
+[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
+[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
+[EARLY-STOP] 25 consecutive violations at 45
+[EARLY-STOP] 25 consecutive violations at 83
+<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\compute_overlap.m',103,1)">103 </a>        end
+if system_dependent('IsDebugMode')==1, dbquit; end
+toTxt
+All files have been merged into: C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\All_MATLAB_Files.txt

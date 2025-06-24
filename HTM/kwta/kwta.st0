@@ -1,0 +1,65 @@
+***** HSPICE -- C-2009.09 32-BIT (Aug 24 2009) winnt ******
+ Input File: d:\memristor\idea4\new_code\kwta\kwta.sp
+ lic:
+ lic: FLEXlm: v8.5b
+ lic: USER:   Eric                 HOSTNAME: DESKTOP-7I10PFH
+ lic: HOSTID: "00cfe033f632 005056c00001 005056c00008" PID:      94804
+ lic: Using FLEXlm license file:
+ lic: 27000@localhost
+ lic: Checkout 1 hspice
+ lic: License/Maintenance for hspice will expire on 31-dec-2028/2008.120
+ lic: FLOATING license(s) on SERVER localhost
+ lic:
+ init: begin read circuit files,  cpu clock=  9.80E-02
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\behave\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\AD\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\XILINX\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\TLINE\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\TI\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\SIGNET\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\PCI\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\LIN_TECH\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\FET\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\DIO\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\COMLINE\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\BURR_BRN\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\BJT\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\behave\
+       option search   = C:\synopsys\Hspice_C-2009.09\PARTS\AD\
+       option post
+       option runlvl   =     6.00
+       option post     =     1.00
+       option list
+       option ingold   =     2.00
+       option runlvl   =     0.00
+       option post
+       option accura
+       option probe
+ init: end read circuit files,  cpu clock=  2.02E-01 memory=    153 kb
+ init: begin check errors,  cpu clock=  2.02E-01
+ init: end check errors,  cpu clock=  2.17E-01 memory=    285 kb
+ init: begin setup matrix, pivot=     0 cpu clock=  2.17E-01
+       establish matrix -- done,  cpu clock=  2.32E-01 memory=    302 kb
+       re-order matrix -- done,  cpu clock=  2.38E-01 memory=    304 kb
+ init: end setup matrix,  cpu clock=  2.50E-01 memory=    318 kb
+ output: d:\memristor\idea4\new_code\kwta\kwta.tr0
+ sweep: tran tran0    begin, stop_t=  1.00E-04 #sweeps=**** cpu clock=  2.62E-01
+ **error**  internal timestep too small in transient analysis
+ sweep: tran tran0    end,  cpu clock=  2.88E-01 memory=    321 kb
+       establish matrix -- done,  cpu clock=  3.05E-01 memory=    312 kb
+       re-order matrix -- done,  cpu clock=  3.11E-01 memory=    314 kb
+ output: d:\memristor\idea4\new_code\kwta\kwta.tr0
+ sweep: tran tran0    begin, stop_t=  1.00E-04 #sweeps=**** cpu clock=  3.24E-01
+ tran: time= 1.0010E-05 tot_iter=    3736 conv_iter=     901 cpu clock= 4.86E-01
+ tran: time= 2.0010E-05 tot_iter=    4793 conv_iter=    1411 cpu clock= 5.33E-01
+ tran: time= 3.0010E-05 tot_iter=    5793 conv_iter=    1911 cpu clock= 5.79E-01
+ tran: time= 4.0010E-05 tot_iter=    6793 conv_iter=    2411 cpu clock= 6.25E-01
+ tran: time= 5.0010E-05 tot_iter=    7793 conv_iter=    2911 cpu clock= 6.76E-01
+ tran: time= 6.0010E-05 tot_iter=    8793 conv_iter=    3411 cpu clock= 7.27E-01
+ tran: time= 7.0010E-05 tot_iter=    9793 conv_iter=    3911 cpu clock= 7.70E-01
+ tran: time= 8.0010E-05 tot_iter=   10793 conv_iter=    4411 cpu clock= 8.17E-01
+ tran: time= 9.0010E-05 tot_iter=   11793 conv_iter=    4911 cpu clock= 8.77E-01
+ tran: time= 1.0000E-04 tot_iter=   12793 conv_iter=    5411 cpu clock= 9.34E-01
+ sweep: tran tran0    end,  cpu clock=  9.39E-01 memory=    324 kb
+>info:         ***** hspice job concluded
+ lic: Release hspice token(s)

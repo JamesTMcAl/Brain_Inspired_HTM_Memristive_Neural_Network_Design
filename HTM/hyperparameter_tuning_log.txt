@@ -1,0 +1,157 @@
+Hyperparameter Tuning Log
+===========================
+Best Params: density=NaN, inc=NaN, dec=NaN with accuracy=0.00%
+Hyperparameter Tuning Log
+===========================
+07-Jan-2025 06:08:12
+Run 1: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Hyperparameter Tuning Log
+===========================
+08-Jan-2025 02:32:08
+Hyperparameter Tuning Log
+===========================
+08-Jan-2025 23:44:18
+Hyperparameter Tuning Log
+===========================
+09-Jan-2025 01:44:36
+Run 1: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Hyperparameter Tuning Log
+===========================
+16-Jan-2025 02:29:13
+Run 1: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Hyperparameter Tuning Log
+===========================
+21-Jan-2025 21:57:09
+Run 1: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.10, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.15, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.15, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 1: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 2: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 3: density=0.20, inc=0.01, dec=0.00, Accuracy=NaN%
+Run 1: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 2: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Run 3: density=0.20, inc=0.01, dec=0.01, Accuracy=NaN%
+Hyperparameter Tuning Log
+===========================
+25-Jan-2025 01:52:17
+Hyperparameter Tuning Log
+===========================
+25-Jan-2025 18:39:01
+Hyperparameter Tuning Log
+===========================
+25-Jan-2025 19:46:03
+Hyperparameter Tuning Log
+===========================
+25-Jan-2025 20:54:21
+Hyperparameter Tuning Log
+===========================
+25-Jan-2025 21:04:10
+Hyperparameter Tuning Log
+===========================
+25-Jan-2025 21:09:01
+Hyperparameter Tuning Log
+===========================
+25-Jan-2025 22:46:03
