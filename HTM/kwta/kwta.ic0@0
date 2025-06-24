@@ -1,0 +1,12 @@
+* "simulator" "HSPICE" 
+* "version" "C-2009.09 32-BIT"
+* "format" "HSP"
+* "rundate" "23:13:14 05/19/2019 "
+* "netlist" "e:\nutstore\hspice\kwta\kwta.sp "
+* "runtitle" ".title kwta"
+* time =    0.            
+* temperature =  2.500e+01       
+*** BEGIN: Saved Operating Point ***                     
+.option 
++ gmindc= 1.000e-12       
+.nodeset

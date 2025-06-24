@@ -1,0 +1,60 @@
+* "simulator" "HSPICE" 
+* "version" "C-2009.09 32-BIT"
+* "format" "HSP"
+* "rundate" "23:13:22 05/19/2019 "
+* "netlist" "e:\nutstore\hspice\kwta\kwta.sp "
+* "runtitle" ".title kwta"
+* time =    0.            
+* temperature =  2.500e+01       
+*** BEGIN: Saved Operating Point ***                     
+.option 
++ gmindc= 1.000e-12       
+.nodeset
++ n_i1 =-5.550e+00       
++ n_i2 =-5.568e+00       
++ n_itail =-6.930e-01       
++ n_m16s = 5.000e+00       
++ n_v1 =   0.            
++ n_v1_ = 5.000e+00       
++ n_v2 =   0.            
++ n_v3 =   0.            
++ n_vin1 = 1.000e-01       
++ n_vin2 = 2.000e-01       
++ n_vin3 = 3.000e-01       
++ n_vout1 = 9.968e-08       
++ n_vout2 = 1.006e-07       
++ n_vout3 = 3.670e-02       
++ xinvert.n_vdd = 5.000e+00       
++ xcursour.n_vcc =-5.000e+00       
++ xcursour.n_vdd = 5.000e+00       
++ xm1.1 = 5.000e+00       
++ xm1.m10_s = 1.000e-01       
++ xm1.m2_s = 9.787e-01       
++ xm1.m3_s = 9.787e-01       
++ xm1.m5_s = 1.745e+00       
++ xm1.m8_s =-5.662e-04       
++ xm1.n_vcc =-5.000e+00       
++ xm1.n_vdd = 5.000e+00       
++ xm2.1 = 4.956e+00       
++ xm2.m10_s = 2.000e-01       
++ xm2.m2_s = 9.787e-01       
++ xm2.m3_s = 9.787e-01       
++ xm2.m5_s = 1.745e+00       
++ xm2.m8_s =-5.614e-04       
++ xm2.n_vcc =-5.000e+00       
++ xm2.n_vdd = 5.000e+00       
++ xm3.1 = 4.720e+00       
++ xm3.m10_s = 3.000e-01       
++ xm3.m2_s =-1.724e-01       
++ xm3.m3_s =-6.930e-01       
++ xm3.m5_s = 3.000e-01       
++ xm3.m8_s =-8.770e-01       
++ xm3.n_vcc =-5.000e+00       
++ xm3.n_vdd = 5.000e+00       
++ xm1.x1.n_vdd = 5.000e+00       
++ xm1.x2.n_vdd = 5.000e+00       
++ xm2.x1.n_vdd = 5.000e+00       
++ xm2.x2.n_vdd = 5.000e+00       
++ xm3.x1.n_vdd = 5.000e+00       
++ xm3.x2.n_vdd = 5.000e+00       
+***   END: Saved Operating Point ***                     
