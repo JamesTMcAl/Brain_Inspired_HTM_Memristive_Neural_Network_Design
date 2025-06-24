@@ -36,7 +36,5 @@ It was developed as part of the final year project for CSC3002 at Queen’s Univ
 
 Ensure MATLAB is installed with Parallel Computing Toolbox (for GPU support).
 
-```bash
-% Navigate to project root
-cd csc3002_htm_project
+
 
