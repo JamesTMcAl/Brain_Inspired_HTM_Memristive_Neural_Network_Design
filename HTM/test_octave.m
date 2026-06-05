@@ -158,4 +158,18 @@ catch ME
         fprintf('  at %s line %d\n', ME.stack(k).file, ME.stack(k).line);
     end
 end
+
+
+% Test temporal memory
+fprintf('\nTesting temporal_memory...\n');
+try
+    tm_state = struct();
+    active_cols = rand(4, 4) > 0.7;
+    [ac, wc, pc, tm_state] = temporal_memory(active_cols, tm_state, true, 1);
+    fprintf('temporal_memory OK: active_cells=%d, anomaly=%.3f\n', ...
+            sum(ac(:)), tm_state.anomaly_score);
+catch ME
+    fprintf('temporal_memory FAILED: %s\n', ME.message);
+end
+
 fprintf('\nDone.\n');
