@@ -90,7 +90,7 @@ function [overlap, syn_connected_thresh_batch, threshold_tracker] = compute_over
     % Compute overlaps by extracting patches and dot-product with weights
     origType = class(slice);           % remember original data type
     slice_double = double(slice);      % work in double for accuracy
-    Wperm = double(gather(w_permanence));  % gather weights to CPU double for computation
+    Wperm = double(w_permanence);  % gather weights to CPU double for computation
     
     if num_samples > 1
         % Batch mode: compute overlap for each sample in loop
@@ -151,7 +151,7 @@ function [overlap, syn_connected_thresh_batch, threshold_tracker] = compute_over
         end
         % Compute new low quantile from current overlap distribution
         if use_gpu
-            ov_vals = gather(overlap_mat(:,:,k));
+            ov_vals = overlap_mat(:,:,k);
         else
             ov_vals = overlap_mat(:,:,k);
         end
@@ -182,7 +182,7 @@ function [overlap, syn_connected_thresh_batch, threshold_tracker] = compute_over
     %  Debug Logging
     if cfg.DEBUG_OVERLAP && mod(sample_counter, DEBUG_INTERVAL) == 0
         ov_all = overlap_mat(:);
-        if use_gpu, ov_all = gather(ov_all); end
+        if use_gpu, ov_all = ov_all; end
         fprintf('[DEBUG_OVERLAP] Iter %d | mean=%.4f | max=%.4f | nnz=%d\n', ...
                 sample_counter, mean(ov_all), max(ov_all), nnz(ov_all>0));
     end

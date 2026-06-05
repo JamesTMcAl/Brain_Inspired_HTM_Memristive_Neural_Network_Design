@@ -1,6 +1,7 @@
 % test_octave.m verify core SP functions work in Octave without GPU
 pkg load image
-
+pkg load image
+pkg load statistics
 % Add path
 addpath(pwd);
 
@@ -101,14 +102,60 @@ try
     potential_radius = 3;
     overlap_dimension = [8, 8];
     w_perm = rand(potential_radius, potential_radius, overlap_dimension(1), overlap_dimension(2)) * 0.6 + 0.2;
-    active_cols = rand(potential_radius, potential_radius, overlap_dimension(1), overlap_dimension(2)) > 0.7;
+    active_cols = rand(size(w_perm)) > 0.7;
+    syn_inc = 0.1 * ones(size(w_perm));
+    syn_dec = 0.05 * ones(size(w_perm));
     memristor_stats = struct('write_counts', zeros(size(w_perm)), 'endurance_limit', 1e6);
-
-    [w_new, params, energy, mem_stats] = update_permanence(w_perm, active_cols, 0.1, 0.05, memristor_stats, 1, 0.001, 0.01, 0.01);
-    fprintf('update_permanence OK: mean_w=%.4f, energy=%.4f\n', mean(w_new(:)), energy);
+    [w_new, params, energy, mem_stats] = update_permanence(w_perm, active_cols, syn_inc, syn_dec, memristor_stats, 1, 0.001, 0.01, 0.01);
+    fprintf('update_permanence OK: mean_w=%.4f, energy=%.6f\n', mean(w_new(:)), energy);
 catch ME
     fprintf('update_permanence FAILED: %s\n', ME.message);
 end
 
+% Test full SP mini training pass
+fprintf('\nTesting full SP mini training pass...\n');
+try
+    pkg load image
 
+    % Tiny synthetic dataset - 10 samples of 10x10 images
+    potential_radius = 3;
+    overlap_dimension = [4, 4];
+    H = overlap_dimension(1) + potential_radius - 1;
+    W = overlap_dimension(2) + potential_radius - 1;
+
+    n_train = 10;
+    train_data = rand(H, W, n_train);
+    train_label = randi(3, n_train, 1);
+    val_data = rand(H, W, 3);
+    val_label = randi(3, 3, 1);
+
+    % Initialize weights
+    pca_coeff = zeros(potential_radius, potential_radius);
+    w_perm = initialize_permanence(pca_coeff, potential_radius, overlap_dimension, false);
+
+    % SP parameters
+    base_density = 0.3;
+    syn_inc = 0.1;
+    syn_dec = 0.05;
+    sample_counter = 0;
+    syn_thresh = 0.2;
+    decay_scaling = 1e-4;
+    endurance_rate = 0.001;
+    entropy_thresh = 0.5;
+    sparsity_thresh = 35;
+    val_acc_history = [];
+
+    [best_w, sc, val_hist, density, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~] = ...
+        train_spatial_pooler(train_data, train_label, base_density, syn_inc, syn_dec, ...
+        sample_counter, syn_thresh, false, w_perm, decay_scaling, endurance_rate, ...
+        pca_coeff, potential_radius, overlap_dimension, val_data, val_label, ...
+        val_acc_history, entropy_thresh, sparsity_thresh, 'synthetic');
+
+    fprintf('train_spatial_pooler OK: samples=%d, density=%.4f\n', sc, density);
+catch ME
+    fprintf('train_spatial_pooler FAILED: %s\n', ME.message);
+    for k = 1:min(3, length(ME.stack))
+        fprintf('  at %s line %d\n', ME.stack(k).file, ME.stack(k).line);
+    end
+end
 fprintf('\nDone.\n');

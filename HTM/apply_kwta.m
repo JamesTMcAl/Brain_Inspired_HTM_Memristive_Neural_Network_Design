@@ -2,7 +2,10 @@ function [active_columns, avg_activity, state, base_area_density] = apply_kwta(o
 % APPLY_KWTA  Adaptive k‑WTA inhibition ↔ lateral inhibition in cortex
     validateattributes(overlap,{'numeric'}, {'2d','nonnegative','finite'}, mfilename,'overlap',1);
     validateattributes(base_area_density,{'numeric'},{'scalar','>=',0,'<=',1}, mfilename,'base_area_density',2);
-    
+    % Ensure output is always defined (Octave compatibility)
+    active_columns = false(size(overlap)); avg_activity = 0;
+    active_columns = false(size(overlap));
+avg_activity = 0;
     cfg = sp_config.instance();
     
     if reset || ~isfield(state,'fallback_counter')

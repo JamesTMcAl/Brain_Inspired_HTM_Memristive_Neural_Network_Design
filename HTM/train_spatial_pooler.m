@@ -17,7 +17,7 @@ fprintf('[DEBUG] SP call with: density=%.4f, LTP=%.4f, LTD=%.4f, decay=%.2e, end
             
 
         if ~use_gpu || isempty(use_gpu)
-    if gpuDeviceCount > 0
+    if safe_gpuDeviceCount > 0
         g = gpuDevice();
         
         use_gpu = false;
@@ -88,8 +88,8 @@ fprintf('[DEBUG] SP call with: density=%.4f, LTP=%.4f, LTD=%.4f, decay=%.2e, end
     noiseLTP = rand(size(w_permanence),'like',w_permanence).^2 .* betarnd(2,5);
     noiseLTD = rand(size(w_permanence),'like',w_permanence).^2 .* betarnd(5,2);
     else
-    noiseLTP = betarnd(2,5, size(w_permanence));
-    noiseLTD = betarnd(5,2, size(w_permanence));    
+    noiseLTP = reshape(betarnd(2,5, numel(w_permanence), 1), size(w_permanence));
+    noiseLTD = reshape(betarnd(5,2, numel(w_permanence), 1), size(w_permanence));    
     end
     noiseLTP = cast(noiseLTP, 'like', w_permanence);
     noiseLTD = cast(noiseLTD, 'like', w_permanence);
@@ -287,7 +287,7 @@ fprintf('[DEBUG] SP call with: density=%.4f, LTP=%.4f, LTD=%.4f, decay=%.2e, end
 
 
     % Sparsity & entropy for this epoch 
-    column_activity_sum = gather(column_activity_sum);    % single gather
+    column_activity_sum = safe_gather(column_activity_sum);    % single gather
    epoch_sparsity = 100 * active_count_total ...
                      / (processed_count * numel(column_activity_sum));
     p_active       = column_activity_sum / processed_count;
