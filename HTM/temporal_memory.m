@@ -80,12 +80,12 @@ function state = tm_init(col_size, cfg)
     state.seg_count        = zeros(n_cols, C, 'uint8');
 
     % Activation threshold - adaptive like SP density controller
-    state.activation_thresh     = 13;
-    state.learning_thresh       = 7;
-    state.initial_permanence    = 0.21;
+    state.activation_thresh     = 3;
+    state.learning_thresh       = 2;
+    state.initial_permanence    = 0.51;
     state.connected_permanence  = 0.50;
     state.perm_inc              = 0.10;
-    state.perm_dec              = 0.10;
+    state.perm_dec              = 0.05;
 
     % Memristor endurance tracking (same pattern as SP)
     state.write_counts     = zeros(n_cols, C, max_segs, max_syns, 'uint32');
@@ -236,6 +236,10 @@ function [predicted, state] = tm_predict(active_cells, state, cfg)
             end
         end
     end
+
+
+
+
 end
 
 

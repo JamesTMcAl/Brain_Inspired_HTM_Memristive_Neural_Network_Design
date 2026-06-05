@@ -172,4 +172,35 @@ catch ME
     fprintf('temporal_memory FAILED: %s\n', ME.message);
 end
 
+
+% Test TM sequence learning
+fprintf('\nTesting TM sequence learning...\n');
+try
+    tm_state = struct();
+
+    % Create 3 fixed patterns A, B, C
+    rng(42);
+    patA = rand(4,4) > 0.7;
+    patB = rand(4,4) > 0.7;
+    patC = rand(4,4) > 0.7;
+    sequence = {patA, patB, patC, patA, patB, patC, patA, patB, patC};
+
+    anomalies = zeros(1, numel(sequence));
+    for i = 1:numel(sequence)
+        [~, ~, ~, tm_state] = temporal_memory(sequence{i}, tm_state, true, i);
+        anomalies(i) = tm_state.anomaly_score;
+        fprintf('  Step %d (pat%s): anomaly=%.3f\n', i, 'ABC'(mod(i-1,3)+1), anomalies(i));
+    end
+
+    % Anomaly should decrease as TM learns the sequence
+    if anomalies(end) < anomalies(2)
+        fprintf('TM sequence learning OK: anomaly reduced from %.3f to %.3f\n', ...
+                anomalies(2), anomalies(end));
+    else
+        fprintf('TM sequence learning WARN: anomaly not reducing\n');
+    end
+catch ME
+    fprintf('TM sequence learning FAILED: %s\n', ME.message);
+end
+
 fprintf('\nDone.\n');
