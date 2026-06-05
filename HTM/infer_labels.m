@@ -114,7 +114,7 @@ function predicted_labels = infer_labels(test_data, w_permanence, train_data, tr
         for j = 1:num_test
             % Hamming distance between test SDR j and all train SDRs
             diffs = sum(abs(train_sdrs - reshape(test_sdrs(j,:), 1, [])), 2);
-            [~, idxK] = mink(diffs, K);
+            [~, sorted_idx] = sort(diffs); idxK = sorted_idx(1:K);
             % majority vote among nearest neighbors
             if isempty(idxK)
                 predicted_labels(j) = mode(train_labels);  % fallback if no neighbors
