@@ -74,5 +74,41 @@ catch ME
     fprintf('apply_kwta FAILED: %s\n', ME.message);
 end
 
+fprintf('\nTesting compute_overlap...\n');
+try
+    pkg load image
+    potential_radius = 3;
+    overlap_dimension = [8, 8];
+    H = overlap_dimension(1) + potential_radius - 1;
+    W = overlap_dimension(2) + potential_radius - 1;
+    train_data = rand(H, W);
+    w_perm = rand(potential_radius, potential_radius, overlap_dimension(1), overlap_dimension(2));
+    threshold_tracker = 0;
+    ii = [1];
+    sample_counter = 1;
+    batch_size = 1;
+    syn_thresh = 0.2;
+
+    [overlap, thresh, threshold_tracker] = compute_overlap(train_data, w_perm, overlap_dimension, potential_radius, ii, syn_thresh, false, sample_counter, batch_size, threshold_tracker);
+    fprintf('compute_overlap OK: size=%s, mean=%.4f\n', mat2str(size(overlap)), mean(overlap(:)));
+catch ME
+    fprintf('compute_overlap FAILED: %s\n', ME.message);
+end
+
+% Test update_permanence
+fprintf('\nTesting update_permanence...\n');
+try
+    potential_radius = 3;
+    overlap_dimension = [8, 8];
+    w_perm = rand(potential_radius, potential_radius, overlap_dimension(1), overlap_dimension(2)) * 0.6 + 0.2;
+    active_cols = rand(potential_radius, potential_radius, overlap_dimension(1), overlap_dimension(2)) > 0.7;
+    memristor_stats = struct('write_counts', zeros(size(w_perm)), 'endurance_limit', 1e6);
+
+    [w_new, params, energy, mem_stats] = update_permanence(w_perm, active_cols, 0.1, 0.05, memristor_stats, 1, 0.001, 0.01, 0.01);
+    fprintf('update_permanence OK: mean_w=%.4f, energy=%.4f\n', mean(w_new(:)), energy);
+catch ME
+    fprintf('update_permanence FAILED: %s\n', ME.message);
+end
+
 
 fprintf('\nDone.\n');
