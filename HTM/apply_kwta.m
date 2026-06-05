@@ -31,11 +31,12 @@ function [active_columns, avg_activity, state, base_area_density] = apply_kwta(o
         if std(overlap(:))<1e-6
             spatial_corr = 0;
         else
-            tmp = corr(overlap(1:end-1,:)', overlap(2:end,:)', 'Rows','complete');
-            spatial_corr = mean(tmp(:),'omitnan');
-        end
-        tmp = corr(overlap(:,1:end-1), overlap(:,2:end), 'Rows','complete');
-        temporal_corr = mean(tmp(:),'omitnan');
+            tmp = corr(overlap(1:end-1,:)', overlap(2:end,:)');
+		tmp(isnan(tmp)) = 0;
+		spatial_corr = mean(tmp(:));
+		tmp = corr(overlap(:,1:end-1), overlap(:,2:end));
+		tmp(isnan(tmp)) = 0;
+		temporal_corr = mean(tmp(:));
 
         initR = cfg.KWTA_INIT_RADIUS;
         scale = cfg.KWTA_RADIUS_SCALE;
