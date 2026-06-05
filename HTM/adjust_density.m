@@ -3,17 +3,12 @@ function [base_area_density, state] = adjust_density( base_area_density, overlap
 %
 % [newDensity, state] = adjust_density(oldDensity, overlap, iter, reset, state, use_mvavg)
 
-    arguments
-        base_area_density  (1,1) double
-        overlap            (:,:)   double
-        sample_counter     (1,1) double
-        reset              (1,1) logical = false
-        state              struct  = struct('I',0,'prevOutput',0,'hist',[])
-        use_mvavg          (1,1) logical = false
-    end
+    if nargin < 4, reset = false; end
+    if nargin < 5, state = struct('I',0,'prevOutput',0,'hist',[]); end
+    if nargin < 6, use_mvavg = false; end
 
     % On reset, initialize integral, previous output, and history buffer
-    if reset || sample_counter == 1
+    if (reset == true) || (sample_counter == 1)
         state = struct('I',0,'prevOutput',0,'hist',[]);
     end
 
@@ -43,15 +38,15 @@ function [base_area_density, state] = adjust_density( base_area_density, overlap
     Kp_boost = 1.0;
     Ki_boost = 1.0;
         end
-        Kp  = min(max(cfg.KP_DENSITY*(1+0.5*std_o)*Kp_boost, 0.01), 0.4); 
-        Ki  = min(max(cfg.KI_DENSITY*(1+0.2*std_o)*Ki_boost, 0.005), 0.1); 
+        Kp  = min(max(cfg.KP_DENSITY*(1+0.5*std_o)*Kp_boost, 0.01), 0.4);
+        Ki  = min(max(cfg.KI_DENSITY*(1+0.2*std_o)*Ki_boost, 0.005), 0.1);
 
         % call shared PI controller
         [adjustment, state] = pi_controller( error_val, state, Kp, Ki, 'clampI',[-2,2], 'momentum', true);
     end
 
     % apply exponential decay + clamp to valid density range
-    alpha = 0.02;                     
+    alpha = 0.02;
         base_area_density = base_area_density + alpha*adjustment;
     base_area_density = min(max(base_area_density, cfg.MIN_DENSITY), cfg.MAX_DENSITY);
 
