@@ -45,7 +45,34 @@ try
 catch ME
     fprintf('calculate_entropy FAILED: %s\n', ME.message);
 end
+% Test validateattributes
+try
+    validateattributes(0.5, {'numeric'}, {'scalar'}, 'test', 'x', 1);
+    fprintf('validateattributes OK\n');
+catch ME
+    fprintf('validateattributes FAILED: %s\n', ME.message);
+end
 
+% Test 'like' syntax
+try
+    x = rand(3,3);
+    y = ones(size(x), 'like', x);
+    fprintf('ones like OK\n');
+catch ME
+    fprintf('ones like FAILED: %s\n', ME.message);
+end
+
+% Test apply_kwta
+fprintf('\nTesting apply_kwta...\n');
+try
+    overlap_mat = rand(8, 8) * 0.5;
+    density = 0.3;
+    kwta_state = struct();
+    [active_cols, avg_act, kwta_state, new_density] = apply_kwta(overlap_mat, density, 1, false, true, kwta_state);
+    fprintf('apply_kwta OK: active=%d, density=%.4f\n', sum(active_cols(:)), new_density);
+catch ME
+    fprintf('apply_kwta FAILED: %s\n', ME.message);
+end
 
 
 fprintf('\nDone.\n');
