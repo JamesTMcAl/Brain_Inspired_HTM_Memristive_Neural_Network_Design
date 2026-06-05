@@ -183,7 +183,8 @@ try
     patA = rand(4,4) > 0.7;
     patB = rand(4,4) > 0.7;
     patC = rand(4,4) > 0.7;
-    sequence = {patA, patB, patC, patA, patB, patC, patA, patB, patC};
+    sequence = {patA, patB, patC, patA, patB, patC, patA, patB, patC, ...
+            patA, patB, patC, patA, patB, patC, patA, patB, patC, patA, patB};
 
     anomalies = zeros(1, numel(sequence));
     for i = 1:numel(sequence)
