@@ -1,9 +1,9 @@
 classdef sp_config
     properties
         % Sparsity targets / overlap‐adaptation
-        TARGET_ACTIVITY  = 0.35;
-        MIN_DENSITY = 0.25;
-        MAX_DENSITY = 0.60;
+        TARGET_ACTIVITY  = 0.05;
+        MIN_DENSITY = 0.05;
+        MAX_DENSITY = 0.40;
         ENTROPY_THRESHOLD_INIT    = 0.50;
         SPARSITY_THRESHOLD_INIT = 35;
 
@@ -56,10 +56,10 @@ classdef sp_config
         INHIB_RADIUS_MIN   = 1;
         KWTA_MIN_ACTIVE_FRAC  = 0.001;
         KWTA_FALLBACK_FACTOR  = 0.8;
-        KWTA_TEMP_GROWTH_RATE     = 0.3;
+        KWTA_TEMP_GROWTH_RATE     = 0.05;
         KWTA_TIME_CONST    = 2500;
         KWTA_BETA_BOOST = 0.03;
-        KWTA_TARGET_DUTY = 0.25;
+        KWTA_TARGET_DUTY = 0.05;
         % stochastic kWTA noise & pacing
         KWTA_NOISE_LEVEL  = 0.05;
         KWTA_STOCH_INTERVAL   = 500;

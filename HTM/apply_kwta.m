@@ -32,15 +32,16 @@ avg_activity = 0;
     if sample_counter==1 || isempty(state.inhibition_radius)
         % global spatial & temporal corr
         if std(overlap(:))<1e-6
-            spatial_corr = 0;
+            spatial_corr  = 0;
+            temporal_corr = 0;
         else
             tmp = corr(overlap(1:end-1,:)', overlap(2:end,:)');
-		tmp(isnan(tmp)) = 0;
-		spatial_corr = mean(tmp(:));
-		tmp = corr(overlap(:,1:end-1), overlap(:,2:end));
-		tmp(isnan(tmp)) = 0;
-		temporal_corr = mean(tmp(:));
-
+            tmp(isnan(tmp)) = 0;
+            spatial_corr = mean(tmp(:));
+            tmp = corr(overlap(:,1:end-1), overlap(:,2:end));
+            tmp(isnan(tmp)) = 0;
+            temporal_corr = mean(tmp(:));
+        end  % <-- closes the std check
         initR = cfg.KWTA_INIT_RADIUS;
         scale = cfg.KWTA_RADIUS_SCALE;
         state.inhibition_radius = round(initR - scale*(spatial_corr + temporal_corr));
@@ -194,6 +195,21 @@ if mod(sample_counter,300)==0
         overlap(dead_cols) = overlap(dead_cols) + 0.1*rand();
         state.refractory_map(dead_cols) = 0;
         state.dead_counter(dead_cols) = 0;
+    end
+end
+% Structural rewiring for persistently dead columns (separate threshold)
+if mod(sample_counter, 300) == 0
+    rewire_cols = state.dead_counter > 500;
+    if any(rewire_cols(:))
+        fprintf('[REWIRE] Rewiring %d persistently dead columns\n', nnz(rewire_cols));
+        state.rewire_flag = rewire_cols;
+        state.dead_counter(rewire_cols) = 0;
+    else
+        state.rewire_flag = false(size(overlap)); 
+    end
+else
+    if ~isfield(state, 'rewire_flag')              
+        state.rewire_flag = false(size(overlap));
     end
 end
     % FALLBACK if too few

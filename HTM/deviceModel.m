@@ -17,7 +17,7 @@ classdef deviceModel
             % LTP (potentiation) update: delta >= 0
             validateattributes(w,     {'numeric'},{'nonempty'},       mfilename, 'w',     2);
             validateattributes(delta, {'numeric'},{'size',size(w)},   mfilename, 'delta', 3);
-            if ~isfield(stats,'write_cycles')
+            if ~isfield(stats,'write_cycles') || ~isequal(size(stats.write_cycles), size(w))
                 stats.write_cycles = zeros(size(w));
             end
 
