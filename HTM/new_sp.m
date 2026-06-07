@@ -124,11 +124,16 @@ function new_sp(dataset, train_data,train_label)
         tic;
         fprintf('[DEBUG] Before training call: w_permanence Size: %s, Mean: %.4f\n', ...
             mat2str(size(w_permanence)), mean(w_permanence(:)));
-
+		
+        
+        
+		tm_state_main = struct();
+			cumulative_counter = 0;  
         for tep = 1:train_epoch
+       
             fprintf('Epoch %d/%d\n', tep, train_epoch);
             
-                sample_counter = 0;  % reset at epoch star
+                sample_counter = cumulative_counter;
                 cfg.EPOCH_START_FLAG = true;
             % Inject noise 
             noise_std = noise_std_base * (1 - tep / train_epoch);
@@ -173,10 +178,33 @@ function new_sp(dataset, train_data,train_label)
             
             [~, stop_epoch] = max(val_accuracy_history);
             
+			            fprintf('[LOG] Epoch %d/%d: Sparsity = %.2f%%, Entropy = %.4f bits\n', tep, train_epoch, epoch_sparsity, epoch_entropy);
+            
+            % TM pass + anomaly feedback
+            anomaly_sum = 0;
+            n_train_samples = size(train_data_noisy, 3);
+            for tm_i = 1:n_train_samples
+                active_cols = rand(overlap_dimension) > (1 - base_area_density);
+                [~, ~, ~, tm_state_main] = temporal_memory(active_cols, tm_state_main, true, ...
+                                                            sample_counter + tm_i);
+                anomaly_sum = anomaly_sum + tm_state_main.anomaly_score;
+            end
+            avg_anomaly = anomaly_sum / n_train_samples;
 
-            fprintf('[LOG] Epoch %d/%d: Sparsity = %.2f%%, Entropy = %.4f bits\n', tep, train_epoch, epoch_sparsity, epoch_entropy);
+            if numel(tm_state_main.anomaly_history) >= 10
+                recent_anomaly = mean(tm_state_main.anomaly_history(end-9:end));
+                if recent_anomaly > 0.5
+                    decay_scaling = decay_scaling * 1.05;
+                    fprintf('[TM-FB] Epoch %d: High anomaly %.3f - slowing SP decay\n', tep, recent_anomaly);
+                elseif recent_anomaly < 0.2
+                    decay_scaling = max(decay_scaling * 0.98, 1e-4);
+                end
+            end
+            fprintf('[TM] Epoch %d avg anomaly: %.3f\n', tep, avg_anomaly);
 
-        end
+            cumulative_counter = cumulative_counter + sample_counter;
+        end  % closes for tep loop	
+        
         
         if isa(w_permanence,'gpuArray')
            w_permanence = gather(w_permanence);

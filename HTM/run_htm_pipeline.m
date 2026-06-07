@@ -85,15 +85,30 @@ for epoch = 1:n_epochs
         overlap_dimension, val_data, val_labels, val_acc_history, ...
         entropy_thresh, sparsity_thresh, 'synthetic');
 
-    % Run TM on training sequence for this epoch
+
+    % Run TM on SP SDRs in sequence order
     anomaly_sum = 0;
+    tt_tm   = struct();
+    kwta_tm = struct();
     for i = 1:n_train
-        active_cols = rand(overlap_dimension) > (1 - base_density);
-        [~, ~, ~, tm_state] = temporal_memory(active_cols, tm_state, true, ...
-                                               sample_counter + i);
+        [ov, ~, tt_tm] = compute_overlap(train_data, w_perm, overlap_dimension, ...
+            potential_radius, i, syn_thresh, false, i, 1, tt_tm);
+        [active_cols, ~, kwta_tm] = apply_kwta(ov, base_density, i, false, (i==1), kwta_tm);
+        [~, ~, ~, tm_state] = temporal_memory(active_cols, tm_state, true, sample_counter + i);
         anomaly_sum = anomaly_sum + tm_state.anomaly_score;
     end
     avg_anomaly = anomaly_sum / n_train;
+
+    % TM anomaly feedback to SP
+    if numel(tm_state.anomaly_history) >= 10
+        recent_anomaly = mean(tm_state.anomaly_history(end-9:end));
+        if recent_anomaly > 0.5
+            decay_scaling = decay_scaling * 1.05;
+            fprintf('[TM-FB] High anomaly %.3f - slowing SP decay\n', recent_anomaly);
+        elseif recent_anomaly < 0.2
+            decay_scaling = max(decay_scaling * 0.98, 1e-4);
+        end
+    end
 
     val_acc = 0;
     if ~isempty(val_acc_history)

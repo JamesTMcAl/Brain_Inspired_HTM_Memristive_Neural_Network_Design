@@ -47,7 +47,11 @@ function [active_cells, winner_cells, predicted_cells, tm_state] = temporal_memo
     n_active = sum(active_columns(:));
     n_correct = sum(sum(any(active_cells & repmat(tm_state.predicted_state, 1, 1, 1), 3) & active_columns));
     tm_state.anomaly_score = 1 - (n_correct / max(n_active, 1));
-
+	if tm_state.anomaly_score > 0.5
+        tm_state.activation_thresh = max(2, tm_state.activation_thresh - 0.01);
+    elseif tm_state.anomaly_score < 0.15
+        tm_state.activation_thresh = min(6, tm_state.activation_thresh + 0.005);
+    end
     tm_state.anomaly_history = [tm_state.anomaly_history, tm_state.anomaly_score];
     if numel(tm_state.anomaly_history) > 100
         tm_state.anomaly_history = tm_state.anomaly_history(end-99:end);
@@ -107,21 +111,23 @@ end
 
 
 function best_cell = tm_find_best_cell(r, c, state)
-% Find cell with most active synapses on its best matching segment
+% Find best matching cell, or least-used cell if no match exists
+% Standard HTM rule: least-used-cell prevents all context collapsing onto cell 1
 
-    [H, W] = size(state.col_size);
     col_idx = sub2ind(state.col_size, r, c);
     C = state.cells_per_col;
 
-    best_cell  = 1;
-    best_score = -1;
+    best_cell     = 1;
+    best_score    = -1;
+    found_match   = false;
 
     prev_flat = state.prev_active(:);
 
+    % First pass: find best matching segment across all cells
     for cell = 1:C
         n_segs = state.seg_count(col_idx, cell);
         for seg = 1:n_segs
-            pre = squeeze(state.seg_presynaptic(col_idx, cell, seg, :));
+            pre  = squeeze(state.seg_presynaptic(col_idx, cell, seg, :));
             perm = squeeze(state.seg_permanences(col_idx, cell, seg, :));
             valid = pre > 0;
             if ~any(valid), continue; end
@@ -131,6 +137,20 @@ function best_cell = tm_find_best_cell(r, c, state)
             if score > best_score
                 best_score = score;
                 best_cell  = cell;
+                found_match = (score > 0);
+            end
+        end
+    end
+
+   
+        if ~found_match
+        min_segs  = Inf;
+        best_cell = 1;
+        for cell = 1:C
+            n = state.seg_count(col_idx, cell);
+            if n < min_segs
+                min_segs  = n;
+                best_cell = cell;
             end
         end
     end
@@ -171,6 +191,23 @@ function state = tm_learn(active_cells, winner_cells, state, sample_counter, cfg
             % Grow new segment if none found
             if found_seg == 0
                 max_segs = size(state.seg_permanences, 3);
+                if n_segs >= max_segs
+                    % Prune lowest scoring segment to make room
+                    seg_scores = zeros(max_segs, 1);
+                    for s = 1:max_segs
+                        pre_s = squeeze(state.seg_presynaptic(col_idx, cell, s, :));
+                        perm_s = squeeze(state.seg_permanences(col_idx, cell, s, :));
+                        valid_s = pre_s > 0;
+                        if any(valid_s)
+                            seg_scores(s) = mean(perm_s(valid_s));
+                        end
+                    end
+                    [~, worst] = min(seg_scores);
+                    state.seg_permanences(col_idx, cell, worst, :) = 0;
+                    state.seg_presynaptic(col_idx, cell, worst, :) = 0;
+                    state.seg_count(col_idx, cell) = max_segs - 1;
+                    n_segs = max_segs - 1;
+                end
                 if n_segs < max_segs
                     n_segs = n_segs + 1;
                     state.seg_count(col_idx, cell) = n_segs;

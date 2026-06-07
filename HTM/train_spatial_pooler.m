@@ -38,8 +38,8 @@ fprintf('[DEBUG] SP call with: density=%.4f, LTP=%.4f, LTD=%.4f, decay=%.2e, end
     
     val_accuracy_history = val_accuracy_history(:);
     % Initialize persistent variables for tracking state
-    persistent total_energy memristor_stats nominal_syn_inc_base nominal_syn_dec_base best_val_accuracy energy_history entropy_hist;
-    if isfield(cfg,'EPOCH_START_FLAG') && cfg.EPOCH_START_FLAG
+	persistent total_energy memristor_stats nominal_syn_inc_base nominal_syn_dec_base best_val_accuracy energy_history;    
+		if isfield(cfg,'EPOCH_START_FLAG') && cfg.EPOCH_START_FLAG
         total_energy      = 0;
         memristor_stats   = struct();     
         energy_history    = [];
@@ -82,6 +82,7 @@ fprintf('[DEBUG] SP call with: density=%.4f, LTP=%.4f, LTD=%.4f, decay=%.2e, end
     entropy_hist     = [];   % running entropy of k‑WTA activations
     sparsity_hist    = [];   % running sparsity (% active cols)
     consecutive_viol = 0;
+    last_recovery = -100;  
     target_energy = 1e-10;
 
     if isa(w_permanence,'gpuArray')
@@ -137,6 +138,16 @@ fprintf('[DEBUG] SP call with: density=%.4f, LTP=%.4f, LTD=%.4f, decay=%.2e, end
 
 
         [active_columns, avg_act, kwta_state, base_area_density] = apply_kwta(overlap, base_area_density, sample_counter, use_gpu, (ii==1), kwta_state);
+ % Structural rewiring - resample permanences for persistently dead columns
+        if isfield(kwta_state, 'rewire_flag') && any(kwta_state.rewire_flag(:))
+            [rr, cc] = find(kwta_state.rewire_flag);
+            for k = 1:numel(rr)
+                r = rr(k); c = cc(k);
+                % Reinitialise this column's permanences near threshold
+                w_permanence(:, :, r, c) = 0.45 + 0.1 * rand(potential_radius, potential_radius);
+            end
+            kwta_state.rewire_flag = false(size(kwta_state.rewire_flag));
+        end
         % Check for rejection (too many kWTA fallbacks)
         if isfield(kwta_state, 'reject_flag') && kwta_state.reject_flag
     fprintf('[REJECT] Parameters rejected at sample_counter=%d. Forcing early stop.\n', sample_counter);
@@ -224,13 +235,19 @@ fprintf('[DEBUG] SP call with: density=%.4f, LTP=%.4f, LTD=%.4f, decay=%.2e, end
             if numel(entropy_hist) >= decline_window
      recent_entropy = entropy_hist(end-decline_window+1:end);
         if mean(diff(recent_entropy)) < 0 && mean(recent_entropy) < entropy_floor
-        fprintf('[LOG] Resetting weights due to persistent low entropy at iter %d\n', sample_counter);
+            reset_strength = min(0.5, 0.1 + (entropy_floor - mean(recent_entropy)) * 5);
+            fprintf('[LOG] Resetting weights (strength=%.2f) at iter %d\n', reset_strength, sample_counter);
             if use_gpu
                 noise = gpuArray.rand(size(w_permanence));
             else
                 noise = rand(size(w_permanence));
             end
-        w_permanence = 0.95 * w_permanence + 0.05 * noise;
+            w_permanence = (1 - reset_strength) * w_permanence + reset_strength * noise;
+            % Clear momentum so it doesn't immediately re-drive collapse
+            if isfield(syn_state, 'velocity_inc')
+                syn_state.velocity_inc = 0;
+                syn_state.velocity_dec = 0;
+            end
         end
             end
             fallback_counter_epoch = 0;
@@ -257,14 +274,27 @@ fprintf('[DEBUG] SP call with: density=%.4f, LTP=%.4f, LTD=%.4f, decay=%.2e, end
         end
         
         % Early stopping: Increase counter if thresholds are violated consistently after warmup
-        if sample_counter  > warmup_samples && ((current_entropy < entropy_threshold) || (sparsity_sample > sparsity_threshold))
+        if sample_counter > warmup_samples && ((current_entropy < entropy_threshold) || (sparsity_sample > sparsity_threshold))
             consecutive_viol = consecutive_viol + 1;
-            if consecutive_viol >= 25        % cumulative
-                fprintf('[EARLY-STOP] %d consecutive violations at %d\n', consecutive_viol, sample_counter);
+            if consecutive_viol >= 25
                 consecutive_viol = 0;
-                break;
+                if sample_counter - last_recovery >= 50  % cooldown
+                    last_recovery = sample_counter;
+                    fprintf('[RECOVERY] at iter %d - triggering recovery\n', sample_counter);
+                    base_area_density = min(base_area_density * 1.15, cfg.MAX_DENSITY);
+                    entropy_threshold = entropy_threshold * 0.85;
+                    if isfield(syn_state, 'velocity_inc')
+                        syn_state.velocity_inc = 0;
+                        syn_state.velocity_dec = 0;
+                    end
+                    if use_gpu
+                        noise = gpuArray.rand(size(w_permanence));
+                    else
+                        noise = rand(size(w_permanence));
+                    end
+                    w_permanence = 0.92 * w_permanence + 0.08 * noise;
+                end
             end
-        else
             consecutive_viol = 0;
         end
         
@@ -275,6 +305,13 @@ fprintf('[DEBUG] SP call with: density=%.4f, LTP=%.4f, LTD=%.4f, decay=%.2e, end
             syn_connected_thresh = syn_connected_thresh_batch(end);
 
         end
+
+			if sample_counter > warmup_samples
+    entropy_threshold = entropy_threshold * 1.001;  % gentle drift back up
+    entropy_threshold = min(entropy_threshold, max(mean(entropy_hist), 0.15));
+end
+
+
     %  Epoch‐end metrics 
         processed_count = sample_counter;
                               

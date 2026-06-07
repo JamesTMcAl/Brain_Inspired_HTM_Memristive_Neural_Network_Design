@@ -26,7 +26,7 @@ function [base_area_density, state] = adjust_density( base_area_density, overlap
         adjustment = cfg.KP_DENSITY * error_val;
     else
         % compute error vs target
-        current_activity = mean(overlap(:));
+        current_activity = mean(overlap(:) > 0);
         error_val        = cfg.TARGET_ACTIVITY - current_activity;
 
         % adaptive PI gains
