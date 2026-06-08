@@ -1,10 +1,10 @@
 classdef sp_config
     properties
         % Sparsity targets / overlap‐adaptation
-        TARGET_ACTIVITY  = 0.05;
+        TARGET_ACTIVITY  = 0.30;
         MIN_DENSITY = 0.05;
-        MAX_DENSITY = 0.40;
-        ENTROPY_THRESHOLD_INIT    = 0.50;
+        MAX_DENSITY = 0.60;
+        ENTROPY_THRESHOLD_INIT = 0.50;
         SPARSITY_THRESHOLD_INIT = 35;
 
         OVERLAP_QUANTILE_INIT  = 0.90;
