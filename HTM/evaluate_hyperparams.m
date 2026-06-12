@@ -15,7 +15,7 @@ function [loss, adjusted_potential_radius] = evaluate_hyperparams(train_data, tr
     adjusted_potential_radius = potential_radius;
 
     try
-        %  Data subsetting 
+        %  Data subsetting
         subset_train_count = min(200, size(train_data, 3));
         subset_val_count   = min(50,  size(val_data,   3));
         assert(subset_train_count > 0, 'Training subset is empty.');
@@ -31,22 +31,22 @@ function [loss, adjusted_potential_radius] = evaluate_hyperparams(train_data, tr
                'train_data and val_data spatial dimensions must match.');
 
         % GPU transfer if enabled
-        if cfg.USE_GPU
+        if cfg.USE_GPU  && safe_gpuDeviceCount() > 0
             train_data_subset = gpuArray(double(train_data_subset));
             val_data_subset   = gpuArray(double(val_data_subset));
         end
 
-        %  Overlap dimensions 
+        %  Overlap dimensions
         input_size        = [size(train_data_subset,1), size(train_data_subset,2)];
         overlap_dimension = input_size - (potential_radius - 1);
 
-        %  Permanence initialisation 
+        %  Permanence initialisation
         initial_w = initialize_permanence(pca_coeff, potential_radius, overlap_dimension, cfg.USE_GPU);
-        if cfg.USE_GPU
+        if cfg.USE_GPU && safe_gpuDeviceCount() > 0
             initial_w = gpuArray(double(initial_w));
         end
 
-        %  Train SP, capturing metrics 
+        %  Train SP, capturing metrics
         try
             [best_weights, ~, ~, ~, ~, ~, ~, ~, ~, epoch_energy, ~, epoch_sparsity, epoch_entropy] = ...
                 train_spatial_pooler( ...
@@ -58,13 +58,12 @@ function [loss, adjusted_potential_radius] = evaluate_hyperparams(train_data, tr
                     val_data_subset, val_label_subset, [], ...
                     cfg.ENTROPY_THRESHOLD_INIT, cfg.SPARSITY_THRESHOLD_INIT);
         catch ME
-            fprintf('[ERROR] train_spatial_pooler failed in evaluate_hyperparams:\n%s\n', ...
-                    getReport(ME, 'extended', 'hyperlinks', 'off'));
+            fprintf('[ERROR] train_spatial_pooler failed in evaluate_hyperparams:\n%s\n', ME.message);
             loss = Inf;
             return;
         end
 
-        %  Compute loss 
+        %  Compute loss
         if isempty(best_weights)
             warning('evaluate_hyperparams:EmptyWeights', ...
                     'train_spatial_pooler returned empty weights.');
@@ -96,8 +95,7 @@ function [loss, adjusted_potential_radius] = evaluate_hyperparams(train_data, tr
                 acc, epoch_sparsity, epoch_entropy, epoch_energy, loss);
 
     catch ME
-        fprintf('[ERROR] evaluate_hyperparams failed:\n%s\n', ...
-                getReport(ME, 'extended', 'hyperlinks', 'off'));
+        fprintf('[ERROR] evaluate_hyperparams failed:\n%s\n', ME.message);
         loss = Inf;
     end
 end

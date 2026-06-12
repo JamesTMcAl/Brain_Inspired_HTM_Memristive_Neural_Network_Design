@@ -23,7 +23,7 @@ input_dim      = [size(train_data,1) size(train_data,2)];
         fprintf('Validation Accuracy: %.2f%%\n', accuracy);
     catch ME
         fprintf('Error in evaluate_with_params: %s\n', ME.message);
-        fprintf('Traceback: %s\n', getReport(ME, 'extended'));
+        fprintf('Traceback: %s\n', ME.message);
         accuracy = NaN;
     end
 end

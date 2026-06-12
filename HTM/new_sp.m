@@ -22,12 +22,12 @@ function new_sp(dataset, train_data, train_label)
     logFile = 'new_sp_console_output.txt';
     if exist(logFile, 'file'), delete(logFile); end
     diary(logFile);
-    fprintf('Logging started at %s\n', datetime('now'));
+    fprintf('Logging started at %s\n', datestr(now));
 
     try
-       
+
         % Data preparation
-       
+
         train_epoch = 10;
         val_ratio   = 0.2;
         [train_data, train_label, val_data, val_label] = split_data(train_data, train_label, val_ratio);
@@ -44,16 +44,16 @@ function new_sp(dataset, train_data, train_label)
             assert(size(val_data, 3) == numel(val_label), 'Val data/label count mismatch.');
         end
 
-      
+
         % SP geometry
-     
+
         [h, w, ~]        = size(train_data);
         potential_radius  = floor(min(h, w) / 4);
         input_dimension   = [size(train_data, 1), size(train_data, 2)];
 
- 
+
         % PCA initialisation
-  
+
         numImgs   = size(train_data, 3);
         nPCA      = max(1, round(cfg.PCA_SAMPLE_FRAC * numImgs));
         selIdx    = randperm(numImgs, nPCA);
@@ -72,9 +72,9 @@ function new_sp(dataset, train_data, train_label)
         [coeff, ~] = pca(patches', 'Centered', false);
         pca_coeff  = reshape(coeff(:, 1), [pr pr]);
 
-       
+
         % Hyperparameter optimisation
-       
+
         [best_params, adjusted_potential_radius] = optimize_hyperparameters( ...
             train_data, train_label, val_data, val_label, dataset, potential_radius, pca_coeff);
 
@@ -93,19 +93,19 @@ function new_sp(dataset, train_data, train_label)
         overlap_dimension = input_dimension - potential_radius + 1;
         assert(all(overlap_dimension > 0), 'Invalid overlap dimensions.');
 
-       
+
         % GPU setup
-       
-        use_gpu = gpuDeviceCount > 0;
+
+        use_gpu = safe_gpuDeviceCount() > 0;
         if use_gpu
             g = gpuDevice();
             fprintf('GPU detected: %s\n', g.Name);
             train_data = gpuArray(train_data);
         end
 
-       
+
         % Initialise weights and history arrays
-       
+
         w_permanence = initialize_permanence(pca_coeff, potential_radius, overlap_dimension, use_gpu);
 
         energy_history            = zeros(train_epoch, 1);
@@ -134,9 +134,9 @@ function new_sp(dataset, train_data, train_label)
         tm_state_main      = struct();
         cumulative_counter = 0;
 
-       
+
         % Epoch loop
-       
+
         for tep = 1:train_epoch
             fprintf('\nEpoch %d/%d\n', tep, train_epoch);
 
@@ -150,7 +150,7 @@ function new_sp(dataset, train_data, train_label)
                 train_data_noisy = gpuArray(train_data_noisy);
             end
 
-            Spatial Pooler training -
+            %Spatial Pooler training -
             [w_permanence, sample_counter, returned_history, base_area_density, ...
              syn_inc_base, syn_dec_base, inh_rad, inc_rate, dec_rate, ...
              e, wc, epoch_sparsity, epoch_entropy, fallback_counter_epoch] = ...
@@ -181,7 +181,7 @@ function new_sp(dataset, train_data, train_label)
             fprintf('[LOG] Epoch %d/%d: Sparsity=%.2f%% | Entropy=%.4f | ValAcc=%.1f%%\n', ...
                     tep, train_epoch, epoch_sparsity, epoch_entropy, final_val_acc);
 
-            TM pass on real SP SDRs -
+            %TM pass on real SP SDRs -
             anomaly_sum = 0;
             tt_tm       = struct();
             kwta_tm     = struct();
@@ -201,7 +201,7 @@ function new_sp(dataset, train_data, train_label)
             avg_anomaly            = anomaly_sum / n_train_samples;
             anomaly_per_epoch(tep) = avg_anomaly;
 
-            TM anomaly feedback to SP decay -
+            %TM anomaly feedback to SP decay -
             if numel(tm_state_main.anomaly_history) >= 10
                 recent_anomaly = mean(tm_state_main.anomaly_history(end-9:end));
                 if recent_anomaly > 0.5
@@ -213,7 +213,7 @@ function new_sp(dataset, train_data, train_label)
             end
             fprintf('[TM] Epoch %d avg anomaly: %.3f\n', tep, avg_anomaly);
 
-            Self-evolution: performance metric -
+            %Self-evolution: performance metric -
             % Measures how close sparsity is to the density target
             sparsity_quality = 1 - abs(epoch_sparsity/100 - base_area_density);
             sparsity_quality = max(0, sparsity_quality);
@@ -222,7 +222,7 @@ function new_sp(dataset, train_data, train_label)
             perf_history(tep) = epoch_entropy * sparsity_quality * (1 - avg_anomaly);
             fprintf('[SELF-EVOLVE] Epoch %d perf_metric=%.4f\n', tep, perf_history(tep));
 
-            Self-evolution: re-optimise if degrading -
+            %Self-evolution: re-optimise if degrading -
             if tep >= 3 && reopt_cooldown == 0
                 recent_perf = perf_history(tep-2:tep);
                 % Check for consistent decline over last 3 epochs
@@ -271,9 +271,9 @@ function new_sp(dataset, train_data, train_label)
             cumulative_counter = cumulative_counter + sample_counter;
         end
 
-       
+
         % Post-training
-       
+
         if isa(w_permanence, 'gpuArray')
             w_permanence = gather(w_permanence);
         end
@@ -295,8 +295,8 @@ function new_sp(dataset, train_data, train_label)
 
         % Save results including self-evolution history
         threshold_tracker = struct();
-        timestamp = char(datetime('now', 'Format', 'yyyyMMdd_HHmmss'));
-        save(['training_results_' timestamp '.mat'], ...
+		timestamp = datestr(now, 'yyyymmdd_HHMMSS');
+		save(['training_results_' timestamp '.mat'], ...
              'w_permanence', 'pca_coeff', ...
              'sample_idx', 'sample_input', 'sample_sdr', ...
              'sparsity_per_epoch', 'entropy_per_epoch', ...
@@ -310,9 +310,8 @@ function new_sp(dataset, train_data, train_label)
 
     catch ME
         fprintf('Error: %s\n', ME.message);
-        fprintf('Stack:\n%s\n', getReport(ME, 'extended'));
+        fprintf('Stack:\n%s\n', ME.message);
     end
 
-    fprintf('\nLogging ended at %s\n', datetime('now'));
-    diary off;
+	fprintf('\nLogging ended at %s\n', datestr(now));    diary off;
 end
