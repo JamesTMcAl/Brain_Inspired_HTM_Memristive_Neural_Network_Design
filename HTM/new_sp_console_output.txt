@@ -1,535 +1,2196 @@
-Logging started at 01-Jun-2025 12:06:04
-[DEBUG] After split_data: train_data shape [32 32 40000], val_data shape [32 32 10000]
-[DEBUG] train_label: 40000, val_label: 10000
-[DEBUG] optimize_hyperparameters: potential_radius=8
-[DEBUG] optimize_hyperparameters: pca_coeff size=[8 8]
-Worker 0 evaluating params: [{"base_area_density":0.49736840724565928,"syn_inc_base":0.055504042309713918,"syn_dec_base":0.0079422037345651189,"decay_scaling":16127.244041574491,"endurance_rate":874442.184995586}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.4974, LTP=0.0555, LTD=0.0079, decay=1.61e+04, endurance=8.74e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
-[EARLY-STOP] 25 consecutive violations at 51
-[EARLY-STOP] 25 consecutive violations at 76
-[DEBUG] Iter 100: Mean Overlap=26.8586
-[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 101
-|==================================================================================================================================================|
-| Iter | Eval   | Objective   | Objective   | BestSoFar   | BestSoFar   | base_area_de-| syn_inc_base | syn_dec_base | decay_scaling| endurance_ra-|
-|      | result |             | runtime     | (observed)  | (estim.)    | nsity        |              |              |              | te           |
-|==================================================================================================================================================|
-|    1 | Best   |       -0.06 |       6.433 |       -0.06 |       -0.06 |      0.49737 |     0.055504 |    0.0079422 |        16127 |   8.7444e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.31127067761107491,"syn_inc_base":0.097491538794040017,"syn_dec_base":0.0040354718622913916,"decay_scaling":5796.8110992945467,"endurance_rate":179338.52797837849}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.3113, LTP=0.0975, LTD=0.0040, decay=5.80e+03, endurance=1.79e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
-[EARLY-STOP] 25 consecutive violations at 51
-[EARLY-STOP] 25 consecutive violations at 76
-[DEBUG] Iter 100: Mean Overlap=26.8369
-[ENERGY] Iter 100: Avg Energy=2.62e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 101
-|    2 | Accept |       -0.06 |       3.495 |       -0.06 |       -0.06 |      0.31127 |     0.097492 |    0.0040355 |       5796.8 |   1.7934e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.31233258719091889,"syn_inc_base":0.10497663761507212,"syn_dec_base":0.015333924339091781,"decay_scaling":14810.750594365074,"endurance_rate":362577.69780017127}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.3123, LTP=0.1050, LTD=0.0153, decay=1.48e+04, endurance=3.63e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
-[EARLY-STOP] 25 consecutive violations at 51
-[EARLY-STOP] 25 consecutive violations at 76
-[DEBUG] Iter 100: Mean Overlap=26.8505
-[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 101
-|    3 | Accept |       -0.06 |      2.8437 |       -0.06 |       -0.06 |      0.31233 |      0.10498 |     0.015334 |        14811 |   3.6258e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.46636782719751507,"syn_inc_base":0.1124775747321817,"syn_dec_base":0.0089023293855644142,"decay_scaling":12441.069699932847,"endurance_rate":129346.16995960794}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.4664, LTP=0.1125, LTD=0.0089, decay=1.24e+04, endurance=1.29e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
-[EARLY-STOP] 25 consecutive violations at 51
-[EARLY-STOP] 25 consecutive violations at 76
-[DEBUG] Iter 100: Mean Overlap=26.8249
-[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 101
-|    4 | Accept |       -0.06 |      2.8272 |       -0.06 |       -0.06 |      0.46637 |      0.11248 |    0.0089023 |        12441 |   1.2935e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.30828712891393767,"syn_inc_base":0.19308526139290622,"syn_dec_base":0.0048720123557738368,"decay_scaling":13554.306296650468,"endurance_rate":323366.13453956693}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.3083, LTP=0.1931, LTD=0.0049, decay=1.36e+04, endurance=3.23e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
-[EARLY-STOP] 25 consecutive violations at 51
-[EARLY-STOP] 25 consecutive violations at 76
-[DEBUG] Iter 100: Mean Overlap=26.8659
-[ENERGY] Iter 100: Avg Energy=2.65e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 101
-|    5 | Accept |       -0.06 |      2.6709 |       -0.06 |       -0.06 |      0.30829 |      0.19309 |     0.004872 |        13554 |   3.2337e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.30828712891393767,"syn_inc_base":0.19308526139290622,"syn_dec_base":0.0048720123557738368,"decay_scaling":13554.306296650468,"endurance_rate":323366.13453956693}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.3083, LTP=0.1931, LTD=0.0049, decay=1.36e+04, endurance=3.23e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
-[EARLY-STOP] 25 consecutive violations at 51
-[EARLY-STOP] 25 consecutive violations at 76
-[DEBUG] Iter 100: Mean Overlap=26.8613
-[ENERGY] Iter 100: Avg Energy=2.64e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 101
-|    6 | Accept |       -0.06 |      2.5543 |       -0.06 |       -0.06 |      0.30829 |      0.19309 |     0.004872 |        13554 |   3.2337e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.30828712891393767,"syn_inc_base":0.19308526139290622,"syn_dec_base":0.0048720123557738368,"decay_scaling":13554.306296650468,"endurance_rate":323366.13453956693}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3048 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.3083, LTP=0.1931, LTD=0.0049, decay=1.36e+04, endurance=3.23e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3189, Sparsity=6.05%
-[EARLY-STOP] 25 consecutive violations at 51
-[EARLY-STOP] 25 consecutive violations at 76
-{Operation terminated by user during <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('im2col>parse_inputs', 'C:\Program Files\MATLAB\R2024b\toolbox\images\images\im2col.m', 138)" style="font-weight:bold">im2col>parse_inputs</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\images\images\im2col.m',138,0)">line 138</a>)
-
-
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('im2col', 'C:\Program Files\MATLAB\R2024b\toolbox\images\images\im2col.m', 51)" style="font-weight:bold">im2col</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\images\images\im2col.m',51,0)">line 51</a>)
-[a, block, kind, padval] = parse_inputs(varargin{:});
-                           ^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('compute_overlap', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\compute_overlap.m', 99)" style="font-weight:bold">compute_overlap</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\compute_overlap.m',99,0)">line 99</a>)
-            patch_cols = im2col(slice_double(:,:,j), [p, p], 'sliding');  % [p*p x outH*outW]
-                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('train_spatial_pooler', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\train_spatial_pooler.m', 114)" style="font-weight:bold">train_spatial_pooler</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\train_spatial_pooler.m',114,0)">line 114</a>)
-            compute_overlap(train_data, w_permanence, overlap_dimension, ...
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('evaluate_hyperparams', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\evaluate_hyperparams.m', 81)" style="font-weight:bold">evaluate_hyperparams</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\evaluate_hyperparams.m',81,0)">line 81</a>)
-            [best_weights, ~, ~,  ~, ~, ~, ~, ~, ~,~, ~, ~, ~] = train_spatial_pooler( ...
-                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('optimize_hyperparameters/safeEvaluate', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m', 47)" style="font-weight:bold">optimize_hyperparameters/safeEvaluate</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m',47,0)">line 47</a>)
-        loss = evaluate_hyperparams( ...
-               ^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/callObjNormally', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjNormally.m', 13)" style="font-weight:bold">BayesianOptimization/callObjNormally</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjNormally.m',13,0)">line 13</a>)
-            Objective = this.ObjectiveFcn(conditionalizeX(this, X));
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/callObjFcn', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjFcn.m', 11)" style="font-weight:bold">BayesianOptimization/callObjFcn</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjFcn.m',11,0)">line 11</a>)
-        = callObjNormally(this, X);
-          ^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/runSerial', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\runSerial.m', 24)" style="font-weight:bold">BayesianOptimization/runSerial</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\runSerial.m',24,0)">line 24</a>)
-        ObjectiveFcnObjectiveEvaluationTime, ObjectiveNargout] = callObjFcn(this, this.XNext);
-                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/run', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\run.m', 9)" style="font-weight:bold">BayesianOptimization/run</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\run.m',9,0)">line 9</a>)
-    this = runSerial(this);
-           ^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\BayesianOptimization.m', 187)" style="font-weight:bold">BayesianOptimization</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\BayesianOptimization.m',187,0)">line 187</a>)
-                this = run(this);
-                       ^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('bayesopt', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\bayesopt.m', 323)" style="font-weight:bold">bayesopt</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\bayesopt.m',323,0)">line 323</a>)
-Results = BayesianOptimization(Options);
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('optimize_hyperparameters', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m', 65)" style="font-weight:bold">optimize_hyperparameters</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m',65,0)">line 65</a>)
-        results = bayesopt(@safeEvaluate, param_ranges, ...
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('new_sp', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m', 96)" style="font-weight:bold">new_sp</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m',96,0)">line 96</a>)
-        [best_params, adjusted_potential_radius] = optimize_hyperparameters(train_data, train_label, val_data, val_label, dataset, potential_radius, pca_coeff);
-                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_all', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m', 40)" style="font-weight:bold">run_all</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m',40,0)">line 40</a>)
-     new_sp(dataset, train_data, train_label);
-     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-} 
-toTxt
-All files have been merged into: C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\All_MATLAB_Files.txt
-run_all
-Starting HTM Spatial Pooler Training...
-No training results found. Starting training process...
-[Warning: File not found or permission denied] 
-[> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('new_sp', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m', 15)" style="font-weight:bold">new_sp</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m',15,0)">line 15</a>)
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_all', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m', 40)" style="font-weight:bold">run_all</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m',40,0)">line 40</a>)] 
-Logging started at 01-Jun-2025 13:25:50
-[DEBUG] After split_data: train_data shape [32 32 4000], val_data shape [32 32 1000]
-[DEBUG] train_label: 4000, val_label: 1000
-[DEBUG] optimize_hyperparameters: potential_radius=8
-[DEBUG] optimize_hyperparameters: pca_coeff size=[8 8]
-Worker 0 evaluating params: [{"base_area_density":0.49736840724565928,"syn_inc_base":0.055504042309713918,"syn_dec_base":0.0079422037345651189,"decay_scaling":16127.244041574491,"endurance_rate":874442.184995586}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.4974, LTP=0.0555, LTD=0.0079, decay=1.61e+04, endurance=8.74e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 70
-[EARLY-STOP] 25 consecutive violations at 95
-[DEBUG] Iter 100: Mean Overlap=0.1107
-[ENERGY] Iter 100: Avg Energy=2.62e-04, Scaling=0.50
-|==================================================================================================================================================|
-| Iter | Eval   | Objective   | Objective   | BestSoFar   | BestSoFar   | base_area_de-| syn_inc_base | syn_dec_base | decay_scaling| endurance_ra-|
-|      | result |             | runtime     | (observed)  | (estim.)    | nsity        |              |              |              | te           |
-|==================================================================================================================================================|
-|    1 | Best   |       -0.06 |      2.9058 |       -0.06 |       -0.06 |      0.49737 |     0.055504 |    0.0079422 |        16127 |   8.7444e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.31127067761107491,"syn_inc_base":0.097491538794040017,"syn_dec_base":0.0040354718622913916,"decay_scaling":5796.8110992945467,"endurance_rate":179338.52797837849}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.3113, LTP=0.0975, LTD=0.0040, decay=5.80e+03, endurance=1.79e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 70
-[EARLY-STOP] 25 consecutive violations at 95
-[DEBUG] Iter 100: Mean Overlap=0.1107
-[ENERGY] Iter 100: Avg Energy=2.62e-04, Scaling=0.50
-|    2 | Accept |       -0.06 |      2.6429 |       -0.06 |       -0.06 |      0.31127 |     0.097492 |    0.0040355 |       5796.8 |   1.7934e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.31233258719091889,"syn_inc_base":0.10497663761507212,"syn_dec_base":0.015333924339091781,"decay_scaling":14810.750594365074,"endurance_rate":362577.69780017127}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.3123, LTP=0.1050, LTD=0.0153, decay=1.48e+04, endurance=3.63e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 70
-[EARLY-STOP] 25 consecutive violations at 95
-[DEBUG] Iter 100: Mean Overlap=0.1106
-[ENERGY] Iter 100: Avg Energy=2.64e-04, Scaling=0.50
-|    3 | Accept |       -0.06 |       2.882 |       -0.06 |       -0.06 |      0.31233 |      0.10498 |     0.015334 |        14811 |   3.6258e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.46636782719751507,"syn_inc_base":0.1124775747321817,"syn_dec_base":0.0089023293855644142,"decay_scaling":12441.069699932847,"endurance_rate":129346.16995960794}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.4664, LTP=0.1125, LTD=0.0089, decay=1.24e+04, endurance=1.29e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[DEBUG] Iter 100: Mean Overlap=0.0991
-[ENERGY] Iter 100: Avg Energy=2.64e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 159
-|    4 | Accept |       -0.06 |       3.269 |       -0.06 |       -0.06 |      0.46637 |      0.11248 |    0.0089023 |        12441 |   1.2935e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.4601914395204047,"syn_inc_base":0.040347475776343525,"syn_dec_base":0.0042631021259919993,"decay_scaling":5813.0417051887171,"endurance_rate":729628.83332270652}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.4602, LTP=0.0403, LTD=0.0043, decay=5.81e+03, endurance=7.30e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 92
-[DEBUG] Iter 100: Mean Overlap=0.1003
-[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 117
-|    5 | Accept |       -0.06 |      3.3247 |       -0.06 |       -0.06 |      0.46019 |     0.040347 |    0.0042631 |         5813 |   7.2963e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.45016460093817795,"syn_inc_base":0.16342337919026811,"syn_dec_base":0.011581068379430064,"decay_scaling":11724.589238011418,"endurance_rate":170079.76426975441}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.4502, LTP=0.1634, LTD=0.0116, decay=1.17e+04, endurance=1.70e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 91
-[DEBUG] Iter 100: Mean Overlap=0.1060
-[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 139
-|    6 | Accept |       -0.06 |       3.126 |       -0.06 |       -0.06 |      0.45016 |      0.16342 |     0.011581 |        11725 |   1.7008e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.43729777517657753,"syn_inc_base":0.10331106859719133,"syn_dec_base":0.0038619156422860807,"decay_scaling":15704.824356144081,"endurance_rate":428974.55244744872}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.4373, LTP=0.1033, LTD=0.0039, decay=1.57e+04, endurance=4.29e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[DEBUG] Iter 100: Mean Overlap=0.0991
-[ENERGY] Iter 100: Avg Energy=2.62e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 100
-[EARLY-STOP] 25 consecutive violations at 149
-|    7 | Accept |       -0.06 |      3.1049 |       -0.06 |       -0.06 |       0.4373 |      0.10331 |    0.0038619 |        15705 |   4.2897e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.45213703562485641,"syn_inc_base":0.13251420774851538,"syn_dec_base":0.010401954973584038,"decay_scaling":7425.52567618355,"endurance_rate":178791.39961853792}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.4521, LTP=0.1325, LTD=0.0104, decay=7.43e+03, endurance=1.79e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 70
-[DEBUG] Iter 100: Mean Overlap=0.1329
-[ENERGY] Iter 100: Avg Energy=2.64e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 120
-|    8 | Accept |       -0.06 |      2.9295 |       -0.06 |       -0.06 |      0.45214 |      0.13251 |     0.010402 |       7425.5 |   1.7879e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.32240776530533777,"syn_inc_base":0.069654624190873357,"syn_dec_base":0.0028236196732907221,"decay_scaling":6056.4492198889748,"endurance_rate":604225.576235651}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.3224, LTP=0.0697, LTD=0.0028, decay=6.06e+03, endurance=6.04e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 70
-[EARLY-STOP] 25 consecutive violations at 95
-[DEBUG] Iter 100: Mean Overlap=0.1107
-[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
-|    9 | Accept |       -0.06 |      2.7592 |       -0.06 |       -0.06 |      0.32241 |     0.069655 |    0.0028236 |       6056.4 |   6.0423e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.30903257622672708,"syn_inc_base":0.07113660722256894,"syn_dec_base":0.0024486194701804406,"decay_scaling":7524.4772048024106,"endurance_rate":230501.71948853682}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.3090, LTP=0.0711, LTD=0.0024, decay=7.52e+03, endurance=2.31e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 70
-[DEBUG] Iter 100: Mean Overlap=0.1327
-[ENERGY] Iter 100: Avg Energy=2.63e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 119
-{Operation terminated by user during <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('compute_overlap', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\compute_overlap.m', 106)" style="font-weight:bold">compute_overlap</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\compute_overlap.m',106,0)">line 106</a>)
-
-
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('infer_labels', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\infer_labels.m', 57)" style="font-weight:bold">infer_labels</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\infer_labels.m',57,0)">line 57</a>)
-            compute_overlap(train_data, w_permanence, overlap_dimension, potential_radius, i:i, syn_connected_thresh, false, i, batch_size, threshold_tracker);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('evaluate_hyperparams', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\evaluate_hyperparams.m', 112)" style="font-weight:bold">evaluate_hyperparams</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\evaluate_hyperparams.m',112,0)">line 112</a>)
-            preds = infer_labels( ...
-                    ^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('optimize_hyperparameters/safeEvaluate', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m', 47)" style="font-weight:bold">optimize_hyperparameters/safeEvaluate</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m',47,0)">line 47</a>)
-        loss = evaluate_hyperparams( ...
-               ^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/callObjNormally', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjNormally.m', 13)" style="font-weight:bold">BayesianOptimization/callObjNormally</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjNormally.m',13,0)">line 13</a>)
-            Objective = this.ObjectiveFcn(conditionalizeX(this, X));
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/callObjFcn', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjFcn.m', 11)" style="font-weight:bold">BayesianOptimization/callObjFcn</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\callObjFcn.m',11,0)">line 11</a>)
-        = callObjNormally(this, X);
-          ^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/runSerial', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\runSerial.m', 24)" style="font-weight:bold">BayesianOptimization/runSerial</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\runSerial.m',24,0)">line 24</a>)
-        ObjectiveFcnObjectiveEvaluationTime, ObjectiveNargout] = callObjFcn(this, this.XNext);
-                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization/run', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\run.m', 9)" style="font-weight:bold">BayesianOptimization/run</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\run.m',9,0)">line 9</a>)
-    this = runSerial(this);
-           ^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('BayesianOptimization', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\BayesianOptimization.m', 187)" style="font-weight:bold">BayesianOptimization</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\@BayesianOptimization\BayesianOptimization.m',187,0)">line 187</a>)
-                this = run(this);
-                       ^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('bayesopt', 'C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\bayesopt.m', 323)" style="font-weight:bold">bayesopt</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\stats\bayesoptim\bayesopt.m',323,0)">line 323</a>)
-Results = BayesianOptimization(Options);
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('optimize_hyperparameters', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m', 65)" style="font-weight:bold">optimize_hyperparameters</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\optimize_hyperparameters.m',65,0)">line 65</a>)
-        results = bayesopt(@safeEvaluate, param_ranges, ...
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('new_sp', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m', 86)" style="font-weight:bold">new_sp</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m',86,0)">line 86</a>)
-        [best_params, adjusted_potential_radius] = optimize_hyperparameters(train_data, train_label, val_data, val_label, dataset, potential_radius, pca_coeff);
-                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_all', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m', 40)" style="font-weight:bold">run_all</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m',40,0)">line 40</a>)
-     new_sp(dataset, train_data, train_label);
-     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-} 
-toTxt
-All files have been merged into: C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\All_MATLAB_Files.txt
-run_all
-Starting HTM Spatial Pooler Training...
-No training results found. Starting training process...
-[Warning: File not found or permission denied] 
-[> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('new_sp', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m', 15)" style="font-weight:bold">new_sp</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m',15,0)">line 15</a>)
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_all', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m', 40)" style="font-weight:bold">run_all</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m',40,0)">line 40</a>)] 
-Logging started at 01-Jun-2025 13:36:26
-[DEBUG] After split_data: train_data shape [28 28 800], val_data shape [28 28 200]
-[DEBUG] train_label: 800, val_label: 200
+Logging started at 11-Jun-2026 20:22:34
+[DEBUG] After split_data: train_data shape [28 28 3200], val_data shape [28 28 800]
+[DEBUG] train_label: 3200, val_label: 800
 [DEBUG] optimize_hyperparameters: potential_radius=7
 [DEBUG] optimize_hyperparameters: pca_coeff size=[7 7]
-Worker 0 evaluating params: [{"base_area_density":0.44802630543424449,"syn_inc_base":0.055504042309713918,"syn_dec_base":0.0079422037345651189,"decay_scaling":16127.244041574491,"endurance_rate":874442.184995586}]
+[OPT] Phase 1: 40 random evaluations
+[OPT] Eval 1/40: density=0.308 inc=0.0975 dec=0.0040 decay=5797 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 2/40: density=0.108 inc=0.1306 dec=0.0029 decay=3904 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 3/40: density=0.219 inc=0.0679 dec=0.0071 decay=6367 end=9e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 4/40: density=0.077 inc=0.1966 dec=0.0052 decay=8733 end=8e+04
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 5/40: density=0.266 inc=0.0704 dec=0.0044 decay=3153 end=1e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 6/40: density=0.340 inc=0.1966 dec=0.0111 decay=3022 end=8e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 7/40: density=0.311 inc=0.1633 dec=0.0030 decay=3705 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 8/40: density=0.316 inc=0.1325 dec=0.0109 decay=4913 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 9/40: density=0.263 inc=0.1720 dec=0.0128 decay=4909 end=7e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 10/40: density=0.115 inc=0.1683 dec=0.0072 decay=4449 end=3e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 11/40: density=0.205 inc=0.1934 dec=0.0022 decay=4249 end=1e+06
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 12/40: density=0.300 inc=0.0640 dec=0.0034 decay=9410 end=8e+04
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 13/40: density=0.147 inc=0.0479 dec=0.0103 decay=3544 end=1e+06
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 14/40: density=0.326 inc=0.1662 dec=0.0118 decay=6543 end=4e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 15/40: density=0.278 inc=0.1169 dec=0.0023 decay=11315 end=1e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 16/40: density=0.233 inc=0.1073 dec=0.0179 decay=4600 end=5e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 17/40: density=0.260 inc=0.1291 dec=0.0024 decay=4256 end=9e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 18/40: density=0.119 inc=0.0662 dec=0.0039 decay=9369 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 19/40: density=0.051 inc=0.0405 dec=0.0063 decay=4440 end=3e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 20/40: density=0.290 inc=0.0553 dec=0.0064 decay=7097 end=5e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 21/40: density=0.336 inc=0.1067 dec=0.0035 decay=19321 end=5e+04
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 22/40: density=0.149 inc=0.1032 dec=0.0030 decay=12683 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 23/40: density=0.125 inc=0.1061 dec=0.0098 decay=5975 end=6e+04
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 24/40: density=0.188 inc=0.0712 dec=0.0084 decay=4603 end=7e+04
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 25/40: density=0.318 inc=0.0928 dec=0.0039 decay=9392 end=4e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 26/40: density=0.251 inc=0.1677 dec=0.0036 decay=7416 end=1e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 27/40: density=0.205 inc=0.1318 dec=0.0085 decay=3465 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 28/40: density=0.263 inc=0.0457 dec=0.0111 decay=12844 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 29/40: density=0.185 inc=0.0823 dec=0.0109 decay=8308 end=1e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 30/40: density=0.059 inc=0.0952 dec=0.0167 decay=12581 end=3e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 31/40: density=0.330 inc=0.0449 dec=0.0080 decay=4469 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 32/40: density=0.105 inc=0.0959 dec=0.0159 decay=13966 end=6e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 33/40: density=0.073 inc=0.0881 dec=0.0122 decay=3269 end=9e+04
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 34/40: density=0.075 inc=0.1708 dec=0.0034 decay=7376 end=5e+04
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 35/40: density=0.084 inc=0.1222 dec=0.0124 decay=6182 end=1e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 36/40: density=0.062 inc=0.0559 dec=0.0028 decay=4646 end=3e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 37/40: density=0.158 inc=0.1964 dec=0.0038 decay=18433 end=7e+04
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 38/40: density=0.208 inc=0.1279 dec=0.0091 decay=7158 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 39/40: density=0.283 inc=0.0643 dec=0.0068 decay=10438 end=5e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 40/40: density=0.099 inc=0.1063 dec=0.0021 decay=12224 end=7e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Phase 1 best loss: Inf
+[OPT] Phase 2: 20 local refinement evaluations
+[OPT] Eval 1/20: density=0.308 inc=0.0975 dec=0.0040 decay=5797 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 2/20: density=0.284 inc=0.0801 dec=0.0037 decay=8236 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 3/20: density=0.339 inc=0.0677 dec=0.0040 decay=6049 end=1e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 4/20: density=0.316 inc=0.0751 dec=0.0033 decay=3784 end=1e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 5/20: density=0.350 inc=0.0986 dec=0.0039 decay=7107 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 6/20: density=0.258 inc=0.0922 dec=0.0028 decay=7683 end=1e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 7/20: density=0.337 inc=0.1083 dec=0.0051 decay=8174 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 8/20: density=0.350 inc=0.0969 dec=0.0028 decay=6278 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 9/20: density=0.269 inc=0.0977 dec=0.0040 decay=6205 end=1e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 10/20: density=0.304 inc=0.0621 dec=0.0043 decay=8549 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 11/20: density=0.350 inc=0.1035 dec=0.0081 decay=4216 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 12/20: density=0.309 inc=0.1651 dec=0.0044 decay=8102 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 13/20: density=0.265 inc=0.1059 dec=0.0037 decay=5273 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 14/20: density=0.324 inc=0.0823 dec=0.0023 decay=6415 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 15/20: density=0.254 inc=0.1223 dec=0.0046 decay=3833 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 16/20: density=0.334 inc=0.1265 dec=0.0037 decay=7781 end=1e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 17/20: density=0.315 inc=0.0422 dec=0.0040 decay=5854 end=3e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 18/20: density=0.327 inc=0.0838 dec=0.0068 decay=4398 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 19/20: density=0.321 inc=0.0762 dec=0.0030 decay=8562 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Eval 20/20: density=0.311 inc=0.1125 dec=0.0043 decay=4683 end=2e+05
+[ERROR] evaluate_hyperparams failed:
+'gpuArray' undefined near line 35, column 33
+[OPT] Phase 2 did not improve (best=Inf)
+[OPT] Best params: Density=0.3085 | LTP=0.0975 | LTD=0.0040 | Decay=5.80e+03 | Endurance=1.79e+05
+[OPT] Best composite loss: Inf
 [DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
 [DEBUG] w_permanence size: [7 7 22 22]
 [LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
-[DEBUG] Initialized: Mean=0.4566 | Min=0.3231 | Max=0.5844 | Size=[7 7 22 22]
-[DEBUG] train_data_subset size: [28 28 200] | train_label_subset size: [1 200]
-[DEBUG] val_data_subset size: [28 28 50] | val_label_subset size: [1 50]
-[DEBUG] SP call with: density=0.4480, LTP=0.0555, LTD=0.0079, decay=1.61e+04, endurance=8.74e+05
-[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
-[LOG] Set dynamic thresholds: Entropy=0.3030, Sparsity=5.56%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 70
-[EARLY-STOP] 25 consecutive violations at 95
-[DEBUG] Iter 100: Mean Overlap=11.0510
-[ENERGY] Iter 100: Avg Energy=3.80e-04, Scaling=0.50
-|==================================================================================================================================================|
-| Iter | Eval   | Objective   | Objective   | BestSoFar   | BestSoFar   | base_area_de-| syn_inc_base | syn_dec_base | decay_scaling| endurance_ra-|
-|      | result |             | runtime     | (observed)  | (estim.)    | nsity        |              |              |              | te           |
-|==================================================================================================================================================|
-|    1 | Best   |        -0.7 |      2.6022 |        -0.7 |        -0.7 |      0.44803 |     0.055504 |    0.0079422 |        16127 |   8.7444e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.30845300820830618,"syn_inc_base":0.097491538794040017,"syn_dec_base":0.0040354718622913916,"decay_scaling":5796.8110992945467,"endurance_rate":179338.52797837849}]
+[DEBUG] Initialized: Mean=0.4564 | Min=0.3202 | Max=0.5781 | Size=[7 7 22 22]
+Starting Training...
+[DEBUG] Before training: w_permanence Size=[7 7 22 22], Mean=0.4564
+
+Epoch 1/10
+[DEBUG] SP call with: density=0.3548, LTP=0.0975, LTD=0.0040, decay=5.80e+03, endurance=1.79e+05
+[DEBUG] start train : train_data size: [28 28 3200] | train_labels size: [1 3200]
+[DEBUG] Iter 100: Mean Overlap=9.1372
+[ENERGY] Iter 100: Avg Energy=9.80e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=8.7938
+[ENERGY] Iter 200: Avg Energy=9.71e-04, Scaling=0.50
+[LOG] Set dynamic thresholds: Entropy=0.9317, Sparsity=70.29%
+[RECOVERY] at iter 293 - triggering recovery
+[DEBUG] Iter 300: Mean Overlap=11.9088
+[ENERGY] Iter 300: Avg Energy=9.56e-04, Scaling=0.50
+[DEBUG] Iter 400: Mean Overlap=9.4604
+[ENERGY] Iter 400: Avg Energy=9.80e-04, Scaling=0.50
+[DEBUG] Iter 500: Mean Overlap=8.5404
+[ENERGY] Iter 500: Avg Energy=9.72e-04, Scaling=0.50
+[DEBUG] Iter 600: Mean Overlap=12.9719
+[ENERGY] Iter 600: Avg Energy=9.66e-04, Scaling=0.50
+[DEBUG] Iter 700: Mean Overlap=9.5820
+[ENERGY] Iter 700: Avg Energy=9.57e-04, Scaling=0.50
+[DEBUG] Iter 800: Mean Overlap=10.1126
+[ENERGY] Iter 800: Avg Energy=9.48e-04, Scaling=0.50
+[DEBUG] Iter 900: Mean Overlap=5.0945
+[ENERGY] Iter 900: Avg Energy=9.39e-04, Scaling=0.50
+[DEBUG] Iter 1000: Mean Overlap=17.0796
+[ENERGY] Iter 1000: Avg Energy=9.32e-04, Scaling=0.50
+[DEBUG] Iter 1100: Mean Overlap=13.8389
+[ENERGY] Iter 1100: Avg Energy=9.21e-04, Scaling=0.50
+[DEBUG] Iter 1200: Mean Overlap=10.4518
+[ENERGY] Iter 1200: Avg Energy=9.10e-04, Scaling=0.50
+[DEBUG] Iter 1300: Mean Overlap=6.9891
+[ENERGY] Iter 1300: Avg Energy=9.01e-04, Scaling=0.50
+[DEBUG] Iter 1400: Mean Overlap=12.9901
+[ENERGY] Iter 1400: Avg Energy=8.94e-04, Scaling=0.50
+[DEBUG] Iter 1500: Mean Overlap=19.7303
+[ENERGY] Iter 1500: Avg Energy=8.87e-04, Scaling=0.50
+[DEBUG] Iter 1600: Mean Overlap=16.3260
+[ENERGY] Iter 1600: Avg Energy=8.78e-04, Scaling=0.50
+[DEBUG] Iter 1700: Mean Overlap=14.7139
+[ENERGY] Iter 1700: Avg Energy=8.68e-04, Scaling=0.50
+[DEBUG] Iter 1800: Mean Overlap=9.6602
+[ENERGY] Iter 1800: Avg Energy=8.61e-04, Scaling=0.50
+[DEBUG] Iter 1900: Mean Overlap=12.9688
+[ENERGY] Iter 1900: Avg Energy=8.54e-04, Scaling=0.50
+[DEBUG] Iter 2000: Mean Overlap=12.9454
+[ENERGY] Iter 2000: Avg Energy=8.46e-04, Scaling=0.50
+[DEBUG] Iter 2100: Mean Overlap=7.9293
+[ENERGY] Iter 2100: Avg Energy=8.41e-04, Scaling=0.50
+[DEBUG] Iter 2200: Mean Overlap=10.1551
+[ENERGY] Iter 2200: Avg Energy=8.36e-04, Scaling=0.50
+[DEBUG] Iter 2300: Mean Overlap=13.7930
+[ENERGY] Iter 2300: Avg Energy=8.33e-04, Scaling=0.50
+[DEBUG] Iter 2400: Mean Overlap=9.9405
+[ENERGY] Iter 2400: Avg Energy=8.27e-04, Scaling=0.50
+[RECOVERY] at iter 2434 - triggering recovery
+[DEBUG] Iter 2500: Mean Overlap=8.8732
+[ENERGY] Iter 2500: Avg Energy=8.36e-04, Scaling=0.50
+[DEBUG] Iter 2600: Mean Overlap=10.6176
+[ENERGY] Iter 2600: Avg Energy=8.37e-04, Scaling=0.50
+[DEBUG] Iter 2700: Mean Overlap=11.2457
+[ENERGY] Iter 2700: Avg Energy=8.32e-04, Scaling=0.50
+[DEBUG] Iter 2800: Mean Overlap=6.9255
+[ENERGY] Iter 2800: Avg Energy=8.27e-04, Scaling=0.50
+[DEBUG] Iter 2900: Mean Overlap=6.3509
+[ENERGY] Iter 2900: Avg Energy=8.24e-04, Scaling=0.50
+[DEBUG] Iter 3000: Mean Overlap=8.7126
+[ENERGY] Iter 3000: Avg Energy=8.19e-04, Scaling=0.50
+[DEBUG] Iter 3100: Mean Overlap=8.4789
+[ENERGY] Iter 3100: Avg Energy=8.15e-04, Scaling=0.50
+[DEBUG] Iter 3200: Mean Overlap=10.5022
+[ENERGY] Iter 3200: Avg Energy=8.12e-04, Scaling=0.50
+[LOG] Epoch 1/10: Sparsity=28.98% | Entropy=0.8430 | ValAcc=74.0%
+[TM] Initialised: 22x22 grid, 32 cells/col, 128 segs/cell
+
+octave:17> type sp_config.m
+sp_config.m is the file defined from: C:\Users\mcali\Brain_Inspired_HTM_Memristive_Neural_Network_Design\HTM\sp_config.m
+
+classdef sp_config
+    properties
+        % Sparsity targets / overlap‐adaptation
+        TARGET_ACTIVITY  = 0.30;
+        MIN_DENSITY = 0.05;
+        MAX_DENSITY = 0.60;
+        ENTROPY_THRESHOLD_INIT = 0.50;
+        SPARSITY_THRESHOLD_INIT = 35;
+
+        OVERLAP_QUANTILE_INIT  = 0.90;
+        OVERLAP_QUANTILE_UPDATE = 0.05;
+        OVERLAP_QUANTILE_DECAY  = 0.95;
+        OVERLAP_MIN_ACTIVE_FRAC = 0.2;  
+        OVERLAP_MAX_ACTIVE_FRAC = 0.3;   
+        Overlap_MIN_ACTV_PRE_TRSH = 0.1
+        Overlap_MAX_ACTV_PRE_TRSH =  0.2
+        % Synaptic defaults
+        SYN_NOISE_LEVEL  = 0.10;   
+        SYN_TARGET_RANGE  = [0.05,0.90];
+        HASH_SUBSAMPLE  = 8;
+        TRAIN_NOISE_BASE   = 0.02;    
+        SYN_CONNECTED_INIT  = 0.25;
+        NOISE_STD  = 0.05;   
+        REFRACTORY_PERIOD   = 5;
+
+        % Synaptic update scaling factors
+        SYN_INC_SCALAR   = 1.5;    
+        SYN_DEC_SCALAR   = 0.8;   
+        SYN_INC_MIN_FACTOR    = 0.3;    
+        SYN_INC_MAX_FACTOR   = 3.0;    
+        SYN_DEC_MIN   = 0.001;  
+        SYN_DEC_MAX    = 0.02;   
+        STD_SCALING_FACTOR  = 0.003; 
+
+        % k-NN classifier setting
+        KNN_K  = 3;      
+        
+        % Hyperparameter tuning
+        HYPER_SEED = 12345;  
+
+        
+        % PI‐controller gains
+        KP_DENSITY  = 0.03;
+        KI_DENSITY   = 0.005;
+        KP_SYNAPTIC   = 0.10;
+        MOMENTUM_GAIN  = 0.8;
+
+        % kWTA / lateral inhibition
+        KWTA_INIT_RADIUS   = 2;
+        KWTA_RADIUS_SCALE  = 1.5;
+        KWTA_RADIUS_HISTORY  = 10;
+        KWTA_LOCAL_MAX   = 5;
+        KWTA_LOCAL_SCALE  = 2;
+        KWTA_LOCAL_MIN     = 2;
+        INHIB_RADIUS_MAX   = 3;
+        INHIB_RADIUS_MIN   = 1;
+        KWTA_MIN_ACTIVE_FRAC  = 0.001;
+        KWTA_FALLBACK_FACTOR  = 0.8;
+        KWTA_TEMP_GROWTH_RATE     = 0.05;
+        KWTA_TIME_CONST    = 2500;
+        KWTA_BETA_BOOST = 0.03;
+        KWTA_TARGET_DUTY = 0.05;
+        % stochastic kWTA noise & pacing
+        KWTA_NOISE_LEVEL  = 0.05;
+        KWTA_STOCH_INTERVAL   = 500;
+        KWTA_STOCH_BASE   = 0.1;
+        KWTA_STOCH_MIN  = 0.01;
+        KWTA_PI_PERIOD     = 32;
+        BOOST_FACTOR    = 1.0;    
+
+        % Debug / performance
+        PCA_SAMPLE_FRAC = 0.10;    
+        DEBUG       = false;
+        DEBUG_ADJUST   = false;
+        DEBUG_OVERLAP  = false;
+        Debug_Overlap_Tracking = false;
+        fallback_Debug = false;
+        Debug_GPU = false;
+        DEBUG_INTERVAL    = 100;
+        EPOCH_START_FLAG     = false;
+        OVERLAP_BATCH_SIZE  = 64;
+        Debug_ENTROPY = false;
+        USE_GPU = true;
+        USE_PCA_INIT = true;
+        SubsetTraining = 1000;
+    end
+    methods (Static)
+        function obj = instance()
+            persistent inst pathAdded        
+            if isempty(pathAdded)
+                try
+                    addpath(fullfile( ...
+                        fileparts(mfilename('fullpath')), ...
+                        'utilsFolder'));
+                catch ME
+                    fprintf(2, 'sp_config.instance: could not add utilsFolder to path:\n%s\n', ME.message);
+                end
+                pathAdded = true;
+            end
+            if isempty(inst)
+                inst = sp_config();
+            end
+            obj = inst;
+        end
+    end
+
+    methods (Access = private)
+        function obj = sp_config(), end
+    end
+end
+
+octave:18> pkg load image
+octave:19> pkg load statistics
+octave:20> clear all
+octave:21> [train_data, train_label] = get_mnist_subset(4000, 1000);
+octave:22> new_sp('MNIST', train_data, train_label)
+warning: addpath: C:\Users\mcali\Brain_Inspired_HTM_Memristive_Neural_Network_Design\HTM\utilsFolder: The system cannot find the file specified.
+
+warning: called from
+    instance at line 92 column 21
+    new_sp at line 14 column 5
+
+warning: delete: new_sp_console_output.txt: Permission denied
+warning: called from
+    delete at line 65 column 11
+    new_sp at line 23 column 32
+
+Logging started at 11-Jun-2026 20:28:09
+[DEBUG] After split_data: train_data shape [28 28 3200], val_data shape [28 28 800]
+[DEBUG] train_label: 3200, val_label: 800
+[DEBUG] optimize_hyperparameters: potential_radius=7
+[DEBUG] optimize_hyperparameters: pca_coeff size=[7 7]
+[OPT] Phase 1: 40 random evaluations
+[OPT] Eval 1/40: density=0.308 inc=0.0975 dec=0.0040 decay=5797 end=2e+05
 [DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
 [DEBUG] w_permanence size: [7 7 22 22]
 [LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
-[DEBUG] Initialized: Mean=0.4566 | Min=0.3231 | Max=0.5844 | Size=[7 7 22 22]
-[DEBUG] train_data_subset size: [28 28 200] | train_label_subset size: [1 200]
-[DEBUG] val_data_subset size: [28 28 50] | val_label_subset size: [1 50]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3117 | Max=0.5675 | Size=[7 7 22 22]
 [DEBUG] SP call with: density=0.3085, LTP=0.0975, LTD=0.0040, decay=5.80e+03, endurance=1.79e+05
 [DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
-[LOG] Set dynamic thresholds: Entropy=0.3030, Sparsity=5.56%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 70
-[EARLY-STOP] 25 consecutive violations at 95
-[DEBUG] Iter 100: Mean Overlap=11.0493
-[ENERGY] Iter 100: Avg Energy=3.83e-04, Scaling=0.50
-|    2 | Accept |       -0.68 |      2.2656 |        -0.7 |    -0.69896 |      0.30845 |     0.097492 |    0.0040355 |       5796.8 |   1.7934e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.30924944039318919,"syn_inc_base":0.10497663761507212,"syn_dec_base":0.015333924339091781,"decay_scaling":14810.750594365074,"endurance_rate":362577.69780017127}]
+[LOG] Set dynamic thresholds: Entropy=0.8958, Sparsity=62.48%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.48e-04, Scaling=0.50
+[RECOVERY] at iter 153 - triggering recovery
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.46e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=31.97% | entropy=0.8644 | energy=4.73e-02 | loss=-0.4877
+[OPT] New best at eval 1: loss=-0.4877
+[OPT] Eval 2/40: density=0.108 inc=0.1306 dec=0.0029 decay=3904 end=2e+05
 [DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
 [DEBUG] w_permanence size: [7 7 22 22]
 [LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
-[DEBUG] Initialized: Mean=0.4566 | Min=0.3231 | Max=0.5844 | Size=[7 7 22 22]
-[DEBUG] train_data_subset size: [28 28 200] | train_label_subset size: [1 200]
-[DEBUG] val_data_subset size: [28 28 50] | val_label_subset size: [1 50]
-[DEBUG] SP call with: density=0.3092, LTP=0.1050, LTD=0.0153, decay=1.48e+04, endurance=3.63e+05
+[DEBUG] Initialized: Mean=0.4564 | Min=0.3255 | Max=0.5778 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.1081, LTP=0.1306, LTD=0.0029, decay=3.90e+03, endurance=1.83e+05
 [DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
-[LOG] Set dynamic thresholds: Entropy=0.3030, Sparsity=5.56%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 70
-[EARLY-STOP] 25 consecutive violations at 95
-[DEBUG] Iter 100: Mean Overlap=11.0453
-[ENERGY] Iter 100: Avg Energy=3.80e-04, Scaling=0.50
-|    3 | Accept |       -0.68 |      2.6254 |        -0.7 |        -0.7 |      0.30925 |      0.10498 |     0.015334 |        14811 |   3.6258e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.4247758703981363,"syn_inc_base":0.1124775747321817,"syn_dec_base":0.0089023293855644142,"decay_scaling":12441.069699932847,"endurance_rate":129346.16995960794}]
+[LOG] Set dynamic thresholds: Entropy=0.5073, Sparsity=22.50%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.85e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.82e-04, Scaling=0.50
+[EVAL] acc=0.680 | sparsity=11.33% | entropy=0.4670 | energy=3.91e-02 | loss=-0.5276
+[OPT] New best at eval 2: loss=-0.5276
+[OPT] Eval 3/40: density=0.219 inc=0.0679 dec=0.0071 decay=6367 end=9e+05
 [DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
 [DEBUG] w_permanence size: [7 7 22 22]
 [LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
-[DEBUG] Initialized: Mean=0.4566 | Min=0.3231 | Max=0.5844 | Size=[7 7 22 22]
-[DEBUG] train_data_subset size: [28 28 200] | train_label_subset size: [1 200]
-[DEBUG] val_data_subset size: [28 28 50] | val_label_subset size: [1 50]
-[DEBUG] SP call with: density=0.4248, LTP=0.1125, LTD=0.0089, decay=1.24e+04, endurance=1.29e+05
+[DEBUG] Initialized: Mean=0.4564 | Min=0.3279 | Max=0.5842 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2186, LTP=0.0679, LTD=0.0071, decay=6.37e+03, endurance=8.82e+05
 [DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
-[LOG] Set dynamic thresholds: Entropy=0.3030, Sparsity=5.56%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 70
-[EARLY-STOP] 25 consecutive violations at 95
-[DEBUG] Iter 100: Mean Overlap=11.0438
-[ENERGY] Iter 100: Avg Energy=3.80e-04, Scaling=0.50
-|    4 | Accept |       -0.68 |       2.696 |        -0.7 |        -0.7 |      0.42478 |      0.11248 |    0.0089023 |        12441 |   1.2935e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.32356046295402313,"syn_inc_base":0.040014381646966073,"syn_dec_base":0.0081853667624984354,"decay_scaling":8976.2666591817269,"endurance_rate":995395.95289735927}]
+[LOG] Set dynamic thresholds: Entropy=0.7683, Sparsity=44.92%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=8.77e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=8.72e-04, Scaling=0.50
+[EVAL] acc=0.680 | sparsity=22.32% | entropy=0.7614 | energy=4.36e-02 | loss=-0.5347
+[OPT] New best at eval 3: loss=-0.5347
+[OPT] Eval 4/40: density=0.077 inc=0.1966 dec=0.0052 decay=8733 end=8e+04
 [DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
 [DEBUG] w_permanence size: [7 7 22 22]
 [LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
-[DEBUG] Initialized: Mean=0.4566 | Min=0.3231 | Max=0.5844 | Size=[7 7 22 22]
-[DEBUG] train_data_subset size: [28 28 200] | train_label_subset size: [1 200]
-[DEBUG] val_data_subset size: [28 28 50] | val_label_subset size: [1 50]
-[DEBUG] SP call with: density=0.3236, LTP=0.0400, LTD=0.0082, decay=8.98e+03, endurance=9.95e+05
+[DEBUG] Initialized: Mean=0.4568 | Min=0.3388 | Max=0.5786 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.0774, LTP=0.1966, LTD=0.0052, decay=8.73e+03, endurance=7.79e+04
 [DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
-[LOG] Set dynamic thresholds: Entropy=0.3030, Sparsity=5.56%
-[EARLY-STOP] 25 consecutive violations at 45
-<a href="matlab: opentoline('C:\Program Files\MATLAB\R2024b\toolbox\parallel\gpu\gpu\@gpuArray\mean.m',40,1)">40  </a>end
-if system_dependent('IsDebugMode')==1, dbquit all; end
-run_all
-Starting HTM Spatial Pooler Training...
-No training results found. Starting training process...
-[Warning: File not found or permission denied] 
-[> In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('new_sp', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m', 15)" style="font-weight:bold">new_sp</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\new_sp.m',15,0)">line 15</a>)
-In <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('run_all', 'C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m', 40)" style="font-weight:bold">run_all</a> (<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\run_all.m',40,0)">line 40</a>)] 
-Logging started at 01-Jun-2025 13:37:21
-[DEBUG] After split_data: train_data shape [32 32 4000], val_data shape [32 32 1000]
-[DEBUG] train_label: 4000, val_label: 1000
-[DEBUG] optimize_hyperparameters: potential_radius=8
-[DEBUG] optimize_hyperparameters: pca_coeff size=[8 8]
-Worker 0 evaluating params: [{"base_area_density":0.49736840724565928,"syn_inc_base":0.055504042309713918,"syn_dec_base":0.0079422037345651189,"decay_scaling":16127.244041574491,"endurance_rate":874442.184995586}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.4974, LTP=0.0555, LTD=0.0079, decay=1.61e+04, endurance=8.74e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 91
-[DEBUG] Iter 100: Mean Overlap=0.1059
-[ENERGY] Iter 100: Avg Energy=2.64e-04, Scaling=0.50
-[EARLY-STOP] 25 consecutive violations at 127
-|==================================================================================================================================================|
-| Iter | Eval   | Objective   | Objective   | BestSoFar   | BestSoFar   | base_area_de-| syn_inc_base | syn_dec_base | decay_scaling| endurance_ra-|
-|      | result |             | runtime     | (observed)  | (estim.)    | nsity        |              |              |              | te           |
-|==================================================================================================================================================|
-|    1 | Best   |       -0.06 |      3.0641 |       -0.06 |       -0.06 |      0.49737 |     0.055504 |    0.0079422 |        16127 |   8.7444e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.31127067761107491,"syn_inc_base":0.097491538794040017,"syn_dec_base":0.0040354718622913916,"decay_scaling":5796.8110992945467,"endurance_rate":179338.52797837849}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.3113, LTP=0.0975, LTD=0.0040, decay=5.80e+03, endurance=1.79e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 70
-[EARLY-STOP] 25 consecutive violations at 95
-[DEBUG] Iter 100: Mean Overlap=0.1106
-[ENERGY] Iter 100: Avg Energy=2.64e-04, Scaling=0.50
-|    2 | Accept |       -0.06 |       2.383 |       -0.06 |       -0.06 |      0.31127 |     0.097492 |    0.0040355 |       5796.8 |   1.7934e+05 |
-Worker 0 evaluating params: [{"base_area_density":0.31233258719091889,"syn_inc_base":0.10497663761507212,"syn_dec_base":0.015333924339091781,"decay_scaling":14810.750594365074,"endurance_rate":362577.69780017127}]
-[DEBUG] potential_radius=8, size(pca_coeff)=[8 8]
-[DEBUG] w_permanence size: [8 8 25 25]
-[LOG] Permanence initialized: [0.40, 0.80] | Size: [8 8 25 25]
-[DEBUG] Initialized: Mean=0.4501 | Min=0.3047 | Max=0.5717 | Size=[8 8 25 25]
-[DEBUG] train_data_subset size: [32 32 200] | train_label_subset size: [200 1]
-[DEBUG] val_data_subset size: [32 32 50] | val_label_subset size: [50 1]
-[DEBUG] SP call with: density=0.3123, LTP=0.1050, LTD=0.0153, decay=1.48e+04, endurance=3.63e+05
-[DEBUG] start train : train_data size: [32 32 200] | train_labels size: [200 1]
-[LOG] Set dynamic thresholds: Entropy=0.3108, Sparsity=5.83%
-[EARLY-STOP] 25 consecutive violations at 45
-[EARLY-STOP] 25 consecutive violations at 83
-<a href="matlab: opentoline('C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\compute_overlap.m',103,1)">103 </a>        end
-if system_dependent('IsDebugMode')==1, dbquit; end
-toTxt
-All files have been merged into: C:\Users\sirwo\OneDrive\Documents\CSC3002\HTM\csc3002_htm_project\new_code\All_MATLAB_Files.txt
+[LOG] Set dynamic thresholds: Entropy=0.4121, Sparsity=16.59%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.59e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.57e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=8.23% | entropy=0.3540 | energy=3.78e-02 | loss=-0.5512
+[OPT] New best at eval 4: loss=-0.5512
+[OPT] Eval 5/40: density=0.266 inc=0.0704 dec=0.0044 decay=3153 end=1e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4568 | Min=0.3239 | Max=0.6003 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2657, LTP=0.0704, LTD=0.0044, decay=3.15e+03, endurance=1.38e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8431, Sparsity=54.26%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.12e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.03e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=26.90% | entropy=0.8223 | energy=4.52e-02 | loss=-0.5667
+[OPT] New best at eval 5: loss=-0.5667
+[OPT] Eval 6/40: density=0.340 inc=0.1966 dec=0.0111 decay=3022 end=8e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4567 | Min=0.3367 | Max=0.5864 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3402, LTP=0.1966, LTD=0.0111, decay=3.02e+03, endurance=8.36e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9282, Sparsity=68.72%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.73e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.62e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=34.23% | entropy=0.8839 | energy=4.81e-02 | loss=-0.5798
+[OPT] New best at eval 6: loss=-0.5798
+[OPT] Eval 7/40: density=0.311 inc=0.1633 dec=0.0030 decay=3705 end=2e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4567 | Min=0.3307 | Max=0.5888 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3112, LTP=0.1633, LTD=0.0030, decay=3.70e+03, endurance=1.73e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8997, Sparsity=63.16%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.48e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.40e-04, Scaling=0.50
+[EVAL] acc=0.680 | sparsity=31.37% | entropy=0.8615 | energy=4.70e-02 | loss=-0.5551
+[OPT] Eval 8/40: density=0.316 inc=0.1325 dec=0.0109 decay=4913 end=2e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3304 | Max=0.5671 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3157, LTP=0.1325, LTD=0.0109, decay=4.91e+03, endurance=2.40e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9047, Sparsity=64.07%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.54e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.47e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=31.84% | entropy=0.8656 | energy=4.74e-02 | loss=-0.5725
+[OPT] Eval 9/40: density=0.263 inc=0.1720 dec=0.0128 decay=4909 end=7e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4564 | Min=0.3192 | Max=0.5697 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2628, LTP=0.1720, LTD=0.0128, decay=4.91e+03, endurance=6.84e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8393, Sparsity=53.74%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.10e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.05e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=26.63% | entropy=0.8188 | energy=4.52e-02 | loss=-0.5651
+[OPT] Eval 10/40: density=0.115 inc=0.1683 dec=0.0072 decay=4449 end=3e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4564 | Min=0.3234 | Max=0.5757 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.1149, LTP=0.1683, LTD=0.0072, decay=4.45e+03, endurance=2.92e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.5349, Sparsity=24.40%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.92e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.87e-04, Scaling=0.50
+[EVAL] acc=0.680 | sparsity=12.05% | entropy=0.4924 | energy=3.94e-02 | loss=-0.5245
+[OPT] Eval 11/40: density=0.205 inc=0.1934 dec=0.0022 decay=4249 end=1e+06
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4563 | Min=0.3357 | Max=0.5815 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2055, LTP=0.1934, LTD=0.0022, decay=4.25e+03, endurance=9.51e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.7426, Sparsity=42.13%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=8.66e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=8.61e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=21.05% | entropy=0.7408 | energy=4.31e-02 | loss=-0.5702
+[OPT] Eval 12/40: density=0.300 inc=0.0640 dec=0.0034 decay=9410 end=8e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3316 | Max=0.5775 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2997, LTP=0.0640, LTD=0.0034, decay=9.41e+03, endurance=8.00e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8849, Sparsity=60.62%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.41e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.36e-04, Scaling=0.50
+[EVAL] acc=0.680 | sparsity=30.19% | entropy=0.8522 | energy=4.68e-02 | loss=-0.5580
+[OPT] Eval 13/40: density=0.147 inc=0.0479 dec=0.0103 decay=3544 end=1e+06
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4566 | Min=0.3353 | Max=0.5952 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.1471, LTP=0.0479, LTD=0.0103, decay=3.54e+03, endurance=9.84e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.6203, Sparsity=30.87%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=8.18e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=8.14e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=15.28% | entropy=0.5988 | energy=4.07e-02 | loss=-0.5435
+[OPT] Eval 14/40: density=0.326 inc=0.1662 dec=0.0118 decay=6543 end=4e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4566 | Min=0.3422 | Max=0.5790 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3262, LTP=0.1662, LTD=0.0118, decay=6.54e+03, endurance=3.82e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9160, Sparsity=66.26%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.61e-04, Scaling=0.50
+[RECOVERY] at iter 136 - triggering recovery
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.77e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=34.33% | entropy=0.8806 | energy=4.89e-02 | loss=-0.4483
+[OPT] Eval 15/40: density=0.278 inc=0.1169 dec=0.0023 decay=11315 end=1e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4566 | Min=0.3283 | Max=0.5935 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2784, LTP=0.1169, LTD=0.0023, decay=1.13e+04, endurance=1.33e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8612, Sparsity=56.88%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.25e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.20e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=28.11% | entropy=0.8335 | energy=4.60e-02 | loss=-0.5727
+[OPT] Eval 16/40: density=0.233 inc=0.1073 dec=0.0179 decay=4600 end=5e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4566 | Min=0.3187 | Max=0.6019 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2330, LTP=0.1073, LTD=0.0179, decay=4.60e+03, endurance=5.00e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.7938, Sparsity=47.87%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=8.87e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=8.80e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=23.67% | entropy=0.7816 | energy=4.40e-02 | loss=-0.5831
+[OPT] New best at eval 16: loss=-0.5831
+[OPT] Eval 17/40: density=0.260 inc=0.1291 dec=0.0024 decay=4256 end=9e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4568 | Min=0.3395 | Max=0.5888 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2596, LTP=0.1291, LTD=0.0024, decay=4.26e+03, endurance=9.07e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8349, Sparsity=53.12%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.08e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.01e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=26.34% | entropy=0.8162 | energy=4.51e-02 | loss=-0.5818
+[OPT] Eval 18/40: density=0.119 inc=0.0662 dec=0.0039 decay=9369 end=2e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4562 | Min=0.3307 | Max=0.5771 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.1192, LTP=0.0662, LTD=0.0039, decay=9.37e+03, endurance=2.37e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.5486, Sparsity=25.37%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.97e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.92e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=12.47% | entropy=0.5069 | energy=3.96e-02 | loss=-0.5649
+[OPT] Eval 19/40: density=0.051 inc=0.0405 dec=0.0063 decay=4440 end=3e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3349 | Max=0.5707 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.0510, LTP=0.0405, LTD=0.0063, decay=4.44e+03, endurance=3.09e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.3207, Sparsity=11.71%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.37e-04, Scaling=0.50
+[RECOVERY] at iter 136 - triggering recovery
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.41e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=5.91% | entropy=0.2681 | energy=3.71e-02 | loss=-0.5194
+[OPT] Eval 20/40: density=0.290 inc=0.0553 dec=0.0064 decay=7097 end=5e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4564 | Min=0.3344 | Max=0.5715 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2895, LTP=0.0553, LTD=0.0064, decay=7.10e+03, endurance=5.34e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8740, Sparsity=58.86%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.31e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.28e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=29.21% | entropy=0.8434 | energy=4.64e-02 | loss=-0.5945
+[OPT] New best at eval 20: loss=-0.5945
+[OPT] Eval 21/40: density=0.336 inc=0.1067 dec=0.0035 decay=19321 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4563 | Min=0.3115 | Max=0.5786 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3364, LTP=0.1067, LTD=0.0035, decay=1.93e+04, endurance=5.43e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9258, Sparsity=68.22%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.71e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.69e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=33.89% | entropy=0.8813 | energy=4.84e-02 | loss=-0.5954
+[OPT] New best at eval 21: loss=-0.5954
+[OPT] Eval 22/40: density=0.149 inc=0.1032 dec=0.0030 decay=12683 end=2e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3313 | Max=0.5833 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.1491, LTP=0.1032, LTD=0.0030, decay=1.27e+04, endurance=2.36e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.6207, Sparsity=30.89%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=8.20e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=8.17e-04, Scaling=0.50
+[EVAL] acc=0.680 | sparsity=15.45% | entropy=0.6045 | energy=4.09e-02 | loss=-0.5266
+[OPT] Eval 23/40: density=0.125 inc=0.1061 dec=0.0098 decay=5975 end=6e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4566 | Min=0.3322 | Max=0.5918 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.1247, LTP=0.1061, LTD=0.0098, decay=5.98e+03, endurance=6.12e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.5588, Sparsity=26.12%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.98e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.95e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=13.01% | entropy=0.5260 | energy=3.97e-02 | loss=-0.5459
+[OPT] Eval 24/40: density=0.188 inc=0.0712 dec=0.0084 decay=4603 end=7e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4562 | Min=0.3053 | Max=0.5808 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.1882, LTP=0.0712, LTD=0.0084, decay=4.60e+03, endurance=7.49e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.7110, Sparsity=38.93%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=8.50e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=8.47e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=19.32% | entropy=0.7056 | energy=4.24e-02 | loss=-0.5492
+[OPT] Eval 25/40: density=0.318 inc=0.0928 dec=0.0039 decay=9392 end=4e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4567 | Min=0.3354 | Max=0.5811 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3182, LTP=0.0928, LTD=0.0039, decay=9.39e+03, endurance=3.99e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9078, Sparsity=64.67%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.57e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.52e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=32.05% | entropy=0.8671 | energy=4.76e-02 | loss=-0.5767
+[OPT] Eval 26/40: density=0.251 inc=0.1677 dec=0.0036 decay=7416 end=1e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4563 | Min=0.3358 | Max=0.5891 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2513, LTP=0.1677, LTD=0.0036, decay=7.42e+03, endurance=1.49e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8229, Sparsity=51.51%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.03e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=8.99e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=25.54% | entropy=0.8077 | energy=4.49e-02 | loss=-0.5589
+[OPT] Eval 27/40: density=0.205 inc=0.1318 dec=0.0085 decay=3465 end=2e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4564 | Min=0.3360 | Max=0.5827 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2050, LTP=0.1318, LTD=0.0085, decay=3.46e+03, endurance=1.52e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.7445, Sparsity=42.33%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=8.65e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=8.60e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=21.05% | entropy=0.7409 | energy=4.30e-02 | loss=-0.5649
+[OPT] Eval 28/40: density=0.263 inc=0.0457 dec=0.0111 decay=12844 end=2e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4569 | Min=0.3195 | Max=0.5740 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2626, LTP=0.0457, LTD=0.0111, decay=1.28e+04, endurance=1.67e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8391, Sparsity=53.70%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.10e-04, Scaling=0.50
+[RECOVERY] at iter 136 - triggering recovery
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.26e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=27.73% | entropy=0.8293 | energy=4.63e-02 | loss=-0.4722
+[OPT] Eval 29/40: density=0.185 inc=0.0823 dec=0.0109 decay=8308 end=1e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3372 | Max=0.5932 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.1848, LTP=0.0823, LTD=0.0109, decay=8.31e+03, endurance=1.11e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.7025, Sparsity=38.12%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=8.49e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=8.46e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=19.03% | entropy=0.6990 | energy=4.23e-02 | loss=-0.5442
+[OPT] Eval 30/40: density=0.059 inc=0.0952 dec=0.0167 decay=12581 end=3e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3224 | Max=0.5815 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.0588, LTP=0.0952, LTD=0.0167, decay=1.26e+04, endurance=3.26e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.3426, Sparsity=12.79%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.44e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.41e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=6.36% | entropy=0.2856 | energy=3.71e-02 | loss=-0.5517
+[OPT] Eval 31/40: density=0.330 inc=0.0449 dec=0.0080 decay=4469 end=2e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3331 | Max=0.5801 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3302, LTP=0.0449, LTD=0.0080, decay=4.47e+03, endurance=1.64e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9204, Sparsity=67.13%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.64e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.57e-04, Scaling=0.50
+[EVAL] acc=0.680 | sparsity=33.28% | entropy=0.8783 | energy=4.79e-02 | loss=-0.5533
+[OPT] Eval 32/40: density=0.105 inc=0.0959 dec=0.0159 decay=13966 end=6e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3283 | Max=0.5777 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.1046, LTP=0.0959, LTD=0.0159, decay=1.40e+04, endurance=6.31e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.5060, Sparsity=22.42%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.83e-04, Scaling=0.50
+[RECOVERY] at iter 136 - triggering recovery
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.91e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=11.48% | entropy=0.4732 | energy=3.96e-02 | loss=-0.4971
+[OPT] Eval 33/40: density=0.073 inc=0.0881 dec=0.0122 decay=3269 end=9e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4563 | Min=0.3143 | Max=0.5737 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.0726, LTP=0.0881, LTD=0.0122, decay=3.27e+03, endurance=8.83e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.3976, Sparsity=15.76%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.54e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.51e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=7.74% | entropy=0.3372 | energy=3.76e-02 | loss=-0.5521
+[OPT] Eval 34/40: density=0.075 inc=0.1708 dec=0.0034 decay=7376 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3294 | Max=0.5820 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.0746, LTP=0.1708, LTD=0.0034, decay=7.38e+03, endurance=5.21e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.4043, Sparsity=16.14%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.57e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.54e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=7.90% | entropy=0.3412 | energy=3.77e-02 | loss=-0.5554
+[OPT] Eval 35/40: density=0.084 inc=0.1222 dec=0.0124 decay=6182 end=1e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3280 | Max=0.5837 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.0841, LTP=0.1222, LTD=0.0124, decay=6.18e+03, endurance=1.30e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.4410, Sparsity=18.29%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.66e-04, Scaling=0.50
+[RECOVERY] at iter 136 - triggering recovery
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.70e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=9.30% | entropy=0.3934 | energy=3.85e-02 | loss=-0.5311
+[OPT] Eval 36/40: density=0.062 inc=0.0559 dec=0.0028 decay=4646 end=3e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3360 | Max=0.5747 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.0622, LTP=0.0559, LTD=0.0028, decay=4.65e+03, endurance=2.76e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.3531, Sparsity=13.33%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.45e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.42e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=6.70% | entropy=0.2985 | energy=3.71e-02 | loss=-0.5523
+[OPT] Eval 37/40: density=0.158 inc=0.1964 dec=0.0038 decay=18433 end=7e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4568 | Min=0.3368 | Max=0.6051 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.1577, LTP=0.1964, LTD=0.0038, decay=1.84e+04, endurance=6.58e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.6429, Sparsity=32.75%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=8.28e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=8.25e-04, Scaling=0.50
+[EVAL] acc=0.680 | sparsity=16.34% | entropy=0.6299 | energy=4.13e-02 | loss=-0.5228
+[OPT] Eval 38/40: density=0.208 inc=0.1279 dec=0.0091 decay=7158 end=2e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4564 | Min=0.3318 | Max=0.5863 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2083, LTP=0.1279, LTD=0.0091, decay=7.16e+03, endurance=2.40e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.7508, Sparsity=43.00%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=8.68e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=8.64e-04, Scaling=0.50
+[EVAL] acc=0.740 | sparsity=21.33% | entropy=0.7457 | energy=4.32e-02 | loss=-0.5894
+[OPT] Eval 39/40: density=0.283 inc=0.0643 dec=0.0068 decay=10438 end=5e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4567 | Min=0.3343 | Max=0.5799 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2833, LTP=0.0643, LTD=0.0068, decay=1.04e+04, endurance=5.20e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8651, Sparsity=57.46%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.29e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.26e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=28.65% | entropy=0.8382 | energy=4.63e-02 | loss=-0.5683
+[OPT] Eval 40/40: density=0.099 inc=0.1063 dec=0.0021 decay=12224 end=7e+05
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3309 | Max=0.5839 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.0991, LTP=0.1063, LTD=0.0021, decay=1.22e+04, endurance=6.73e+05
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.4886, Sparsity=21.28%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=7.78e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=7.77e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=10.47% | entropy=0.4350 | energy=3.88e-02 | loss=-0.5442
+[OPT] Phase 1 best loss: -0.5954
+[OPT] Phase 2: 20 local refinement evaluations
+[OPT] Eval 1/20: density=0.336 inc=0.1067 dec=0.0035 decay=19321 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4562 | Min=0.3310 | Max=0.5966 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3364, LTP=0.1067, LTD=0.0035, decay=1.93e+04, endurance=5.43e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9259, Sparsity=68.26%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.72e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.69e-04, Scaling=0.50
+[EVAL] acc=0.740 | sparsity=33.90% | entropy=0.8813 | energy=4.85e-02 | loss=-0.6141
+[OPT] New best at eval 1: loss=-0.6141
+[OPT] Eval 2/20: density=0.350 inc=0.1218 dec=0.0054 decay=25000 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4563 | Min=0.3375 | Max=0.5809 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3500, LTP=0.1218, LTD=0.0054, decay=2.50e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9356, Sparsity=70.35%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.80e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.77e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=35.12% | entropy=0.8865 | energy=4.89e-02 | loss=-0.5880
+[OPT] Eval 3/20: density=0.277 inc=0.0898 dec=0.0051 decay=23894 end=6e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4563 | Min=0.3366 | Max=0.5806 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2768, LTP=0.0898, LTD=0.0051, decay=2.39e+04, endurance=6.33e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8575, Sparsity=56.32%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.24e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.22e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=27.98% | entropy=0.8322 | energy=4.61e-02 | loss=-0.5702
+[OPT] Eval 4/20: density=0.343 inc=0.1424 dec=0.0028 decay=21421 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4568 | Min=0.3354 | Max=0.5909 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3432, LTP=0.1424, LTD=0.0028, decay=2.14e+04, endurance=5.46e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9311, Sparsity=69.36%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.76e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.74e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=34.53% | entropy=0.8844 | energy=4.87e-02 | loss=-0.5792
+[OPT] Eval 5/20: density=0.350 inc=0.1320 dec=0.0024 decay=22153 end=7e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4564 | Min=0.3270 | Max=0.5791 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3500, LTP=0.1320, LTD=0.0024, decay=2.22e+04, endurance=6.57e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9368, Sparsity=70.64%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.82e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.79e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=35.17% | entropy=0.8863 | energy=4.90e-02 | loss=-0.5829
+[OPT] Eval 6/20: density=0.338 inc=0.1013 dec=0.0026 decay=12181 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4563 | Min=0.3358 | Max=0.5827 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3384, LTP=0.1013, LTD=0.0026, decay=1.22e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9271, Sparsity=68.51%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.74e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.70e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=34.07% | entropy=0.8829 | energy=4.85e-02 | loss=-0.5775
+[OPT] Eval 7/20: density=0.317 inc=0.1027 dec=0.0027 decay=12378 end=6e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4568 | Min=0.3260 | Max=0.5959 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3166, LTP=0.1027, LTD=0.0027, decay=1.24e+04, endurance=6.28e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9049, Sparsity=64.13%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.55e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.52e-04, Scaling=0.50
+[EVAL] acc=0.680 | sparsity=31.89% | entropy=0.8656 | energy=4.76e-02 | loss=-0.5573
+[OPT] Eval 8/20: density=0.320 inc=0.1003 dec=0.0045 decay=25000 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4564 | Min=0.3132 | Max=0.6025 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3198, LTP=0.1003, LTD=0.0045, decay=2.50e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9092, Sparsity=64.92%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.58e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.55e-04, Scaling=0.50
+[EVAL] acc=0.760 | sparsity=32.25% | entropy=0.8689 | energy=4.77e-02 | loss=-0.6327
+[OPT] New best at eval 8: loss=-0.6327
+[OPT] Eval 9/20: density=0.331 inc=0.0987 dec=0.0035 decay=9151 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3390 | Max=0.5714 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3313, LTP=0.0987, LTD=0.0035, decay=9.15e+03, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9200, Sparsity=67.05%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.66e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.62e-04, Scaling=0.50
+[EVAL] acc=0.740 | sparsity=33.40% | entropy=0.8789 | energy=4.81e-02 | loss=-0.6127
+[OPT] Eval 10/20: density=0.286 inc=0.0708 dec=0.0042 decay=25000 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4560 | Min=0.3381 | Max=0.5971 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2862, LTP=0.0708, LTD=0.0042, decay=2.50e+04, endurance=5.08e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8710, Sparsity=58.37%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.31e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.27e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=28.91% | entropy=0.8409 | energy=4.64e-02 | loss=-0.5710
+[OPT] Eval 11/20: density=0.319 inc=0.0771 dec=0.0027 decay=13459 end=7e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4564 | Min=0.3286 | Max=0.5887 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3194, LTP=0.0771, LTD=0.0027, decay=1.35e+04, endurance=7.42e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9094, Sparsity=64.96%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.60e-04, Scaling=0.50
+[RECOVERY] at iter 136 - triggering recovery
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.76e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=33.65% | entropy=0.8758 | energy=4.88e-02 | loss=-0.4489
+[OPT] Eval 12/20: density=0.350 inc=0.1005 dec=0.0039 decay=16531 end=7e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3219 | Max=0.5720 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3500, LTP=0.1005, LTD=0.0039, decay=1.65e+04, endurance=6.66e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9364, Sparsity=70.54%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.82e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.79e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=35.16% | entropy=0.8871 | energy=4.90e-02 | loss=-0.6040
+[OPT] Eval 13/20: density=0.294 inc=0.0977 dec=0.0038 decay=18605 end=6e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4566 | Min=0.3323 | Max=0.5828 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.2944, LTP=0.0977, LTD=0.0038, decay=1.86e+04, endurance=6.43e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8788, Sparsity=59.63%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.36e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.33e-04, Scaling=0.50
+[EVAL] acc=0.740 | sparsity=29.67% | entropy=0.8468 | energy=4.66e-02 | loss=-0.6168
+[OPT] Eval 14/20: density=0.350 inc=0.0718 dec=0.0028 decay=16439 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4566 | Min=0.3315 | Max=0.5893 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3500, LTP=0.0718, LTD=0.0028, decay=1.64e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9365, Sparsity=70.58%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.81e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.78e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=35.15% | entropy=0.8866 | energy=4.89e-02 | loss=-0.6045
+[OPT] Eval 15/20: density=0.350 inc=0.0731 dec=0.0063 decay=18998 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4567 | Min=0.3411 | Max=0.5704 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3500, LTP=0.0731, LTD=0.0063, decay=1.90e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9361, Sparsity=70.48%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.82e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.79e-04, Scaling=0.50
+[EVAL] acc=0.680 | sparsity=35.13% | entropy=0.8864 | energy=4.90e-02 | loss=-0.5666
+[OPT] Eval 16/20: density=0.350 inc=0.0816 dec=0.0026 decay=24108 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4567 | Min=0.3388 | Max=0.5910 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3500, LTP=0.0816, LTD=0.0026, decay=2.41e+04, endurance=5.27e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9365, Sparsity=70.58%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.81e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.79e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=35.15% | entropy=0.8862 | energy=4.89e-02 | loss=-0.5848
+[OPT] Eval 17/20: density=0.309 inc=0.0955 dec=0.0034 decay=13558 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4563 | Min=0.3220 | Max=0.5782 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3092, LTP=0.0955, LTD=0.0034, decay=1.36e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.8976, Sparsity=62.79%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.50e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.45e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=31.16% | entropy=0.8602 | energy=4.73e-02 | loss=-0.5760
+[OPT] Eval 18/20: density=0.340 inc=0.1396 dec=0.0033 decay=22563 end=6e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3238 | Max=0.5842 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3401, LTP=0.1396, LTD=0.0033, decay=2.26e+04, endurance=6.25e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9288, Sparsity=68.86%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.76e-04, Scaling=0.50
+[RECOVERY] at iter 133 - triggering recovery
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.95e-04, Scaling=0.50
+[EVAL] acc=0.720 | sparsity=35.85% | entropy=0.8891 | energy=4.98e-02 | loss=-0.4360
+[OPT] Eval 19/20: density=0.350 inc=0.0808 dec=0.0026 decay=22126 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4564 | Min=0.3390 | Max=0.5870 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3500, LTP=0.0808, LTD=0.0026, decay=2.21e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9358, Sparsity=70.41%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.81e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.79e-04, Scaling=0.50
+[EVAL] acc=0.740 | sparsity=35.16% | entropy=0.8863 | energy=4.89e-02 | loss=-0.6242
+[OPT] Eval 20/20: density=0.350 inc=0.1086 dec=0.0032 decay=25000 end=5e+04
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3293 | Max=0.5795 | Size=[7 7 22 22]
+[DEBUG] SP call with: density=0.3500, LTP=0.1086, LTD=0.0032, decay=2.50e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 200] | train_labels size: [1 200]
+[LOG] Set dynamic thresholds: Entropy=0.9366, Sparsity=70.60%
+[DEBUG] Iter 100: Mean Overlap=8.8224
+[ENERGY] Iter 100: Avg Energy=9.81e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.4525
+[ENERGY] Iter 200: Avg Energy=9.79e-04, Scaling=0.50
+[EVAL] acc=0.700 | sparsity=35.13% | entropy=0.8866 | energy=4.89e-02 | loss=-0.5871
+[OPT] Phase 2 improved: loss=-0.6327
+[OPT] Best params: Density=0.3198 | LTP=0.1003 | LTD=0.0045 | Decay=2.50e+04 | Endurance=5.00e+04
+[OPT] Best composite loss: -0.6327
+[DEBUG] potential_radius=7, size(pca_coeff)=[7 7]
+[DEBUG] w_permanence size: [7 7 22 22]
+[LOG] Permanence initialized: [0.40, 0.80] | Size: [7 7 22 22]
+[DEBUG] Initialized: Mean=0.4565 | Min=0.3259 | Max=0.5773 | Size=[7 7 22 22]
+Starting Training...
+[DEBUG] Before training: w_permanence Size=[7 7 22 22], Mean=0.4565
+
+Epoch 1/10
+[DEBUG] SP call with: density=0.3678, LTP=0.1003, LTD=0.0045, decay=2.50e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 3200] | train_labels size: [1 3200]
+[DEBUG] Iter 100: Mean Overlap=8.9776
+[ENERGY] Iter 100: Avg Energy=9.90e-04, Scaling=0.50
+[DEBUG] Iter 200: Mean Overlap=7.6978
+[ENERGY] Iter 200: Avg Energy=9.85e-04, Scaling=0.50
+[LOG] Set dynamic thresholds: Entropy=0.9445, Sparsity=73.14%
+[DEBUG] Iter 300: Mean Overlap=10.1367
+[ENERGY] Iter 300: Avg Energy=9.79e-04, Scaling=0.50
+[RECOVERY] at iter 348 - triggering recovery
+[DEBUG] Iter 400: Mean Overlap=8.0071
+[ENERGY] Iter 400: Avg Energy=9.80e-04, Scaling=0.50
+[DEBUG] Iter 500: Mean Overlap=16.9072
+[ENERGY] Iter 500: Avg Energy=9.94e-04, Scaling=0.50
+[DEBUG] Iter 600: Mean Overlap=8.1276
+[ENERGY] Iter 600: Avg Energy=9.91e-04, Scaling=0.50
+[DEBUG] Iter 700: Mean Overlap=13.9781
+[ENERGY] Iter 700: Avg Energy=9.85e-04, Scaling=0.50
+[DEBUG] Iter 800: Mean Overlap=11.5399
+[ENERGY] Iter 800: Avg Energy=9.81e-04, Scaling=0.50
+[DEBUG] Iter 900: Mean Overlap=10.3948
+[ENERGY] Iter 900: Avg Energy=9.74e-04, Scaling=0.50
+[DEBUG] Iter 1000: Mean Overlap=9.8933
+[ENERGY] Iter 1000: Avg Energy=9.72e-04, Scaling=0.50
+[DEBUG] Iter 1100: Mean Overlap=15.9477
+[ENERGY] Iter 1100: Avg Energy=9.63e-04, Scaling=0.50
+[DEBUG] Iter 1200: Mean Overlap=9.2034
+[ENERGY] Iter 1200: Avg Energy=9.54e-04, Scaling=0.50
+[DEBUG] Iter 1300: Mean Overlap=12.2799
+[ENERGY] Iter 1300: Avg Energy=9.46e-04, Scaling=0.50
+[DEBUG] Iter 1400: Mean Overlap=5.8567
+[ENERGY] Iter 1400: Avg Energy=9.39e-04, Scaling=0.50
+[DEBUG] Iter 1500: Mean Overlap=5.8874
+[ENERGY] Iter 1500: Avg Energy=9.31e-04, Scaling=0.50
+[DEBUG] Iter 1600: Mean Overlap=11.7857
+[ENERGY] Iter 1600: Avg Energy=9.24e-04, Scaling=0.50
+[DEBUG] Iter 1700: Mean Overlap=12.6305
+[ENERGY] Iter 1700: Avg Energy=9.14e-04, Scaling=0.50
+[DEBUG] Iter 1800: Mean Overlap=7.9422
+[ENERGY] Iter 1800: Avg Energy=9.08e-04, Scaling=0.50
+[DEBUG] Iter 1900: Mean Overlap=9.1588
+[ENERGY] Iter 1900: Avg Energy=9.01e-04, Scaling=0.50
+[DEBUG] Iter 2000: Mean Overlap=9.9706
+[ENERGY] Iter 2000: Avg Energy=8.95e-04, Scaling=0.50
+[DEBUG] Iter 2100: Mean Overlap=9.8891
+[ENERGY] Iter 2100: Avg Energy=8.91e-04, Scaling=0.50
+[DEBUG] Iter 2200: Mean Overlap=10.1648
+[ENERGY] Iter 2200: Avg Energy=8.85e-04, Scaling=0.50
+[DEBUG] Iter 2300: Mean Overlap=12.5290
+[ENERGY] Iter 2300: Avg Energy=8.83e-04, Scaling=0.50
+[DEBUG] Iter 2400: Mean Overlap=12.8254
+[ENERGY] Iter 2400: Avg Energy=8.78e-04, Scaling=0.50
+[DEBUG] Iter 2500: Mean Overlap=11.5927
+[ENERGY] Iter 2500: Avg Energy=8.75e-04, Scaling=0.50
+[DEBUG] Iter 2600: Mean Overlap=10.3212
+[ENERGY] Iter 2600: Avg Energy=8.71e-04, Scaling=0.50
+[RECOVERY] at iter 2647 - triggering recovery
+[DEBUG] Iter 2700: Mean Overlap=11.0323
+[ENERGY] Iter 2700: Avg Energy=8.78e-04, Scaling=0.50
+[DEBUG] Iter 2800: Mean Overlap=8.6230
+[ENERGY] Iter 2800: Avg Energy=8.86e-04, Scaling=0.50
+[DEBUG] Iter 2900: Mean Overlap=8.1229
+[ENERGY] Iter 2900: Avg Energy=8.85e-04, Scaling=0.50
+[DEBUG] Iter 3000: Mean Overlap=13.9794
+[ENERGY] Iter 3000: Avg Energy=8.80e-04, Scaling=0.50
+[DEBUG] Iter 3100: Mean Overlap=9.7302
+[ENERGY] Iter 3100: Avg Energy=8.77e-04, Scaling=0.50
+[DEBUG] Iter 3200: Mean Overlap=10.5098
+[ENERGY] Iter 3200: Avg Energy=8.74e-04, Scaling=0.50
+[LOG] Epoch 1/10: Sparsity=30.29% | Entropy=0.8547 | ValAcc=74.5%
+[TM] Initialised: 22x22 grid, 32 cells/col, 128 segs/cell
+[TM] Epoch 1 avg anomaly: 0.012
+[SELF-EVOLVE] Epoch 1 perf_metric=0.7906
+
+Epoch 2/10
+[DEBUG] SP call with: density=0.2393, LTP=0.0488, LTD=0.0020, decay=2.45e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 3200] | train_labels size: [1 3200]
+[DEBUG] Iter 3300: Mean Overlap=9.0211
+[ENERGY] Iter 3300: Avg Energy=8.72e-04, Scaling=0.50
+[DEBUG] Iter 3400: Mean Overlap=7.6803
+[ENERGY] Iter 3400: Avg Energy=8.69e-04, Scaling=0.50
+[DEBUG] Iter 3500: Mean Overlap=10.1254
+[ENERGY] Iter 3500: Avg Energy=8.65e-04, Scaling=0.50
+[DEBUG] Iter 3600: Mean Overlap=8.0361
+[ENERGY] Iter 3600: Avg Energy=8.62e-04, Scaling=0.50
+[DEBUG] Iter 3700: Mean Overlap=16.8616
+[ENERGY] Iter 3700: Avg Energy=8.58e-04, Scaling=0.50
+[DEBUG] Iter 3800: Mean Overlap=8.0614
+[ENERGY] Iter 3800: Avg Energy=8.55e-04, Scaling=0.50
+[DEBUG] Iter 3900: Mean Overlap=13.9223
+[ENERGY] Iter 3900: Avg Energy=8.51e-04, Scaling=0.50
+[DEBUG] Iter 4000: Mean Overlap=11.4521
+[ENERGY] Iter 4000: Avg Energy=8.48e-04, Scaling=0.50
+[DEBUG] Iter 4100: Mean Overlap=10.3651
+[ENERGY] Iter 4100: Avg Energy=8.46e-04, Scaling=0.50
+[DEBUG] Iter 4200: Mean Overlap=9.8550
+[ENERGY] Iter 4200: Avg Energy=8.43e-04, Scaling=0.50
+[DEBUG] Iter 4300: Mean Overlap=15.9004
+[ENERGY] Iter 4300: Avg Energy=8.38e-04, Scaling=0.50
+[DEBUG] Iter 4400: Mean Overlap=9.1307
+[ENERGY] Iter 4400: Avg Energy=8.34e-04, Scaling=0.50
+[DEBUG] Iter 4500: Mean Overlap=12.2379
+[ENERGY] Iter 4500: Avg Energy=8.31e-04, Scaling=0.50
+[DEBUG] Iter 4600: Mean Overlap=5.8676
+[ENERGY] Iter 4600: Avg Energy=8.28e-04, Scaling=0.50
+[DEBUG] Iter 4700: Mean Overlap=5.8440
+[ENERGY] Iter 4700: Avg Energy=8.23e-04, Scaling=0.50
+[DEBUG] Iter 4800: Mean Overlap=11.7730
+[ENERGY] Iter 4800: Avg Energy=8.21e-04, Scaling=0.50
+[DEBUG] Iter 4900: Mean Overlap=12.6517
+[ENERGY] Iter 4900: Avg Energy=8.15e-04, Scaling=0.50
+[DEBUG] Iter 5000: Mean Overlap=7.9065
+[ENERGY] Iter 5000: Avg Energy=8.12e-04, Scaling=0.50
+[DEBUG] Iter 5100: Mean Overlap=9.1348
+[ENERGY] Iter 5100: Avg Energy=8.08e-04, Scaling=0.50
+[DEBUG] Iter 5200: Mean Overlap=9.9076
+[ENERGY] Iter 5200: Avg Energy=8.06e-04, Scaling=0.50
+[DEBUG] Iter 5300: Mean Overlap=9.8841
+[ENERGY] Iter 5300: Avg Energy=8.03e-04, Scaling=0.50
+[DEBUG] Iter 5400: Mean Overlap=10.1392
+[ENERGY] Iter 5400: Avg Energy=7.99e-04, Scaling=0.50
+[DEBUG] Iter 5500: Mean Overlap=12.4922
+[ENERGY] Iter 5500: Avg Energy=7.95e-04, Scaling=0.50
+[DEBUG] Iter 5600: Mean Overlap=12.7479
+[ENERGY] Iter 5600: Avg Energy=7.92e-04, Scaling=0.50
+[BOOST] Reactivating 2 dead columns.
+[DEBUG] Iter 5700: Mean Overlap=11.5328
+[ENERGY] Iter 5700: Avg Energy=7.88e-04, Scaling=0.50
+[DEBUG] Iter 5800: Mean Overlap=10.3259
+[ENERGY] Iter 5800: Avg Energy=7.84e-04, Scaling=0.50
+[DEBUG] Iter 5900: Mean Overlap=11.0860
+[ENERGY] Iter 5900: Avg Energy=7.82e-04, Scaling=0.50
+[DEBUG] Iter 6000: Mean Overlap=8.5822
+[ENERGY] Iter 6000: Avg Energy=7.78e-04, Scaling=0.50
+[DEBUG] Iter 6100: Mean Overlap=8.0813
+[ENERGY] Iter 6100: Avg Energy=7.76e-04, Scaling=0.50
+[DEBUG] Iter 6200: Mean Overlap=13.9630
+[ENERGY] Iter 6200: Avg Energy=7.72e-04, Scaling=0.50
+[BOOST] Reactivating 16 dead columns.
+[DEBUG] Iter 6300: Mean Overlap=9.7013
+[ENERGY] Iter 6300: Avg Energy=7.69e-04, Scaling=0.50
+[DEBUG] Iter 6400: Mean Overlap=10.4801
+[ENERGY] Iter 6400: Avg Energy=7.68e-04, Scaling=0.50
+[LOG] Epoch 2/10: Sparsity=8.97% | Entropy=0.4315 | ValAcc=75.9%
+[BOOST] Reactivating 21 dead columns.
+[BOOST] Reactivating 12 dead columns.
+[BOOST] Reactivating 17 dead columns.
+[BOOST] Reactivating 22 dead columns.
+[BOOST] Reactivating 30 dead columns.
+[BOOST] Reactivating 21 dead columns.
+[BOOST] Reactivating 26 dead columns.
+[BOOST] Reactivating 24 dead columns.
+[BOOST] Reactivating 17 dead columns.
+[BOOST] Reactivating 27 dead columns.
+[TM] Epoch 2 avg anomaly: 0.367
+[SELF-EVOLVE] Epoch 2 perf_metric=0.2690
+
+Epoch 3/10
+[DEBUG] SP call with: density=0.1050, LTP=0.0488, LTD=0.0020, decay=2.45e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 3200] | train_labels size: [1 3200]
+[DEBUG] Iter 9700: Mean Overlap=8.9757
+[ENERGY] Iter 9700: Avg Energy=7.55e-04, Scaling=0.50
+[DEBUG] Iter 9800: Mean Overlap=7.6980
+[ENERGY] Iter 9800: Avg Energy=7.52e-04, Scaling=0.50
+[RECOVERY] at iter 9880 - triggering recovery
+[BOOST] Reactivating 40 dead columns.
+[DEBUG] Iter 9900: Mean Overlap=10.1206
+[ENERGY] Iter 9900: Avg Energy=7.51e-04, Scaling=0.50
+[DEBUG] Iter 10000: Mean Overlap=7.9295
+[ENERGY] Iter 10000: Avg Energy=7.55e-04, Scaling=0.50
+[DEBUG] Iter 10100: Mean Overlap=16.8832
+[ENERGY] Iter 10100: Avg Energy=7.52e-04, Scaling=0.50
+[BOOST] Reactivating 37 dead columns.
+[DEBUG] Iter 10200: Mean Overlap=8.0514
+[ENERGY] Iter 10200: Avg Energy=7.51e-04, Scaling=0.50
+[RECOVERY] at iter 10294 - triggering recovery
+[DEBUG] Iter 10300: Mean Overlap=13.9238
+[ENERGY] Iter 10300: Avg Energy=7.47e-04, Scaling=0.50
+[DEBUG] Iter 10400: Mean Overlap=11.4408
+[ENERGY] Iter 10400: Avg Energy=7.53e-04, Scaling=0.50
+[BOOST] Reactivating 43 dead columns.
+[DEBUG] Iter 10500: Mean Overlap=10.3621
+[ENERGY] Iter 10500: Avg Energy=7.51e-04, Scaling=0.50
+[DEBUG] Iter 10600: Mean Overlap=9.8428
+[ENERGY] Iter 10600: Avg Energy=7.49e-04, Scaling=0.50
+[RECOVERY] at iter 10651 - triggering recovery
+[DEBUG] Iter 10700: Mean Overlap=15.8923
+[ENERGY] Iter 10700: Avg Energy=7.51e-04, Scaling=0.50
+[BOOST] Reactivating 26 dead columns.
+[DEBUG] Iter 10800: Mean Overlap=9.1358
+[ENERGY] Iter 10800: Avg Energy=7.50e-04, Scaling=0.50
+[DEBUG] Iter 10900: Mean Overlap=12.2538
+[ENERGY] Iter 10900: Avg Energy=7.46e-04, Scaling=0.50
+[RECOVERY] at iter 10949 - triggering recovery
+[DEBUG] Iter 11000: Mean Overlap=5.8562
+[ENERGY] Iter 11000: Avg Energy=7.51e-04, Scaling=0.50
+[BOOST] Reactivating 36 dead columns.
+[DEBUG] Iter 11100: Mean Overlap=5.8438
+[ENERGY] Iter 11100: Avg Energy=7.49e-04, Scaling=0.50
+[DEBUG] Iter 11200: Mean Overlap=11.7111
+[ENERGY] Iter 11200: Avg Energy=7.47e-04, Scaling=0.50
+[RECOVERY] at iter 11272 - triggering recovery
+[DEBUG] Iter 11300: Mean Overlap=12.6449
+[ENERGY] Iter 11300: Avg Energy=7.45e-04, Scaling=0.50
+[BOOST] Reactivating 45 dead columns.
+[DEBUG] Iter 11400: Mean Overlap=7.8425
+[ENERGY] Iter 11400: Avg Energy=7.48e-04, Scaling=0.50
+[DEBUG] Iter 11500: Mean Overlap=9.0919
+[ENERGY] Iter 11500: Avg Energy=7.45e-04, Scaling=0.50
+[RECOVERY] at iter 11551 - triggering recovery
+[DEBUG] Iter 11600: Mean Overlap=9.9103
+[ENERGY] Iter 11600: Avg Energy=7.49e-04, Scaling=0.50
+[BOOST] Reactivating 30 dead columns.
+[DEBUG] Iter 11700: Mean Overlap=9.8425
+[ENERGY] Iter 11700: Avg Energy=7.49e-04, Scaling=0.50
+[DEBUG] Iter 11800: Mean Overlap=10.0892
+[ENERGY] Iter 11800: Avg Energy=7.46e-04, Scaling=0.50
+[RECOVERY] at iter 11883 - triggering recovery
+[DEBUG] Iter 11900: Mean Overlap=12.4672
+[ENERGY] Iter 11900: Avg Energy=7.44e-04, Scaling=0.50
+[BOOST] Reactivating 38 dead columns.
+[DEBUG] Iter 12000: Mean Overlap=12.7200
+[ENERGY] Iter 12000: Avg Energy=7.48e-04, Scaling=0.50
+[DEBUG] Iter 12100: Mean Overlap=11.5265
+[ENERGY] Iter 12100: Avg Energy=7.46e-04, Scaling=0.50
+[DEBUG] Iter 12200: Mean Overlap=10.2634
+[ENERGY] Iter 12200: Avg Energy=7.42e-04, Scaling=0.50
+[RECOVERY] at iter 12207 - triggering recovery
+[BOOST] Reactivating 29 dead columns.
+[DEBUG] Iter 12300: Mean Overlap=11.0418
+[ENERGY] Iter 12300: Avg Energy=7.48e-04, Scaling=0.50
+[DEBUG] Iter 12400: Mean Overlap=8.5580
+[ENERGY] Iter 12400: Avg Energy=7.45e-04, Scaling=0.50
+[DEBUG] Iter 12500: Mean Overlap=8.0979
+[ENERGY] Iter 12500: Avg Energy=7.43e-04, Scaling=0.50
+[BOOST] Reactivating 53 dead columns.
+[DEBUG] Iter 12600: Mean Overlap=13.9811
+[ENERGY] Iter 12600: Avg Energy=7.40e-04, Scaling=0.50
+[RECOVERY] at iter 12693 - triggering recovery
+[DEBUG] Iter 12700: Mean Overlap=9.6980
+[ENERGY] Iter 12700: Avg Energy=7.39e-04, Scaling=0.50
+[DEBUG] Iter 12800: Mean Overlap=10.4905
+[ENERGY] Iter 12800: Avg Energy=7.44e-04, Scaling=0.50
+[LOG] Epoch 3/10: Sparsity=2.62% | Entropy=0.1637 | ValAcc=77.0%
+[BOOST] Reactivating 45 dead columns.
+[BOOST] Reactivating 36 dead columns.
+[BOOST] Reactivating 31 dead columns.
+[BOOST] Reactivating 41 dead columns.
+[BOOST] Reactivating 50 dead columns.
+[BOOST] Reactivating 47 dead columns.
+[BOOST] Reactivating 46 dead columns.
+[BOOST] Reactivating 53 dead columns.
+[BOOST] Reactivating 39 dead columns.
+[BOOST] Reactivating 45 dead columns.
+[TM] Epoch 3 avg anomaly: 0.315
+[SELF-EVOLVE] Epoch 3 perf_metric=0.1046
+[SELF-EVOLVE] Performance degrading (0.7906 → 0.2690 → 0.1046). Re-optimising...
+[SELF-EVOLVE] Re-optimisation failed: 'gather' undefined near line 237, column 29
+
+The ‘gather’ function is not yet implemented in Octave.
+
+Please read <https://www.octave.org/missing.html> to learn how you can
+contribute missing functionality.
+
+Epoch 4/10
+[DEBUG] SP call with: density=0.0937, LTP=0.0488, LTD=0.0020, decay=2.45e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 3200] | train_labels size: [1 3200]
+[DEBUG] Iter 22500: Mean Overlap=8.9482
+[ENERGY] Iter 22500: Avg Energy=7.24e-04, Scaling=0.50
+[RECOVERY] at iter 22531 - triggering recovery
+[DEBUG] Iter 22600: Mean Overlap=7.6139
+[ENERGY] Iter 22600: Avg Energy=7.28e-04, Scaling=0.50
+[DEBUG] Iter 22700: Mean Overlap=10.0742
+[ENERGY] Iter 22700: Avg Energy=7.26e-04, Scaling=0.50
+[BOOST] Reactivating 42 dead columns.
+[DEBUG] Iter 22800: Mean Overlap=7.9256
+[ENERGY] Iter 22800: Avg Energy=7.25e-04, Scaling=0.50
+[RECOVERY] at iter 22885 - triggering recovery
+[DEBUG] Iter 22900: Mean Overlap=16.8650
+[ENERGY] Iter 22900: Avg Energy=7.24e-04, Scaling=0.50
+[DEBUG] Iter 23000: Mean Overlap=8.0070
+[ENERGY] Iter 23000: Avg Energy=7.26e-04, Scaling=0.50
+[BOOST] Reactivating 57 dead columns.
+[DEBUG] Iter 23100: Mean Overlap=13.8880
+[ENERGY] Iter 23100: Avg Energy=7.24e-04, Scaling=0.50
+[DEBUG] Iter 23200: Mean Overlap=11.3950
+[ENERGY] Iter 23200: Avg Energy=7.23e-04, Scaling=0.50
+[RECOVERY] at iter 23263 - triggering recovery
+[DEBUG] Iter 23300: Mean Overlap=10.3166
+[ENERGY] Iter 23300: Avg Energy=7.24e-04, Scaling=0.50
+[BOOST] Reactivating 47 dead columns.
+[DEBUG] Iter 23400: Mean Overlap=9.8321
+[ENERGY] Iter 23400: Avg Energy=7.26e-04, Scaling=0.50
+[RECOVERY] at iter 23468 - triggering recovery
+[DEBUG] Iter 23500: Mean Overlap=15.9066
+[ENERGY] Iter 23500: Avg Energy=7.25e-04, Scaling=0.50
+[DEBUG] Iter 23600: Mean Overlap=9.1069
+[ENERGY] Iter 23600: Avg Energy=7.26e-04, Scaling=0.50
+[BOOST] Reactivating 46 dead columns.
+[DEBUG] Iter 23700: Mean Overlap=12.2123
+[ENERGY] Iter 23700: Avg Energy=7.24e-04, Scaling=0.50
+[RECOVERY] at iter 23763 - triggering recovery
+[DEBUG] Iter 23800: Mean Overlap=5.8095
+[ENERGY] Iter 23800: Avg Energy=7.25e-04, Scaling=0.50
+[DEBUG] Iter 23900: Mean Overlap=5.8269
+[ENERGY] Iter 23900: Avg Energy=7.25e-04, Scaling=0.50
+[BOOST] Reactivating 53 dead columns.
+[DEBUG] Iter 24000: Mean Overlap=11.7232
+[ENERGY] Iter 24000: Avg Energy=7.24e-04, Scaling=0.50
+[DEBUG] Iter 24100: Mean Overlap=12.5681
+[ENERGY] Iter 24100: Avg Energy=7.21e-04, Scaling=0.50
+[RECOVERY] at iter 24133 - triggering recovery
+[DEBUG] Iter 24200: Mean Overlap=7.8605
+[ENERGY] Iter 24200: Avg Energy=7.24e-04, Scaling=0.50
+[BOOST] Reactivating 51 dead columns.
+[DEBUG] Iter 24300: Mean Overlap=9.0886
+[ENERGY] Iter 24300: Avg Energy=7.23e-04, Scaling=0.50
+[DEBUG] Iter 24400: Mean Overlap=9.8878
+[ENERGY] Iter 24400: Avg Energy=7.21e-04, Scaling=0.50
+[RECOVERY] at iter 24401 - triggering recovery
+[DEBUG] Iter 24500: Mean Overlap=9.8142
+[ENERGY] Iter 24500: Avg Energy=7.25e-04, Scaling=0.50
+[BOOST] Reactivating 48 dead columns.
+[DEBUG] Iter 24600: Mean Overlap=10.0757
+[ENERGY] Iter 24600: Avg Energy=7.23e-04, Scaling=0.50
+[DEBUG] Iter 24700: Mean Overlap=12.4599
+[ENERGY] Iter 24700: Avg Energy=7.21e-04, Scaling=0.50
+[RECOVERY] at iter 24789 - triggering recovery
+[DEBUG] Iter 24800: Mean Overlap=12.7035
+[ENERGY] Iter 24800: Avg Energy=7.20e-04, Scaling=0.50
+[BOOST] Reactivating 50 dead columns.
+[DEBUG] Iter 24900: Mean Overlap=11.4950
+[ENERGY] Iter 24900: Avg Energy=7.23e-04, Scaling=0.50
+[DEBUG] Iter 25000: Mean Overlap=10.2178
+[ENERGY] Iter 25000: Avg Energy=7.21e-04, Scaling=0.50
+[RECOVERY] at iter 25033 - triggering recovery
+[DEBUG] Iter 25100: Mean Overlap=11.0216
+[ENERGY] Iter 25100: Avg Energy=7.24e-04, Scaling=0.50
+[BOOST] Reactivating 50 dead columns.
+[DEBUG] Iter 25200: Mean Overlap=8.5407
+[ENERGY] Iter 25200: Avg Energy=7.22e-04, Scaling=0.50
+[DEBUG] Iter 25300: Mean Overlap=8.0551
+[ENERGY] Iter 25300: Avg Energy=7.21e-04, Scaling=0.50
+[RECOVERY] at iter 25320 - triggering recovery
+[DEBUG] Iter 25400: Mean Overlap=13.9723
+[ENERGY] Iter 25400: Avg Energy=7.24e-04, Scaling=0.50
+[BOOST] Reactivating 57 dead columns.
+[DEBUG] Iter 25500: Mean Overlap=9.6541
+[ENERGY] Iter 25500: Avg Energy=7.23e-04, Scaling=0.50
+[DEBUG] Iter 25600: Mean Overlap=10.4524
+[ENERGY] Iter 25600: Avg Energy=7.22e-04, Scaling=0.50
+[LOG] Epoch 4/10: Sparsity=1.27% | Entropy=0.0923 | ValAcc=78.1%
+[BOOST] Reactivating 51 dead columns.
+[BOOST] Reactivating 45 dead columns.
+[BOOST] Reactivating 39 dead columns.
+[BOOST] Reactivating 41 dead columns.
+[BOOST] Reactivating 53 dead columns.
+[BOOST] Reactivating 61 dead columns.
+[BOOST] Reactivating 55 dead columns.
+[BOOST] Reactivating 69 dead columns.
+[BOOST] Reactivating 55 dead columns.
+[BOOST] Reactivating 52 dead columns.
+[TM] Epoch 4 avg anomaly: 0.310
+[SELF-EVOLVE] Epoch 4 perf_metric=0.0586
+
+Epoch 5/10
+[DEBUG] SP call with: density=0.0917, LTP=0.0488, LTD=0.0020, decay=2.45e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 3200] | train_labels size: [1 3200]
+[RECOVERY] at iter 48073 - triggering recovery
+[DEBUG] Iter 48100: Mean Overlap=8.9572
+[ENERGY] Iter 48100: Avg Energy=7.03e-04, Scaling=0.50
+[DEBUG] Iter 48200: Mean Overlap=7.6062
+[ENERGY] Iter 48200: Avg Energy=7.04e-04, Scaling=0.50
+[BOOST] Reactivating 52 dead columns.
+[DEBUG] Iter 48300: Mean Overlap=10.0700
+[ENERGY] Iter 48300: Avg Energy=7.04e-04, Scaling=0.50
+[DEBUG] Iter 48400: Mean Overlap=7.9117
+[ENERGY] Iter 48400: Avg Energy=7.03e-04, Scaling=0.50
+[RECOVERY] at iter 48416 - triggering recovery
+[DEBUG] Iter 48500: Mean Overlap=16.8450
+[ENERGY] Iter 48500: Avg Energy=7.04e-04, Scaling=0.50
+[BOOST] Reactivating 50 dead columns.
+[DEBUG] Iter 48600: Mean Overlap=7.9786
+[ENERGY] Iter 48600: Avg Energy=7.04e-04, Scaling=0.50
+[RECOVERY] at iter 48693 - triggering recovery
+[DEBUG] Iter 48700: Mean Overlap=13.8809
+[ENERGY] Iter 48700: Avg Energy=7.03e-04, Scaling=0.50
+[DEBUG] Iter 48800: Mean Overlap=11.3960
+[ENERGY] Iter 48800: Avg Energy=7.05e-04, Scaling=0.50
+[BOOST] Reactivating 48 dead columns.
+[DEBUG] Iter 48900: Mean Overlap=10.3096
+[ENERGY] Iter 48900: Avg Energy=7.04e-04, Scaling=0.50
+[DEBUG] Iter 49000: Mean Overlap=9.8029
+[ENERGY] Iter 49000: Avg Energy=7.03e-04, Scaling=0.50
+[DEBUG] Iter 49100: Mean Overlap=15.8897
+[ENERGY] Iter 49100: Avg Energy=7.02e-04, Scaling=0.50
+[RECOVERY] at iter 49118 - triggering recovery
+[BOOST] Reactivating 37 dead columns.
+[DEBUG] Iter 49200: Mean Overlap=9.0567
+[ENERGY] Iter 49200: Avg Energy=7.03e-04, Scaling=0.50
+[DEBUG] Iter 49300: Mean Overlap=12.1821
+[ENERGY] Iter 49300: Avg Energy=7.03e-04, Scaling=0.50
+[DEBUG] Iter 49400: Mean Overlap=5.7842
+[ENERGY] Iter 49400: Avg Energy=7.02e-04, Scaling=0.50
+[RECOVERY] at iter 49409 - triggering recovery
+[BOOST] Reactivating 53 dead columns.
+[DEBUG] Iter 49500: Mean Overlap=5.7907
+[ENERGY] Iter 49500: Avg Energy=7.03e-04, Scaling=0.50
+[DEBUG] Iter 49600: Mean Overlap=11.7075
+[ENERGY] Iter 49600: Avg Energy=7.02e-04, Scaling=0.50
+[RECOVERY] at iter 49605 - triggering recovery
+[DEBUG] Iter 49700: Mean Overlap=12.6031
+[ENERGY] Iter 49700: Avg Energy=7.03e-04, Scaling=0.50
+[BOOST] Reactivating 40 dead columns.
+[DEBUG] Iter 49800: Mean Overlap=7.7946
+[ENERGY] Iter 49800: Avg Energy=7.03e-04, Scaling=0.50
+[DEBUG] Iter 49900: Mean Overlap=9.0384
+[ENERGY] Iter 49900: Avg Energy=7.02e-04, Scaling=0.50
+[DEBUG] Iter 50000: Mean Overlap=9.8452
+[ENERGY] Iter 50000: Avg Energy=7.02e-04, Scaling=0.50
+[RECOVERY] at iter 50043 - triggering recovery
+[BOOST] Reactivating 64 dead columns.
+[DEBUG] Iter 50100: Mean Overlap=9.8101
+[ENERGY] Iter 50100: Avg Energy=7.03e-04, Scaling=0.50
+[DEBUG] Iter 50200: Mean Overlap=10.0507
+[ENERGY] Iter 50200: Avg Energy=7.02e-04, Scaling=0.50
+[RECOVERY] at iter 50205 - triggering recovery
+[DEBUG] Iter 50300: Mean Overlap=12.4543
+[ENERGY] Iter 50300: Avg Energy=7.03e-04, Scaling=0.50
+[BOOST] Reactivating 60 dead columns.
+[DEBUG] Iter 50400: Mean Overlap=12.6710
+[ENERGY] Iter 50400: Avg Energy=7.03e-04, Scaling=0.50
+[DEBUG] Iter 50500: Mean Overlap=11.4797
+[ENERGY] Iter 50500: Avg Energy=7.02e-04, Scaling=0.50
+[DEBUG] Iter 50600: Mean Overlap=10.2246
+[ENERGY] Iter 50600: Avg Energy=7.01e-04, Scaling=0.50
+[RECOVERY] at iter 50609 - triggering recovery
+[BOOST] Reactivating 47 dead columns.
+[DEBUG] Iter 50700: Mean Overlap=10.9969
+[ENERGY] Iter 50700: Avg Energy=7.03e-04, Scaling=0.50
+[DEBUG] Iter 50800: Mean Overlap=8.5236
+[ENERGY] Iter 50800: Avg Energy=7.02e-04, Scaling=0.50
+[DEBUG] Iter 50900: Mean Overlap=8.0088
+[ENERGY] Iter 50900: Avg Energy=7.01e-04, Scaling=0.50
+[RECOVERY] at iter 50922 - triggering recovery
+[BOOST] Reactivating 47 dead columns.
+[DEBUG] Iter 51000: Mean Overlap=13.9076
+[ENERGY] Iter 51000: Avg Energy=7.02e-04, Scaling=0.50
+[DEBUG] Iter 51100: Mean Overlap=9.6103
+[ENERGY] Iter 51100: Avg Energy=7.02e-04, Scaling=0.50
+[DEBUG] Iter 51200: Mean Overlap=10.4366
+[ENERGY] Iter 51200: Avg Energy=7.02e-04, Scaling=0.50
+[LOG] Epoch 5/10: Sparsity=0.64% | Entropy=0.0527 | ValAcc=79.5%
+[BOOST] Reactivating 48 dead columns.
+[BOOST] Reactivating 47 dead columns.
+[BOOST] Reactivating 41 dead columns.
+[BOOST] Reactivating 39 dead columns.
+[BOOST] Reactivating 57 dead columns.
+[BOOST] Reactivating 62 dead columns.
+[BOOST] Reactivating 46 dead columns.
+[BOOST] Reactivating 60 dead columns.
+[BOOST] Reactivating 48 dead columns.
+[BOOST] Reactivating 44 dead columns.
+[TM] Epoch 5 avg anomaly: 0.304
+[SELF-EVOLVE] Epoch 5 perf_metric=0.0336
+
+Epoch 6/10
+[DEBUG] SP call with: density=0.0903, LTP=0.0488, LTD=0.0020, decay=2.45e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 3200] | train_labels size: [1 3200]
+[RECOVERY] at iter 99281 - triggering recovery
+[DEBUG] Iter 99300: Mean Overlap=8.9219
+[ENERGY] Iter 99300: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 99400: Mean Overlap=7.5740
+[ENERGY] Iter 99400: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 99500: Mean Overlap=10.0448
+[ENERGY] Iter 99500: Avg Energy=6.89e-04, Scaling=0.50
+[BOOST] Reactivating 60 dead columns.
+[DEBUG] Iter 99600: Mean Overlap=7.8877
+[ENERGY] Iter 99600: Avg Energy=6.89e-04, Scaling=0.50
+[RECOVERY] at iter 99612 - triggering recovery
+[DEBUG] Iter 99700: Mean Overlap=16.7905
+[ENERGY] Iter 99700: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 99800: Mean Overlap=7.9362
+[ENERGY] Iter 99800: Avg Energy=6.89e-04, Scaling=0.50
+[RECOVERY] at iter 99893 - triggering recovery
+[BOOST] Reactivating 65 dead columns.
+[DEBUG] Iter 99900: Mean Overlap=13.8469
+[ENERGY] Iter 99900: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 100000: Mean Overlap=11.3711
+[ENERGY] Iter 100000: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 100100: Mean Overlap=10.2886
+[ENERGY] Iter 100100: Avg Energy=6.89e-04, Scaling=0.50
+[BOOST] Reactivating 66 dead columns.
+[DEBUG] Iter 100200: Mean Overlap=9.7735
+[ENERGY] Iter 100200: Avg Energy=6.89e-04, Scaling=0.50
+[RECOVERY] at iter 100246 - triggering recovery
+[DEBUG] Iter 100300: Mean Overlap=15.8742
+[ENERGY] Iter 100300: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 100400: Mean Overlap=9.0506
+[ENERGY] Iter 100400: Avg Energy=6.89e-04, Scaling=0.50
+[BOOST] Reactivating 63 dead columns.
+[DEBUG] Iter 100500: Mean Overlap=12.1303
+[ENERGY] Iter 100500: Avg Energy=6.89e-04, Scaling=0.50
+[RECOVERY] at iter 100537 - triggering recovery
+[DEBUG] Iter 100600: Mean Overlap=5.7564
+[ENERGY] Iter 100600: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 100700: Mean Overlap=5.7447
+[ENERGY] Iter 100700: Avg Energy=6.89e-04, Scaling=0.50
+[BOOST] Reactivating 64 dead columns.
+[DEBUG] Iter 100800: Mean Overlap=11.6615
+[ENERGY] Iter 100800: Avg Energy=6.89e-04, Scaling=0.50
+[RECOVERY] at iter 100844 - triggering recovery
+[DEBUG] Iter 100900: Mean Overlap=12.5782
+[ENERGY] Iter 100900: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 101000: Mean Overlap=7.7969
+[ENERGY] Iter 101000: Avg Energy=6.89e-04, Scaling=0.50
+[BOOST] Reactivating 62 dead columns.
+[DEBUG] Iter 101100: Mean Overlap=9.0179
+[ENERGY] Iter 101100: Avg Energy=6.89e-04, Scaling=0.50
+[RECOVERY] at iter 101149 - triggering recovery
+[DEBUG] Iter 101200: Mean Overlap=9.8197
+[ENERGY] Iter 101200: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 101300: Mean Overlap=9.7890
+[ENERGY] Iter 101300: Avg Energy=6.89e-04, Scaling=0.50
+[RECOVERY] at iter 101392 - triggering recovery
+[BOOST] Reactivating 63 dead columns.
+[DEBUG] Iter 101400: Mean Overlap=10.0153
+[ENERGY] Iter 101400: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 101500: Mean Overlap=12.4590
+[ENERGY] Iter 101500: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 101600: Mean Overlap=12.6373
+[ENERGY] Iter 101600: Avg Energy=6.89e-04, Scaling=0.50
+[BOOST] Reactivating 67 dead columns.
+[DEBUG] Iter 101700: Mean Overlap=11.4615
+[ENERGY] Iter 101700: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 101800: Mean Overlap=10.2104
+[ENERGY] Iter 101800: Avg Energy=6.89e-04, Scaling=0.50
+[RECOVERY] at iter 101806 - triggering recovery
+[DEBUG] Iter 101900: Mean Overlap=10.9541
+[ENERGY] Iter 101900: Avg Energy=6.89e-04, Scaling=0.50
+[BOOST] Reactivating 54 dead columns.
+[DEBUG] Iter 102000: Mean Overlap=8.4640
+[ENERGY] Iter 102000: Avg Energy=6.89e-04, Scaling=0.50
+[RECOVERY] at iter 102005 - triggering recovery
+[DEBUG] Iter 102100: Mean Overlap=8.0141
+[ENERGY] Iter 102100: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 102200: Mean Overlap=13.9007
+[ENERGY] Iter 102200: Avg Energy=6.89e-04, Scaling=0.50
+[BOOST] Reactivating 56 dead columns.
+[DEBUG] Iter 102300: Mean Overlap=9.6419
+[ENERGY] Iter 102300: Avg Energy=6.89e-04, Scaling=0.50
+[DEBUG] Iter 102400: Mean Overlap=10.4224
+[ENERGY] Iter 102400: Avg Energy=6.89e-04, Scaling=0.50
+[LOG] Epoch 6/10: Sparsity=0.32% | Entropy=0.0294 | ValAcc=80.5%
+[BOOST] Reactivating 48 dead columns.
+[BOOST] Reactivating 39 dead columns.
+[BOOST] Reactivating 43 dead columns.
+[BOOST] Reactivating 51 dead columns.
+[BOOST] Reactivating 63 dead columns.
+[BOOST] Reactivating 60 dead columns.
+[BOOST] Reactivating 58 dead columns.
+[BOOST] Reactivating 65 dead columns.
+[BOOST] Reactivating 63 dead columns.
+[BOOST] Reactivating 60 dead columns.
+[TM] Epoch 6 avg anomaly: 0.306
+[SELF-EVOLVE] Epoch 6 perf_metric=0.0187
+[SELF-EVOLVE] Performance degrading (0.0586 → 0.0336 → 0.0187). Re-optimising...
+[SELF-EVOLVE] Re-optimisation failed: 'gather' undefined near line 237, column 29
+
+The ‘gather’ function is not yet implemented in Octave.
+
+Please read <https://www.octave.org/missing.html> to learn how you can
+contribute missing functionality.
+
+Epoch 7/10
+[DEBUG] SP call with: density=0.0883, LTP=0.0488, LTD=0.0020, decay=2.45e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 3200] | train_labels size: [1 3200]
+[RECOVERY] at iter 201637 - triggering recovery
+[DEBUG] Iter 201700: Mean Overlap=8.9010
+[ENERGY] Iter 201700: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 201800: Mean Overlap=7.5406
+[ENERGY] Iter 201800: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 73 dead columns.
+[DEBUG] Iter 201900: Mean Overlap=9.9926
+[ENERGY] Iter 201900: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 201948 - triggering recovery
+[DEBUG] Iter 202000: Mean Overlap=7.8615
+[ENERGY] Iter 202000: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 202100: Mean Overlap=16.7957
+[ENERGY] Iter 202100: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 57 dead columns.
+[DEBUG] Iter 202200: Mean Overlap=7.9041
+[ENERGY] Iter 202200: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 202294 - triggering recovery
+[DEBUG] Iter 202300: Mean Overlap=13.8258
+[ENERGY] Iter 202300: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 202400: Mean Overlap=11.3578
+[ENERGY] Iter 202400: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 63 dead columns.
+[DEBUG] Iter 202500: Mean Overlap=10.2533
+[ENERGY] Iter 202500: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 202600: Mean Overlap=9.7424
+[ENERGY] Iter 202600: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 202646 - triggering recovery
+[DEBUG] Iter 202700: Mean Overlap=15.8540
+[ENERGY] Iter 202700: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 202760 - triggering recovery
+[BOOST] Reactivating 33 dead columns.
+[DEBUG] Iter 202800: Mean Overlap=9.0347
+[ENERGY] Iter 202800: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 202900: Mean Overlap=12.1230
+[ENERGY] Iter 202900: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 203000: Mean Overlap=5.7299
+[ENERGY] Iter 203000: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 68 dead columns.
+[DEBUG] Iter 203100: Mean Overlap=5.7126
+[ENERGY] Iter 203100: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 203192 - triggering recovery
+[DEBUG] Iter 203200: Mean Overlap=11.6552
+[ENERGY] Iter 203200: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 203300: Mean Overlap=12.5454
+[ENERGY] Iter 203300: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 73 dead columns.
+[DEBUG] Iter 203400: Mean Overlap=7.7472
+[ENERGY] Iter 203400: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 203413 - triggering recovery
+[DEBUG] Iter 203500: Mean Overlap=9.0165
+[ENERGY] Iter 203500: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 203600: Mean Overlap=9.8158
+[ENERGY] Iter 203600: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 53 dead columns.
+[DEBUG] Iter 203700: Mean Overlap=9.7499
+[ENERGY] Iter 203700: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 203800: Mean Overlap=9.9903
+[ENERGY] Iter 203800: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 203851 - triggering recovery
+[DEBUG] Iter 203900: Mean Overlap=12.4135
+[ENERGY] Iter 203900: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 66 dead columns.
+[DEBUG] Iter 204000: Mean Overlap=12.6388
+[ENERGY] Iter 204000: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 204100: Mean Overlap=11.4175
+[ENERGY] Iter 204100: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 204200: Mean Overlap=10.1730
+[ENERGY] Iter 204200: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 204209 - triggering recovery
+[BOOST] Reactivating 52 dead columns.
+[DEBUG] Iter 204300: Mean Overlap=10.9372
+[ENERGY] Iter 204300: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 204358 - triggering recovery
+[DEBUG] Iter 204400: Mean Overlap=8.4706
+[ENERGY] Iter 204400: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 204500: Mean Overlap=7.9663
+[ENERGY] Iter 204500: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 55 dead columns.
+[DEBUG] Iter 204600: Mean Overlap=13.8734
+[ENERGY] Iter 204600: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 204700: Mean Overlap=9.5780
+[ENERGY] Iter 204700: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 204800: Mean Overlap=10.3611
+[ENERGY] Iter 204800: Avg Energy=6.87e-04, Scaling=0.50
+[LOG] Epoch 7/10: Sparsity=0.16% | Entropy=0.0163 | ValAcc=81.6%
+[BOOST] Reactivating 55 dead columns.
+[BOOST] Reactivating 48 dead columns.
+[BOOST] Reactivating 55 dead columns.
+[BOOST] Reactivating 50 dead columns.
+[BOOST] Reactivating 70 dead columns.
+[BOOST] Reactivating 71 dead columns.
+[BOOST] Reactivating 61 dead columns.
+[BOOST] Reactivating 77 dead columns.
+[BOOST] Reactivating 57 dead columns.
+[BOOST] Reactivating 59 dead columns.
+[TM] Epoch 7 avg anomaly: 0.303
+[SELF-EVOLVE] Epoch 7 perf_metric=0.0104
+
+Epoch 8/10
+[DEBUG] SP call with: density=0.0860, LTP=0.0488, LTD=0.0020, decay=2.45e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 3200] | train_labels size: [1 3200]
+[RECOVERY] at iter 406425 - triggering recovery
+[DEBUG] Iter 406500: Mean Overlap=8.8736
+[ENERGY] Iter 406500: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 406600: Mean Overlap=7.5173
+[ENERGY] Iter 406600: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 406700: Mean Overlap=9.9927
+[ENERGY] Iter 406700: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 406758 - triggering recovery
+[BOOST] Reactivating 60 dead columns.
+[DEBUG] Iter 406800: Mean Overlap=7.8209
+[ENERGY] Iter 406800: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 406900: Mean Overlap=16.7748
+[ENERGY] Iter 406900: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 406963 - triggering recovery
+[DEBUG] Iter 407000: Mean Overlap=7.8859
+[ENERGY] Iter 407000: Avg Energy=6.86e-04, Scaling=0.50
+[BOOST] Reactivating 49 dead columns.
+[DEBUG] Iter 407100: Mean Overlap=13.7987
+[ENERGY] Iter 407100: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 407200: Mean Overlap=11.3247
+[ENERGY] Iter 407200: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 407300: Mean Overlap=10.2315
+[ENERGY] Iter 407300: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 407367 - triggering recovery
+[BOOST] Reactivating 60 dead columns.
+[DEBUG] Iter 407400: Mean Overlap=9.7288
+[ENERGY] Iter 407400: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 407500: Mean Overlap=15.8263
+[ENERGY] Iter 407500: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 407600: Mean Overlap=9.0043
+[ENERGY] Iter 407600: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 407607 - triggering recovery
+[BOOST] Reactivating 43 dead columns.
+[DEBUG] Iter 407700: Mean Overlap=12.1084
+[ENERGY] Iter 407700: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 407800: Mean Overlap=5.6973
+[ENERGY] Iter 407800: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 407900: Mean Overlap=5.6960
+[ENERGY] Iter 407900: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 407992 - triggering recovery
+[BOOST] Reactivating 74 dead columns.
+[DEBUG] Iter 408000: Mean Overlap=11.6199
+[ENERGY] Iter 408000: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 408100: Mean Overlap=12.5370
+[ENERGY] Iter 408100: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 408200: Mean Overlap=7.7268
+[ENERGY] Iter 408200: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 408201 - triggering recovery
+[BOOST] Reactivating 54 dead columns.
+[DEBUG] Iter 408300: Mean Overlap=8.9775
+[ENERGY] Iter 408300: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 408400: Mean Overlap=9.7846
+[ENERGY] Iter 408400: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 408426 - triggering recovery
+[DEBUG] Iter 408500: Mean Overlap=9.7257
+[ENERGY] Iter 408500: Avg Energy=6.86e-04, Scaling=0.50
+[BOOST] Reactivating 38 dead columns.
+[DEBUG] Iter 408600: Mean Overlap=9.9861
+[ENERGY] Iter 408600: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 408697 - triggering recovery
+[DEBUG] Iter 408700: Mean Overlap=12.3976
+[ENERGY] Iter 408700: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 408800: Mean Overlap=12.6101
+[ENERGY] Iter 408800: Avg Energy=6.86e-04, Scaling=0.50
+[BOOST] Reactivating 51 dead columns.
+[DEBUG] Iter 408900: Mean Overlap=11.4064
+[ENERGY] Iter 408900: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 409000: Mean Overlap=10.1367
+[ENERGY] Iter 409000: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 409050 - triggering recovery
+[DEBUG] Iter 409100: Mean Overlap=10.9143
+[ENERGY] Iter 409100: Avg Energy=6.86e-04, Scaling=0.50
+[BOOST] Reactivating 36 dead columns.
+[DEBUG] Iter 409200: Mean Overlap=8.4411
+[ENERGY] Iter 409200: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 409300: Mean Overlap=7.9309
+[ENERGY] Iter 409300: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 409395 - triggering recovery
+[DEBUG] Iter 409400: Mean Overlap=13.8752
+[ENERGY] Iter 409400: Avg Energy=6.86e-04, Scaling=0.50
+[BOOST] Reactivating 36 dead columns.
+[DEBUG] Iter 409500: Mean Overlap=9.5402
+[ENERGY] Iter 409500: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 409600: Mean Overlap=10.3518
+[ENERGY] Iter 409600: Avg Energy=6.86e-04, Scaling=0.50
+[LOG] Epoch 8/10: Sparsity=0.08% | Entropy=0.0090 | ValAcc=81.4%
+[BOOST] Reactivating 35 dead columns.
+[BOOST] Reactivating 24 dead columns.
+[BOOST] Reactivating 25 dead columns.
+[BOOST] Reactivating 31 dead columns.
+[BOOST] Reactivating 43 dead columns.
+[BOOST] Reactivating 41 dead columns.
+[BOOST] Reactivating 36 dead columns.
+[BOOST] Reactivating 49 dead columns.
+[BOOST] Reactivating 38 dead columns.
+[BOOST] Reactivating 39 dead columns.
+[TM] Epoch 8 avg anomaly: 0.297
+[SELF-EVOLVE] Epoch 8 perf_metric=0.0057
+
+Epoch 9/10
+[DEBUG] SP call with: density=0.0979, LTP=0.0488, LTD=0.0020, decay=2.45e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 3200] | train_labels size: [1 3200]
+[DEBUG] Iter 816100: Mean Overlap=8.8476
+[ENERGY] Iter 816100: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 816131 - triggering recovery
+[DEBUG] Iter 816200: Mean Overlap=7.4803
+[ENERGY] Iter 816200: Avg Energy=6.86e-04, Scaling=0.50
+[BOOST] Reactivating 37 dead columns.
+[DEBUG] Iter 816300: Mean Overlap=9.9524
+[ENERGY] Iter 816300: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 816400: Mean Overlap=7.7933
+[ENERGY] Iter 816400: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 816500: Mean Overlap=16.7626
+[ENERGY] Iter 816500: Avg Energy=6.86e-04, Scaling=0.50
+[BOOST] Reactivating 72 dead columns.
+[DEBUG] Iter 816600: Mean Overlap=7.8536
+[ENERGY] Iter 816600: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 816622 - triggering recovery
+[DEBUG] Iter 816700: Mean Overlap=13.7936
+[ENERGY] Iter 816700: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 816800: Mean Overlap=11.3005
+[ENERGY] Iter 816800: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 816895 - triggering recovery
+[BOOST] Reactivating 64 dead columns.
+[DEBUG] Iter 816900: Mean Overlap=10.2059
+[ENERGY] Iter 816900: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 817000: Mean Overlap=9.6973
+[ENERGY] Iter 817000: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 817100: Mean Overlap=15.8054
+[ENERGY] Iter 817100: Avg Energy=6.86e-04, Scaling=0.50
+[BOOST] Reactivating 55 dead columns.
+[DEBUG] Iter 817200: Mean Overlap=8.9751
+[ENERGY] Iter 817200: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 817207 - triggering recovery
+[DEBUG] Iter 817300: Mean Overlap=12.0858
+[ENERGY] Iter 817300: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 817400: Mean Overlap=5.6676
+[ENERGY] Iter 817400: Avg Energy=6.86e-04, Scaling=0.50
+[BOOST] Reactivating 61 dead columns.
+[DEBUG] Iter 817500: Mean Overlap=5.6563
+[ENERGY] Iter 817500: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 817529 - triggering recovery
+[DEBUG] Iter 817600: Mean Overlap=11.5937
+[ENERGY] Iter 817600: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 817700: Mean Overlap=12.5180
+[ENERGY] Iter 817700: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 817706 - triggering recovery
+[BOOST] Reactivating 36 dead columns.
+[DEBUG] Iter 817800: Mean Overlap=7.6894
+[ENERGY] Iter 817800: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 817900: Mean Overlap=8.9499
+[ENERGY] Iter 817900: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 818000: Mean Overlap=9.7427
+[ENERGY] Iter 818000: Avg Energy=6.86e-04, Scaling=0.50
+[BOOST] Reactivating 60 dead columns.
+[DEBUG] Iter 818100: Mean Overlap=9.7016
+[ENERGY] Iter 818100: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 818171 - triggering recovery
+[DEBUG] Iter 818200: Mean Overlap=9.9517
+[ENERGY] Iter 818200: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 818300: Mean Overlap=12.3656
+[ENERGY] Iter 818300: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 818370 - triggering recovery
+[BOOST] Reactivating 67 dead columns.
+[DEBUG] Iter 818400: Mean Overlap=12.5912
+[ENERGY] Iter 818400: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 818500: Mean Overlap=11.3876
+[ENERGY] Iter 818500: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 818600: Mean Overlap=10.1140
+[ENERGY] Iter 818600: Avg Energy=6.86e-04, Scaling=0.50
+[BOOST] Reactivating 58 dead columns.
+[DEBUG] Iter 818700: Mean Overlap=10.8891
+[ENERGY] Iter 818700: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 818775 - triggering recovery
+[DEBUG] Iter 818800: Mean Overlap=8.4023
+[ENERGY] Iter 818800: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 818900: Mean Overlap=7.9079
+[ENERGY] Iter 818900: Avg Energy=6.86e-04, Scaling=0.50
+[RECOVERY] at iter 818955 - triggering recovery
+[BOOST] Reactivating 39 dead columns.
+[DEBUG] Iter 819000: Mean Overlap=13.8453
+[ENERGY] Iter 819000: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 819100: Mean Overlap=9.5242
+[ENERGY] Iter 819100: Avg Energy=6.86e-04, Scaling=0.50
+[DEBUG] Iter 819200: Mean Overlap=10.3271
+[ENERGY] Iter 819200: Avg Energy=6.86e-04, Scaling=0.50
+[LOG] Epoch 9/10: Sparsity=0.04% | Entropy=0.0049 | ValAcc=80.9%
+[BOOST] Reactivating 38 dead columns.
+[BOOST] Reactivating 27 dead columns.
+[BOOST] Reactivating 33 dead columns.
+[BOOST] Reactivating 33 dead columns.
+[BOOST] Reactivating 45 dead columns.
+[BOOST] Reactivating 51 dead columns.
+[BOOST] Reactivating 40 dead columns.
+[BOOST] Reactivating 31 dead columns.
+[BOOST] Reactivating 41 dead columns.
+[BOOST] Reactivating 42 dead columns.
+[TM] Epoch 9 avg anomaly: 0.303
+[SELF-EVOLVE] Epoch 9 perf_metric=0.0031
+
+Epoch 10/10
+[DEBUG] SP call with: density=0.0972, LTP=0.0488, LTD=0.0020, decay=2.45e+04, endurance=5.00e+04
+[DEBUG] start train : train_data size: [28 28 3200] | train_labels size: [1 3200]
+[DEBUG] Iter 1635300: Mean Overlap=8.8224
+[ENERGY] Iter 1635300: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 1635331 - triggering recovery
+[DEBUG] Iter 1635400: Mean Overlap=7.4525
+[ENERGY] Iter 1635400: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1635500: Mean Overlap=9.9282
+[ENERGY] Iter 1635500: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 24 dead columns.
+[DEBUG] Iter 1635600: Mean Overlap=7.7663
+[ENERGY] Iter 1635600: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1635700: Mean Overlap=16.7344
+[ENERGY] Iter 1635700: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1635800: Mean Overlap=7.8289
+[ENERGY] Iter 1635800: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 41 dead columns.
+[DEBUG] Iter 1635900: Mean Overlap=13.7683
+[ENERGY] Iter 1635900: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1636000: Mean Overlap=11.2773
+[ENERGY] Iter 1636000: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1636100: Mean Overlap=10.1806
+[ENERGY] Iter 1636100: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 66 dead columns.
+[DEBUG] Iter 1636200: Mean Overlap=9.6688
+[ENERGY] Iter 1636200: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 1636274 - triggering recovery
+[DEBUG] Iter 1636300: Mean Overlap=15.7841
+[ENERGY] Iter 1636300: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1636400: Mean Overlap=8.9483
+[ENERGY] Iter 1636400: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 48 dead columns.
+[DEBUG] Iter 1636500: Mean Overlap=12.0536
+[ENERGY] Iter 1636500: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1636600: Mean Overlap=5.6309
+[ENERGY] Iter 1636600: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1636700: Mean Overlap=5.6249
+[ENERGY] Iter 1636700: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 60 dead columns.
+[DEBUG] Iter 1636800: Mean Overlap=11.5670
+[ENERGY] Iter 1636800: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1636900: Mean Overlap=12.4970
+[ENERGY] Iter 1636900: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1637000: Mean Overlap=7.6643
+[ENERGY] Iter 1637000: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 1637099 - triggering recovery
+[BOOST] Reactivating 60 dead columns.
+[DEBUG] Iter 1637100: Mean Overlap=8.9243
+[ENERGY] Iter 1637100: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1637200: Mean Overlap=9.7182
+[ENERGY] Iter 1637200: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1637300: Mean Overlap=9.6771
+[ENERGY] Iter 1637300: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 49 dead columns.
+[DEBUG] Iter 1637400: Mean Overlap=9.9260
+[ENERGY] Iter 1637400: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1637500: Mean Overlap=12.3430
+[ENERGY] Iter 1637500: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1637600: Mean Overlap=12.5719
+[ENERGY] Iter 1637600: Avg Energy=6.87e-04, Scaling=0.50
+[RECOVERY] at iter 1637624 - triggering recovery
+[BOOST] Reactivating 47 dead columns.
+[DEBUG] Iter 1637700: Mean Overlap=11.3593
+[ENERGY] Iter 1637700: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1637800: Mean Overlap=10.0847
+[ENERGY] Iter 1637800: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1637900: Mean Overlap=10.8581
+[ENERGY] Iter 1637900: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 44 dead columns.
+[DEBUG] Iter 1638000: Mean Overlap=8.3800
+[ENERGY] Iter 1638000: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1638100: Mean Overlap=7.8778
+[ENERGY] Iter 1638100: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1638200: Mean Overlap=13.8209
+[ENERGY] Iter 1638200: Avg Energy=6.87e-04, Scaling=0.50
+[BOOST] Reactivating 66 dead columns.
+[DEBUG] Iter 1638300: Mean Overlap=9.4942
+[ENERGY] Iter 1638300: Avg Energy=6.87e-04, Scaling=0.50
+[DEBUG] Iter 1638400: Mean Overlap=10.3018
+[ENERGY] Iter 1638400: Avg Energy=6.87e-04, Scaling=0.50
+[LOG] Epoch 10/10: Sparsity=0.02% | Entropy=0.0027 | ValAcc=80.1%
+[BOOST] Reactivating 44 dead columns.
+[BOOST] Reactivating 43 dead columns.
+[BOOST] Reactivating 44 dead columns.
+[BOOST] Reactivating 39 dead columns.
+[BOOST] Reactivating 55 dead columns.
+[BOOST] Reactivating 64 dead columns.
+[BOOST] Reactivating 63 dead columns.
+[BOOST] Reactivating 61 dead columns.
+[BOOST] Reactivating 62 dead columns.
+[BOOST] Reactivating 47 dead columns.
+[TM] Epoch 10 avg anomaly: 0.309
+[SELF-EVOLVE] Epoch 10 perf_metric=0.0017
+Error: syntax error near line 7, column 30 in file C:\Users\mcali\Brain_Inspired_HTM_Memristive_Neural_Network_Design\HTM\generate_sdr.m
+Stack:
+syntax error near line 7, column 30 in file C:\Users\mcali\Brain_Inspired_HTM_Memristive_Neural_Network_Design\HTM\generate_sdr.m
+
+Logging ended at 12-Jun-2026 01:37:01
