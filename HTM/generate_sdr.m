@@ -1,12 +1,12 @@
 function [sdr_flat, state] = generate_sdr(data, w_permanence, idx, config, state)
     %GENERATE_SDR  Generate sparse distributed representation using adaptive kWTA
-    arguments
-        data            {mustBeNumeric}
-        w_permanence    {mustBeNumeric}
-        idx             (1,1) {mustBeInteger}
-        config          struct  % overlap_dim, potential_radius, syn_connected_thresh, base_area_density
-        state           struct  % sample_counter (int), kwta_state (struct)
-    end
+    % (arguments block removed — MATLAB not supported in Octave)
+    validateattributes(data,{'numeric'}, {}, mfilename, 'data', 1);
+    validateattributes(w_permanence, {'numeric'}, {}, mfilename, 'w_permanence', 2);
+    validateattributes(idx,{'numeric'}, {'scalar','integer'}, mfilename, 'idx', 3);
+    assert(isstruct(config),'config must be a struct');
+    assert(isstruct(state),'state must be a struct');
+
     cfg = sp_config.instance();
 
     % Move data to GPU if enabled
@@ -19,7 +19,7 @@ function [sdr_flat, state] = generate_sdr(data, w_permanence, idx, config, state
 
     input_size = [size(data,1), size(data,2)];
     dynamic_overlap_dim = input_size - (config.potential_radius - 1);
-        
+
 
     if ~isfield(state, 'threshold_tracker') || isempty(state.threshold_tracker)
     state.threshold_tracker = struct();
@@ -41,7 +41,7 @@ function [sdr_flat, state] = generate_sdr(data, w_permanence, idx, config, state
 
     % Flatten SDR
     sdr_flat = active_columns(:);
-    state.last_active_columns = active_columns;   
+    state.last_active_columns = active_columns;
     % Debug print
     if cfg.DEBUG
         fprintf('[SDR] Sample %d | Active=%d/%d\n', idx, nnz(sdr_flat), numel(sdr_flat));

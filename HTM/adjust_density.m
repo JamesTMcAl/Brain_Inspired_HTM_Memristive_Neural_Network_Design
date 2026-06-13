@@ -40,19 +40,20 @@ function [base_area_density, state] = adjust_density(base_area_density, overlap,
             % healthy and stable/improving: pull target toward current activity
             current_act = mean(overlap(:) > 0);
 	    % adaptive rate scales with PI call frequency
-            % more calls per epoch = slower rate per call 
+            % more calls per epoch = slower rate per call
             % fewer calls = faster rate so it converges within the epoch
             if ~isfield(state, 'adapt_rate'), state.adapt_rate = 0.20; end
-            if numel(state.entropy_hist) == 10      
+            if numel(state.entropy_hist) == 10
                 % Use faster rate for small datasets, slower for large
                 estimated_calls = max(1, round(sample_counter / 10));
                 state.adapt_rate = min(0.20, max(0.02, 2.0 / estimated_calls));
             end
             state.target_activity = (1 - state.adapt_rate) * state.target_activity +  state.adapt_rate * current_act;
-        elseif recent_entropy < 0.15
-            % Collapsing: loosen target to allow more columns active
-            state.target_activity = min(state.target_activity * 1.05, 0.45);
+        elseif recent_entropy < 0.15 || recent_entropy < 0.5 * cfg.ENTROPY_THRESHOLD_INIT
+            % Collapsing or entropy below half its healthy initial level, loosen target aggressively to pull activity back up
+            state.target_activity = min(state.target_activity * 1.10, 0.45);
         end
+        state.target_activity = max(state.target_activity, cfg.MIN_DENSITY * 2);
         state.target_activity = min(max(state.target_activity, cfg.MIN_DENSITY), cfg.MAX_DENSITY);
     end
 
