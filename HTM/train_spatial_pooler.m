@@ -206,13 +206,15 @@ function [best_weights, sample_counter, val_accuracy_history, base_area_density,
                 density_state.entropy_hist = density_state.entropy_hist(end-49:end);
             end
 
-            % PI sparsity controller
-            if mod(sample_counter, cfg.KWTA_PI_PERIOD) == 0
+            % pi controller fires a fixed ~30 times per epoch regardless of dataset size
+            % keeps adaptation rate consistent across 90-sample and 4000-sample runs
+            pi_period = max(cfg.KWTA_PI_PERIOD, round(num_samples / 30));
+            if mod(sample_counter, pi_period) == 0
                 [base_area_density, density_state] = adjust_density( ...
                     base_area_density, overlap, sample_counter, (ii==1), density_state);
             end
 
-            %  Entropy history (for reset logic) 
+            %  Entropy history (for reset logic)
             if isempty(entropy_hist), entropy_hist = []; end
             entropy_hist = [entropy_hist, current_entropy];
             if numel(entropy_hist) > 100
@@ -259,7 +261,7 @@ function [best_weights, sample_counter, val_accuracy_history, base_area_density,
                         entropy_threshold, sparsity_threshold);
             end
 
-            % Recovery 
+            % Recovery
             if sample_counter > warmup_samples && ((current_entropy < entropy_threshold) || (sparsity_sample < sparsity_threshold * 0.3))
                 consecutive_viol = consecutive_viol + 1;
                 if consecutive_viol >= 25

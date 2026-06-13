@@ -142,17 +142,12 @@ function best_cell = tm_find_best_cell(r, c, state)
         end
     end
 
-   
+
         if ~found_match
-        min_segs  = Inf;
-        best_cell = 1;
-        for cell = 1:C
-            n = state.seg_count(col_idx, cell);
-            if n < min_segs
-                min_segs  = n;
-                best_cell = cell;
-            end
-        end
+        % least used cell with random tie break critical for variable order memory. Without the tie-break all early context collapses onto cell 1 since every cell starts with 0 segments.
+        seg_counts = double(state.seg_count(col_idx, :));   % 1xC
+        candidates = find(seg_counts == min(seg_counts));
+        best_cell  = candidates(randi(numel(candidates)));
     end
 end
 
