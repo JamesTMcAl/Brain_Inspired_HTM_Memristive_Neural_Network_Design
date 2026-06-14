@@ -56,7 +56,8 @@ function [syn_inc, syn_dec, state] = adjust_synaptic_factors( ...
     % Base updates
     inc_base = (syn_inc_base + 0.005*input_std) * homeo_scale;
     dec_base = syn_dec_base * homeo_scale;
-    decay = exp(-sample_counter / (decay_scaling * 1.5));
+    epoch_position = mod(sample_counter, decay_scaling);
+    decay = 0.3 + 0.7 * exp(-epoch_position / (decay_scaling * 1.5));
 
     % Compute scalar updates
     scalar_inc = inc_base * (1 + boost_factor * state.velocity_inc) * decay * 1.5;

@@ -293,7 +293,8 @@ function new_sp(dataset, train_data, train_label)
         example_state = struct('sample_counter', 1, 'threshold_tracker', struct());
         [sdr_flat, ~] = generate_sdr(train_data, w_permanence, sample_idx, config, example_state);
         sample_sdr    = reshape(sdr_flat, overlap_dimension);
-        sample_input  = gather(train_data(:, :, sample_idx));
+        sample_input  = train_data(:, :, sample_idx);
+        if isa(sample_input, 'gpuArray'), sample_input = gather(sample_input); end
 
         total_training_time = toc;
         fprintf('\nTraining Complete. Total Time: %.2f seconds\n', total_training_time);
