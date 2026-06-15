@@ -84,7 +84,11 @@ function [best_weights, sample_counter, val_accuracy_history, base_area_density,
         threshold_tracker = 1e-3;
     end
 
-    sample_batch = cfg.OVERLAP_BATCH_SIZE;
+    % adaptive batch: bigger batches on small inputs reduce call overhead shrink automatically for large inputs so memory stays bounded
+    input_elems  = prod(overlap_dimension);
+    mem_cap      = max(32, round(2e5 / max(1, input_elems)));
+    sample_batch = min(cfg.OVERLAP_BATCH_SIZE * 2, mem_cap);
+    sample_batch = max(sample_batch, 32);
 
     % Main training loop
     for start = 1:sample_batch:num_samples
@@ -300,7 +304,7 @@ function [best_weights, sample_counter, val_accuracy_history, base_area_density,
     end
 
     % Epoch-end metrics
-    processed_count = sample_counter;
+    processed_count = num_samples;
     epoch_energy    = sum(energy_history);
 
     if isfield(memristor_stats, 'write_cycles')

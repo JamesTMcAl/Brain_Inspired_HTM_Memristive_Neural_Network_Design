@@ -70,7 +70,7 @@ classdef sp_config
 
         % Debug / performance
         PCA_SAMPLE_FRAC = 0.10;
-        DEBUG       = true;
+        DEBUG       = false;
         DEBUG_ADJUST   = false;
         DEBUG_OVERLAP  = false;
         Debug_Overlap_Tracking = false;

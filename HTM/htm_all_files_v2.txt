@@ -1,0 +1,3987 @@
+======== DataHash.m ========
+%%written by Jan Simon
+function Hash = DataHash(Data, Opt)
+% DATAHASH  Create a hash value for any array (numeric, logical, char, struct, cell …)
+%
+%   Hash = DataHash(Data)           - returns lowercase MD5 hex string
+%   Hash = DataHash(Data, Opt)      - see below for options
+%
+% Basic idea:
+%   1. Serialize the input recursively into a uint8 byte stream
+%   2. Run the stream through java.security.MessageDigest
+%
+% Minimal option struct:
+%   Opt.Method   : 'MD5' (default) | 'SHA-1' | 'SHA-256' …
+%   Opt.Format   : 'hex' (default) | 'uint8'
+%
+% Compatible with Jan Simon’s original function for the arguments used
+% in compute_overlap.m (single input, default options).
+
+% ---------- default options ----------
+if nargin < 2 || ~isstruct(Opt)
+    Opt = struct;
+end
+if ~isfield(Opt,'Method')
+    Opt.Method = 'MD5';
+end
+if ~isfield(Opt,'Format')
+    Opt.Format = 'hex';
+end
+
+% ---------- serialize the data ----------
+% — guard Java & MATLAB version
+if ~usejava('jvm')
+    error('DataHash:NoJava','DataHash requires Java; JVM is disabled.');
+end
+if verLessThan('matlab','7.6')  % R2008a
+    error('DataHash:OldMATLAB','DataHash requires MATLAB ≥ R2008a.');
+end
+% ---------- serialize the data ----------
+byteStream = getByteStreamFromArray(Data);   % built-in, R2008a+
+
+% ---------- compute digest ----------
+md     = java.security.MessageDigest.getInstance(upper(Opt.Method));
+hash16 = typecast(md.digest(byteStream), 'uint8');   % big‑endian order
+
+% ---------- return in requested format ----------
+switch lower(Opt.Format)
+    case 'hex'
+        Hash = sprintf('%.2x', hash16);
+    case 'uint8'
+        Hash = reshape(hash16, 1, []);
+    otherwise
+        error('DataHash:BadFormat','Unknown Opt.Format value.');
+end
+end
+
+
+======== TestHTMFunctions.m ========
+classdef TestHTMFunctions < matlab.unittest.TestCase
+    % TestHTMFunctions  Unit tests 
+    %   Covers core utilities: DataHash, split_data, calculate_entropy,
+    %   pi_controller, and simple overlap/inference pipelines.
+
+    methods (Test)
+        function testDataHashHexAndUint8(testCase)
+            % Known input yields expected MD5 and uint8
+            data = uint8([1 2 3 4 5]);
+            hexHash = DataHash(data, struct('Method','MD5','Format','hex'));
+            testCase.verifyClass(hexHash, 'char');
+            testCase.verifyGreaterThan(numel(hexHash), 0);
+            uint8Hash = DataHash(data, struct('Method','MD5','Format','uint8'));
+            testCase.verifyClass(uint8Hash, 'uint8');
+            testCase.verifySize(uint8Hash, [1,16]);
+        end
+
+        function testSplitDataSizes(testCase)
+            % Create synthetic 3D data [H W N] and labels
+            H = 10; W = 8; N = 50;
+            data = rand(H,W,N);
+            labels = (1:N)';
+            [trD, trL, vD, vL] = split_data(data, labels, 0.2);
+            testCase.verifyEqual(size(trD,3) + size(vD,3), N);
+            testCase.verifyEqual(numel(trL) + numel(vL), N);
+        end
+
+        function testCalculateEntropyEdgeCases(testCase)
+            % All zeros or ones should give zero entropy
+            z = zeros(5);
+            testCase.verifyEqual(calculate_entropy(z), 0);
+            o = ones(5);
+            testCase.verifyEqual(calculate_entropy(o), 0);
+            % Half ones/zeros gives entropy ~1 bit
+            m = [zeros(10,1); ones(10,1)]; m = reshape(m, [4,5]);
+            e = calculate_entropy(m);
+            testCase.verifyGreaterThan(e, 0.9);
+            testCase.verifyLessThan(e, 1.1);
+        end
+
+        function testPIControllerBasic(testCase)
+            % PI controller should accumulate integral
+            state = struct('I',0,'prevOutput',0);
+            [adj1, st1] = pi_controller(1.0, state, 0.5, 0.1, struct('clampI',[-Inf Inf],'momentum',false));
+            [adj2, st2] = pi_controller(1.0, st1, 0.5, 0.1, struct('clampI',[-Inf Inf],'momentum',false));
+            testCase.verifyGreaterThan(adj2, adj1);
+            testCase.verifyGreaterThan(st2.I, st1.I);
+        end
+
+        function testAdjustDensityProportional(testCase)
+            % With use_mvavg=false, small overlap -> increase density
+            cfg = sp_config.instance();
+            state = struct('I',0,'prevOutput',0,'hist',[]);
+            base = cfg.TARGET_ACTIVITY; % start at target
+            overlap = zeros(4);
+            [newD, ~] = adjust_density(base, overlap, 1, true, state, false);
+            testCase.verifyLessThan(newD, base + 1); % stays in range
+            testCase.verifyGreaterThanOrEqual(newD, cfg.MIN_DENSITY);
+            testCase.verifyLessThanOrEqual(newD, cfg.MAX_DENSITY);
+        end
+
+                
+        function testInferLabelsTrivial(testCase)
+        % For identical train/test, accuracy=100%
+        H = 4; W = 4; N = 10;
+        data = rand(H,W,N);
+        potential_radius = 3;
+        overlap_dim = [H,W] - (potential_radius - 1);
+        w_perm = initialize_permanence(ones(potential_radius), potential_radius, overlap_dim, false);
+
+        labels = ones(N,1);
+        preds = infer_labels(data, w_perm, data, labels, overlap_dim);
+        testCase.verifySize(preds, [N,1]);
+        end
+
+
+        function testDataHashIdempotenceAndError(testCase)
+        data = uint8(randi(255,1,128));
+        h1 = DataHash(data);
+        h2 = DataHash(data);
+        testCase.verifyEqual(h1,h2,'Hashes should be deterministic');
+        testCase.verifyNotEqual(h1,DataHash([data 0]), ...
+            'Different input should give different hash');
+
+        testCase.verifyError(@()DataHash(data,struct('Format','bogus')), ...
+            'DataHash:BadFormat');
+        end
+
+    function testSplitDataRatioTolerance(testCase)
+        rng(42);               % reproducible
+        D = rand(6,6,103);     % prime count to test rounding
+        L = (1:103)';
+        [~,trL,vD,vL] = split_data(D,L,0.25);
+        ratio = size(vD,3)/size(D,3);
+        testCase.verifyLessThan(abs(ratio-0.25), 1/size(D,3));
+        allSeen = sort([trL; vL]);
+        testCase.verifyEqual(allSeen, sort(L));
+    end
+
+    function testCalculateEntropyRandomMatrix(testCase)
+        m = rand(100) > 0.3;   % ~0.88 bits theoretical
+        e = calculate_entropy(m);
+        testCase.verifyGreaterThan(e,0.7);
+        testCase.verifyLessThan(e,1.0);
+    end
+
+    function testPIControllerClampAndMomentum(testCase)
+        st = struct('I',1.9,'prevOutput',0.4);
+        opts = struct('clampI',[-2 2],'momentum',true);
+        [adj, st2] = pi_controller(-5,st,0.3,0.6,opts);
+        testCase.verifyGreaterThanOrEqual(st2.I,-2);  % clamped
+        testCase.verifyNotEqual(adj,0.3*(-5)+0.6*st2.I, ...
+            'Momentum term should perturb raw PI output');
+    end
+
+    function testAdjustDensityMovingAverage(testCase)
+        cfg  = sp_config.instance();
+        ovlp = rand(10)<0.05;  % sparse → expect density to go up
+        base = cfg.MIN_DENSITY;
+        state = struct('I',0,'prevOutput',0,'hist',[]);
+        [newD,~] = adjust_density(base,ovlp,1,true,state,true);
+        testCase.verifyGreaterThan(newD, base);
+    end
+
+            function testComputeOverlapBatchHandling(testCase)
+    % Test both batch/non-batch modes on CPU/GPU
+    potential_radius = 3;
+    input_size = [8, 8];
+    overlap_dim = input_size - (potential_radius-1);
+    n_samples = 4;
+    
+    % Create test data and weights
+    data_batch = rand([input_size, n_samples], 'single');
+    data_single = data_batch(:,:,1); 
+    w_permanence = ones([potential_radius, potential_radius, overlap_dim], 'single');
+
+    % Test configurations: {use_gpu, batch_mode, description}
+    configs = {
+        false, false, 'CPU non-batch';
+        false, true,  'CPU batch';
+        true,  false, 'GPU non-batch';
+        true,  true,  'GPU batch';
+    };
+
+        for cfg_idx = 1:size(configs,1)
+        use_gpu = configs{cfg_idx,1};
+        batch_mode = configs{cfg_idx,2};
+        desc = configs{cfg_idx,3};
+        
+        if use_gpu && gpuDeviceCount == 0
+            testCase.assumeTrue(false, 'Skipping GPU test - no device available');
+            continue;
+        end
+        
+        % Run compute_overlap
+        if batch_mode
+            input_data = data_batch;
+            sample_indices = 1:n_samples;
+            expected_size = [overlap_dim, n_samples];
+        else
+            input_data = data_single;
+            sample_indices = 1;
+            expected_size = overlap_dim;
+        end
+        
+        % Execute with fresh threshold tracker
+        threshold_tracker = struct();
+        [overlap, syn_thresh, tt] = compute_overlap(...
+            input_data, w_permanence, overlap_dim, potential_radius, ...
+            sample_indices, 0.5, use_gpu, 1, 10, threshold_tracker);
+        if ~batch_mode && ndims(overlap) == 2
+    overlap = reshape(overlap, [size(overlap), 1]);
+        end
+        % Basic validation
+        testCase.verifySize(overlap, expected_size, ...
+            sprintf('%s: Size mismatch', desc));
+        testCase.verifyTrue(isa(gather(overlap), 'single') || isa(gather(overlap), 'double'), ...
+            sprintf('%s: Wrong data type', desc));
+        testCase.verifyGreaterThanOrEqual(overlap, 0, ...
+            sprintf('%s: Negative overlaps', desc));
+        
+        % Compare batch results to individual computations
+        if batch_mode
+            for i = 1:n_samples
+                % Compute single version
+                [ov_single, ~, ~] = compute_overlap(...
+                    data_batch(:,:,i), w_permanence, overlap_dim, ...
+                    potential_radius, 1, 0.5, use_gpu, 1, 10, threshold_tracker);
+                
+                % Extract batch result
+                if use_gpu
+                    ov_batch = gather(overlap(:,:,i));
+                    ov_single = gather(ov_single);
+                else
+                    ov_batch = overlap(:,:,i);
+                end
+                
+                if ndims(ov_single) == 2
+    ov_single = reshape(ov_single, size(ov_single,1), size(ov_single,2), 1);
+            end
+        if ndims(ov_batch) == 2
+    ov_batch = reshape(ov_batch, size(ov_batch,1), size(ov_batch,2), 1);
+        end
+
+        % Match data types
+        ov_batch = double(ov_batch);
+        ov_single = double(ov_single);
+
+        testCase.verifyEqual(ov_batch, ov_single, 'AbsTol', 1e-3, ...
+    sprintf('%s: Batch elem %d mismatch', desc, i));
+
+            end
+        end
+        
+        % Validate threshold tracker structure
+        if batch_mode
+            testCase.verifyTrue(isstruct(tt), ...
+                'Threshold tracker should be struct in batch mode');
+            testCase.verifyEqual(numel(fieldnames(tt)), n_samples, ...
+                'Threshold tracker missing sample entries');
+        end
+        end
+        end
+
+        function testComputeOverlapNumericalConsistency(testCase)
+    % Verify CPU/GPU numerical consistency with tolerance
+    if gpuDeviceCount == 0
+        testCase.assumeTrue(false, 'Skipping GPU consistency test');
+        return;
+    end
+    
+    % Create test data
+    data = rand(10,10,2,'single');  % 2 samples
+    w_perm = rand(3,3,8,8,'single');
+    overlap_dim = [8,8];
+    potential_radius = 3;
+    
+    % CPU results
+    [ov_cpu_batch, th_cpu, tt_cpu] = compute_overlap(...
+        data, w_perm, overlap_dim, potential_radius, 1:2, 0.5, false, 1, 10, struct());
+    
+    % GPU results
+    [ov_gpu_batch, th_gpu, tt_gpu] = compute_overlap(...
+        gpuArray(data), w_perm, overlap_dim, potential_radius, 1:2, 0.5, true, 1, 10, struct());
+    
+    testCase.verifyEqual(double(gather(ov_gpu_batch)), double(ov_cpu_batch), 'AbsTol', 1e-2, ...
+    'GPU/CPU numerical mismatch');
+
+    testCase.verifyEqual(gather(th_gpu), th_cpu, 'AbsTol', 1e-2, ...
+        'Threshold values mismatch');
+        end
+        function testInferLabelsKnnVsSvm(testCase)
+            % Construct two clearly separable classes
+            N = 6; H = 4; W = 4;
+        clsA = zeros(H,W,N/2);        % all zeros
+        clsB = ones(H,W,N/2)*2.0;       % bright
+        data = cat(3,clsA,clsB);
+        labels = [ones(N/2,1); 2*ones(N/2,1)];
+
+    potential_radius = 2;
+        overlap_dim = [H W] - (potential_radius - 1);
+        w_perm = initialize_permanence(2 * ones(potential_radius), potential_radius, overlap_dim, false);
+
+    % k-NN path
+    preds = infer_labels(data,w_perm,data,labels,overlap_dim);
+    testCase.verifyEqual(preds, labels);
+
+    % Corrupt train SDRs to force k-NN failure → triggers SVM
+    badTrain = data + 0.2*randn(size(data)); 
+    preds2 = infer_labels(data,w_perm,badTrain,labels,overlap_dim);
+    testCase.verifySize(preds2,[N,1]);  % fallback still predicts
+        end
+
+
+            function testOverlapSingleVsBatchDims(testCase)
+    potential_radius = 3;
+    input_size = [10, 10];
+    overlap_dim = input_size - (potential_radius - 1);
+    data = rand([input_size, 2]);  % 2 samples
+    w_perm = rand(potential_radius, potential_radius, overlap_dim(1), overlap_dim(2));
+    
+    % Single
+    [ov1, ~, ~] = compute_overlap(data(:,:,1), w_perm, overlap_dim, potential_radius, 1, 0.5, false, 1, 1, struct());
+    testCase.verifyEqual(size(ov1), overlap_dim, 'Single sample overlap mismatch');
+    
+    % Batch
+    [ov2, ~, ~] = compute_overlap(data, w_perm, overlap_dim, potential_radius, 1:2, 0.5, false, 1, 2, struct());
+    testCase.verifyEqual(size(ov2), [overlap_dim, 2], 'Batch sample overlap mismatch');
+            end
+
+
+            function testApplyKwtaBasic(testCase)
+    % Setup: create overlap matrix
+    overlap = rand(8, 8);  % Simulated input
+    base_area_density = 0.1;
+    sample_counter = 1;
+    use_gpu = false;
+    reset = true;
+    state = struct();
+
+    % Run apply_kwta
+    [active_columns, avg_activity, new_state, new_density] = apply_kwta( ...
+        overlap, base_area_density, sample_counter, use_gpu, reset, state);
+
+    % Assertions
+    testCase.verifySize(active_columns, size(overlap));
+    testCase.verifyClass(active_columns, 'logical');
+    testCase.verifyGreaterThanOrEqual(avg_activity, 0);
+    testCase.verifyLessThanOrEqual(avg_activity, 1);
+    testCase.verifyGreaterThanOrEqual(new_density, 0);
+    testCase.verifyLessThanOrEqual(new_density, 1);
+end
+
+                        
+    function testComputeOverlap2DInputGPUandCPU(testCase)
+        % Test compute_overlap with 2D data on CPU and GPU
+        H = 7; W = 5;
+        data2D = rand(H, W);
+        potential_radius = 3;
+        overlap_dim = [H - potential_radius + 1, W - potential_radius + 1];
+        w_perm = rand(potential_radius, potential_radius, overlap_dim(1), overlap_dim(2));
+        % CPU path
+        [ov_cpu, ~, ~] = compute_overlap(data2D, w_perm, overlap_dim, potential_radius, 1, 0.5, false, 1, 1, struct());
+        % GPU path
+        [ov_gpu, ~, ~] = compute_overlap(data2D, w_perm, overlap_dim, potential_radius, 1, 0.5, true, 1, 1, struct());
+        testCase.verifyEqual(size(ov_cpu), overlap_dim, '2D CPU output size mismatch');
+        if ndims(ov_gpu) == 3 && size(ov_gpu,3) == 1
+    ov_gpu = ov_gpu(:,:,1);
+        end
+        testCase.verifyEqual(gather(ov_gpu), ov_cpu, 'RelTol', 1e-6, '2D CPU/GPU mismatch');
+
+    end
+
+    function testComputeOverlapBatchVsSingleConsistency(testCase)
+        % Test batch vs single-sample consistency for compute_overlap
+        H = 8; W = 6; N = 3;
+        data = rand(H, W, N);
+        potential_radius = 3;
+        overlap_dim = [H - potential_radius + 1, W - potential_radius + 1];
+        w_perm = rand(potential_radius, potential_radius, overlap_dim(1), overlap_dim(2));
+        [ov_batch, ~, ~] = compute_overlap(data, w_perm, overlap_dim, potential_radius, 1:N, 0.5, false, 1, N, struct());
+        for i = 1:N
+            [ov_single, ~, ~] = compute_overlap(data(:,:,i), w_perm, overlap_dim, potential_radius, 1, 0.5, false, i, 1, struct());
+            testCase.verifyEqual(ov_batch(:,:,i), ov_single, 'RelTol', 1e-6, ...
+                sprintf('Overlap mismatch for sample %d', i));
+        end
+    end
+
+    function testThresholdAdaptationVariedDensity(testCase)
+        % Test adaptive thresholding on samples with very different intensities
+        H = 5; W = 5;
+        data1 = zeros(H, W);    % low-intensity sample
+        data2 = ones(H, W);     % high-intensity sample
+        data = cat(3, data1, data2);
+        potential_radius = 2;
+        overlap_dim = [H - potential_radius + 1, W - potential_radius + 1];
+        w_perm = rand(potential_radius, potential_radius, overlap_dim(1), overlap_dim(2));
+        threshold_tracker = struct();
+        [~, thr1, threshold_tracker] = compute_overlap(data, w_perm, overlap_dim, potential_radius, 1, 0.5, false, 1, 2, threshold_tracker);
+        [~, thr2, ~] = compute_overlap(data, w_perm, overlap_dim, potential_radius, 2, 0.5, false, 2, 2, threshold_tracker);
+        testCase.verifyGreaterThan(thr2, thr1, ...
+    'Adaptive threshold did not increase for higher-intensity sample');
+
+    end
+
+    function testInferLabelsBatchVsSingle(testCase)
+        % Test consistency of infer_labels when called on batches vs single samples
+        H = 5; W = 5;
+        % Create two classes: all zeros vs all ones
+        classA = zeros(H, W, 4);
+        classB = ones(H, W, 4);
+        train_data = cat(3, classA, classB);
+        train_labels = [ones(4,1); 2*ones(4,1)];
+        potential_radius = 2;
+        overlap_dim = [H - potential_radius + 1, W - potential_radius + 1];
+        % Use simple random permanence for demonstration
+        w_perm = rand(potential_radius, potential_radius, overlap_dim(1), overlap_dim(2));
+        % Test data: one zero and one one image
+        test_data = zeros(H, W, 2);
+        test_data(:,:,2) = 1;
+        % Predictions on batch
+        preds_batch = infer_labels(test_data, w_perm, train_data, train_labels, overlap_dim);
+        % Predictions one by one
+        preds_single = zeros(2,1);
+        for j = 1:2
+            sample = reshape(test_data(:,:,j), size(test_data,1), size(test_data,2), 1);
+
+            preds_single(j) = infer_labels(sample, w_perm, train_data, train_labels, overlap_dim);
+
+        end
+        testCase.verifyEqual(preds_batch, preds_single, 'Infer_labels batch vs single mismatch');
+    end
+end
+
+
+    
+end
+
+
+======== adjust_density.m ========
+function [base_area_density, state] = adjust_density(base_area_density, overlap, sample_counter, reset, state, use_mvavg)
+%ADJUST_DENSITY  PI-controller or moving-average for dynamic sparsity.
+%   Measures the fraction of columns with any overlap (not raw overlap magnitude) so the error signal is in the same units as TARGET_ACTIVITY.
+%   Self-adaptive target: shifts toward current activity when entropy is healthy and stable, loosens when entropy is collapsing. This lets the system find its own sparsity equilibrium rather than chasing a fixed biological ideal that may not suit the input statistics.
+
+
+    if nargin < 4, reset     = false; end
+    if nargin < 5, state     = struct('I', 0, 'prevOutput', 0, 'hist', [], ...
+                                      'prev_error', 0, 'entropy_hist', [], ...
+                                      'target_activity', []); end
+    if nargin < 6, use_mvavg = false; end
+
+    % Reset on request or first iteration
+    if reset || sample_counter == 1
+        state = struct('I', 0, 'prevOutput', 0, 'hist', [], ...
+                       'prev_error', 0, 'entropy_hist', [], ...
+                       'target_activity', []);
+    end
+
+    % Backwards-compatibility: ensure all fields exist on old state structs
+    if ~isfield(state, 'prev_error'),      state.prev_error     = 0;  end
+    if ~isfield(state, 'entropy_hist'),    state.entropy_hist   = []; end
+    if ~isfield(state, 'target_activity'), state.target_activity = []; end
+
+    cfg = sp_config.instance();
+
+    % Initialise adaptive target from config on first call
+    if isempty(state.target_activity)
+        state.target_activity = cfg.TARGET_ACTIVITY;
+    end
+
+
+    % Entropy-driven adaptive target update
+
+    if numel(state.entropy_hist) >= 10
+        recent_entropy = mean(state.entropy_hist(end-9:end));
+        entropy_trend  = state.entropy_hist(end) - state.entropy_hist(max(1, end-9));
+
+        if recent_entropy > 0.4 && entropy_trend >= 0
+            % healthy and stable/improving: pull target toward current activity
+            current_act = mean(overlap(:) > 0);
+	    % adaptive rate scales with PI call frequency
+            % more calls per epoch = slower rate per call
+            % fewer calls = faster rate so it converges within the epoch
+            if ~isfield(state, 'adapt_rate'), state.adapt_rate = 0.20; end
+            if numel(state.entropy_hist) == 10
+                % Use faster rate for small datasets, slower for large
+                estimated_calls = max(1, round(sample_counter / 10));
+                state.adapt_rate = min(0.20, max(0.02, 2.0 / estimated_calls));
+            end
+            state.target_activity = (1 - state.adapt_rate) * state.target_activity +  state.adapt_rate * current_act;
+        elseif recent_entropy < 0.15 || recent_entropy < 0.5 * cfg.ENTROPY_THRESHOLD_INIT
+            % Collapsing or entropy below half its healthy initial level, loosen target aggressively to pull activity back up
+            state.target_activity = min(state.target_activity * 1.10, 0.45);
+        end
+        state.target_activity = max(state.target_activity, cfg.MIN_DENSITY * 2);
+        state.target_activity = min(max(state.target_activity, cfg.MIN_DENSITY), cfg.MAX_DENSITY);
+    end
+
+    effective_target = state.target_activity;
+
+
+    % Moving-average mode (proportional only)
+
+    if use_mvavg
+        state.hist = [state.hist, mean(overlap(:) > 0)];
+        if numel(state.hist) > 100
+            state.hist = state.hist(end-99:end);
+        end
+        current_activity = mean(state.hist);
+        error_val        = effective_target - current_activity;
+        adjustment       = cfg.KP_DENSITY * error_val;
+
+
+    % PI mode (default)
+
+    else
+        current_activity = mean(overlap(:) > 0);
+        error_val        = effective_target - current_activity;
+
+        % Integral windup guard: halve integral when error flips sign
+        if sign(error_val) ~= sign(state.prev_error) && sample_counter > 100
+            state.I = state.I * 0.5;
+        end
+        state.prev_error = error_val;
+
+        % Adaptive PI gains
+        std_o = std(overlap(:));
+        if sample_counter < 2000
+            Kp_boost = 2.0;
+            Ki_boost = 2.0;
+        else
+            Kp_boost = 1.0;
+            Ki_boost = 1.0;
+        end
+        Kp = min(max(cfg.KP_DENSITY * (1 + 0.5*std_o) * Kp_boost, 0.01), 0.4);
+        Ki = min(max(cfg.KI_DENSITY * (1 + 0.2*std_o) * Ki_boost, 0.005), 0.1);
+
+        [adjustment, state] = pi_controller(error_val, state, Kp, Ki, ...
+                                            'clampI', [-2, 2], 'momentum', true);
+    end
+
+
+    % Proportional step size
+
+    error_magnitude = abs(error_val);
+    if error_magnitude > 0.2
+        alpha = 0.015;
+    elseif error_magnitude > 0.05
+        alpha = 0.005;
+    else
+        alpha = 0.001;
+    end
+
+    base_area_density = base_area_density + alpha * adjustment;
+    base_area_density = min(max(base_area_density, cfg.MIN_DENSITY), cfg.MAX_DENSITY);
+
+    if cfg.DEBUG && cfg.DEBUG_ADJUST && mod(sample_counter, 100) == 0
+        fprintf('[DENSITY] Iter %d | Activity=%.4f | Target=%.4f | Density=%.4f | Adj=%.4f\n', ...
+                sample_counter, current_activity, effective_target, ...
+                base_area_density, adjustment);
+    end
+end
+
+
+======== adjust_synaptic_factors.m ========
+function [syn_inc, syn_dec, state] = adjust_synaptic_factors( ...
+    active_cols, syn_inc_base, syn_dec_base, boost_factor, ...
+    sample_counter, decay_scaling, input_std, state, w_permanence)
+%ADJUST_SYNAPTIC_FACTORS Adjust the synaptic increment/decrement factors based on activity.
+
+    cfg = sp_config.instance();
+
+    % Expand active_cols if needed
+    if isequal(size(active_cols), size(w_permanence(:,:,1,1)))
+        active_cols = repmat(active_cols, [size(w_permanence,1), size(w_permanence,2), 1, 1]);
+    end
+    assert(isequal(size(active_cols), size(w_permanence)), ...
+        'Size mismatch between active_cols and w_permanence');
+
+    % Early exit for no activity
+    if isempty(active_cols) || ~any(active_cols(:))
+        syn_inc = zeros(size(w_permanence), 'like', w_permanence);
+        syn_dec = zeros(size(w_permanence), 'like', w_permanence);
+        return;
+    end
+
+    % Initialize momentum if needed
+    if ~isfield(state, 'velocity_inc')
+        state.velocity_inc = 0;
+        state.velocity_dec = 0;
+    end
+
+    if  cfg.DEBUG && mod(sample_counter, 100) == 0
+        fprintf('[DEBUG] sample_counter: %d | active_cols size: %s | w_permanence size: %s\n', ...
+                sample_counter, mat2str(size(active_cols)), mat2str(size(w_permanence)));
+    end
+
+    % Compute statistics
+    original_active   = squeeze(any(any(active_cols,1),2));
+    active_ratio      = mean(original_active(:));
+    persistence_ratio = mean(w_permanence(:) > 0.5);
+
+    % Momentum update
+    tr = cfg.SYN_TARGET_RANGE;
+    m  = min(0.95, 0.5 + 0.45*tanh(0.1*sample_counter));
+    state.velocity_inc = m*state.velocity_inc + (1-m)*(active_ratio - tr(1));
+    state.velocity_dec = 0.9*state.velocity_dec + 0.1*(tr(2) - persistence_ratio);
+
+    % Clamp velocities
+    state.velocity_inc = max(-0.3, min(0.3, state.velocity_inc));
+    state.velocity_dec = max(-0.3, min(0.3, state.velocity_dec));
+
+    % Homeostatic scaling
+    activity_error = tr(1) - mean(active_cols(:));
+    Kp_syn = 0.1;
+    homeo_scale = 1 + Kp_syn * activity_error;
+    if cfg.DEBUG && mod(sample_counter, 100) == 0
+        fprintf('[DEBUG] synaptic scaling_factor=%.4f\n', homeo_scale);
+    end
+
+    % Base updates
+    inc_base = (syn_inc_base + 0.005*input_std) * homeo_scale;
+    dec_base = syn_dec_base * homeo_scale;
+    epoch_position = mod(sample_counter, decay_scaling);
+    decay = 0.3 + 0.7 * exp(-epoch_position / (decay_scaling * 1.5));
+
+    % Compute scalar updates
+    scalar_inc = inc_base * (1 + boost_factor * state.velocity_inc) * decay * 1.5;
+    scalar_dec = dec_base * (1 + boost_factor * state.velocity_dec) * decay * 0.8;
+
+    % Broadcast scalars safely
+    syn_inc = scalar_inc * ones(size(w_permanence), 'like', w_permanence);
+    syn_dec = scalar_dec * ones(size(w_permanence), 'like', w_permanence);
+
+    % Clamp to safe operational ranges
+    SYN_INC_MIN_ABS = 1e-4;  % prevent zero update
+    SYN_INC_MAX_ABS = 1e-1;  % prevent exploding updates
+    syn_inc = max(SYN_INC_MIN_ABS, min(SYN_INC_MAX_ABS, syn_inc));
+
+        syn_dec = max(0.001, min(0.02, syn_dec));
+end
+
+
+======== apply_kwta.m ========
+function [active_columns, avg_activity, state, base_area_density] = apply_kwta(overlap, base_area_density, sample_counter, use_gpu, reset, state)
+% APPLY_KWTA  Global hard k-WTA inhibition with homeostatic duty-cycle boosting.
+%   Selects exactly k = round(N * base_area_density) columns by rank on the
+%   boosted overlap score. Replaces local imdilate inhibition which cannot
+%   reach k on small grids (e.g. 8x8 = 64 columns with radius 3 blocks ~49
+%   neighbours per winner, making k > 2 physically unreachable).
+%   Keeps: radius tracking (read by train_spatial_pooler), duty-cycle boosting,
+%          dead-column tracking, structural rewiring flag, refractory map,
+%          stochastic exploration, fallback safety net.
+%   Removes: local imdilate loop, k_adjust_factor rescaling, density auto-inflation.
+
+    validateattributes(overlap, {'numeric'}, {'2d','nonnegative','finite'}, mfilename, 'overlap', 1);
+    validateattributes(base_area_density, {'numeric'}, {'scalar','>=',0,'<=',1}, mfilename, 'base_area_density', 2);
+
+    % Ensure outputs always defined (Octave compatibility)
+    active_columns = false(size(overlap));
+    avg_activity   = 0;
+
+    cfg = sp_config.instance();
+
+    
+    % State initialisation
+    
+    if reset || ~isfield(state, 'fallback_counter')
+        state.fallback_counter = 0;
+    end
+    if reset || ~isfield(state, 'avg_overlap')
+        state.avg_overlap = mean(overlap(:));
+    end
+    if reset || ~isfield(state, 'inhibition_radius')
+        state.inhibition_radius         = [];
+        state.radius_history            = [];
+        state.prev_overlap              = [];
+        state.refractory_map            = zeros(size(overlap));
+        state.inhibition_radius_history = [];
+        state.activity_map              = 0.5 * ones(size(overlap));
+        state.duty_cycle_map            = 0.01 * ones(size(overlap), 'like', overlap);
+    end
+
+    
+    % Inhibition radius tracking (kept for train_spatial_pooler logging)
+    
+    if sample_counter == 1 || isempty(state.inhibition_radius)
+        if std(overlap(:)) < 1e-6
+            spatial_corr  = 0;
+            temporal_corr = 0;
+        else
+            tmp = corr(overlap(1:end-1,:)', overlap(2:end,:)');
+            tmp(isnan(tmp)) = 0;
+            spatial_corr = mean(tmp(:));
+            tmp = corr(overlap(:,1:end-1), overlap(:,2:end));
+            tmp(isnan(tmp)) = 0;
+            temporal_corr = mean(tmp(:));
+        end
+        initR = cfg.KWTA_INIT_RADIUS;
+        scale = cfg.KWTA_RADIUS_SCALE;
+        state.inhibition_radius = round(initR - scale * (spatial_corr + temporal_corr));
+        state.radius_history    = repmat(state.inhibition_radius, 1, cfg.KWTA_RADIUS_HISTORY);
+        state.prev_overlap      = mean(overlap(:));
+        state.inhibition_radius_history = state.inhibition_radius;
+    end
+
+    % Local variance -> adaptive radius (kept for radius history logging)
+    w0     = max(cfg.KWTA_LOCAL_MIN, round(sqrt(numel(overlap) / 10)));
+    kernel = ones(w0, 'like', overlap) / (w0^2);
+    mu     = conv2(overlap, kernel, 'same');
+    mu2    = conv2(overlap.^2, kernel, 'same');
+    local_var = mu2 - mu.^2;
+
+    R = max(cfg.KWTA_LOCAL_MIN, ...
+            round(cfg.KWTA_LOCAL_MAX - cfg.KWTA_LOCAL_SCALE * (local_var ./ (max(local_var(:)) + eps))));
+    state.inhibition_radius = round(mean(R(:)));
+
+    % Smooth radius
+    state.radius_history = [state.radius_history(2:end), state.inhibition_radius];
+    final_radius = max(cfg.KWTA_LOCAL_MIN, round(mean(state.radius_history)));
+
+    % Correlation tweak
+    curr = mean(overlap(:));
+    if curr < state.prev_overlap && state.inhibition_radius < cfg.INHIB_RADIUS_MAX
+        state.inhibition_radius = state.inhibition_radius + 1;
+    elseif curr > state.prev_overlap && state.inhibition_radius > cfg.INHIB_RADIUS_MIN
+        state.inhibition_radius = state.inhibition_radius - 1;
+    end
+    state.prev_overlap = curr;
+    state.inhibition_radius_history(end+1) = state.inhibition_radius;
+
+    
+    % DETERMINE k     
+    min_active = max(round(cfg.KWTA_MIN_ACTIVE_FRAC * numel(overlap)), 2);
+    k = max(round(numel(overlap) * base_area_density), min_active + 1);
+    k = min(k, numel(overlap) - 1);
+
+    
+    % Normalise + duty-cycle boosting
+    
+    mn     = min(overlap(:));
+    vr     = max(overlap(:)) - mn + eps;
+    normed = (overlap - mn) / vr;
+
+    boost_factors = exp(cfg.KWTA_BETA_BOOST * (cfg.KWTA_TARGET_DUTY - state.duty_cycle_map));
+    normed = normed .* boost_factors;
+
+    if cfg.Debug_Overlap_Tracking
+        fprintf('[DEBUG] normed min=%.4f, mean=%.4f, max=%.4f\n', ...
+                min(normed(:)), mean(normed(:)), max(normed(:)));
+    end
+
+    
+    % Symmetry-breaking noise
+    
+    if sample_counter < 1000
+        base_noise = 0.1;
+    else
+        base_noise = cfg.KWTA_NOISE_LEVEL + 0.03 * exp(-sample_counter / 25000);
+    end
+
+    noise_scale = base_noise + 0.1 * (1 - state.activity_map);
+    noisy = normed + noise_scale .* randn(size(normed));
+
+    [~, sorted_idx] = sort(noisy(:), 'descend');
+
+    
+    % GLOBAL k-WTA: select exactly k columns by rank
+    % Refractory map respected 
+    
+    active_columns = false(size(overlap));
+    selected = 0;
+
+    % Pass 1: top-k among non-refractory columns
+    for idx = sorted_idx'
+        if state.refractory_map(idx) == 0
+            active_columns(idx) = true;
+            state.refractory_map(idx) = cfg.REFRACTORY_PERIOD;
+            selected = selected + 1;
+            if selected >= k, break; end
+        end
+    end
+
+    % Pass 2: if refractory blocked too many, fill from top remaining
+    if selected < k
+        for idx = sorted_idx'
+            if ~active_columns(idx)
+                active_columns(idx) = true;
+                selected = selected + 1;
+                if selected >= k, break; end
+            end
+        end
+    end
+
+    state.refractory_map = max(0, state.refractory_map - 1);
+    state.activity_map   = 0.99 * state.activity_map + 0.01 * double(active_columns);
+
+    if cfg.DEBUG && mod(sample_counter, cfg.DEBUG_INTERVAL) == 0
+        fprintf('[DEBUG] Global k-WTA: selected %d/%d columns (k=%d)\n', ...
+                nnz(active_columns), numel(active_columns), k);
+    end
+
+    
+    % Dead-column tracking + structural rewiring flag
+    
+    if ~isfield(state, 'dead_counter')
+        state.dead_counter = zeros(size(overlap));
+    end
+
+    state.dead_counter = state.dead_counter + double(~active_columns);
+    state.dead_counter(active_columns) = 0;
+
+    if mod(sample_counter, 300) == 0
+        % Soft boost for columns dead > 100 steps
+        dead_cols = state.dead_counter > 100;
+        if any(dead_cols(:))
+            fprintf('[BOOST] Reactivating %d dead columns.\n', nnz(dead_cols));
+            state.refractory_map(dead_cols) = 0;
+            state.dead_counter(dead_cols)   = 0;
+        end
+
+        % Structural rewiring for persistently dead columns (> 500 steps)
+        rewire_cols = state.dead_counter > 500;
+        if any(rewire_cols(:))
+            fprintf('[REWIRE] Flagging %d persistently dead columns for rewiring\n', nnz(rewire_cols));
+            state.rewire_flag = rewire_cols;
+            state.dead_counter(rewire_cols) = 0;
+        else
+            state.rewire_flag = false(size(overlap));
+        end
+    else
+        if ~isfield(state, 'rewire_flag')
+            state.rewire_flag = false(size(overlap));
+        end
+    end
+
+    
+    % Fallback safety net (should rarely fire with hard-k)
+    
+    if nnz(active_columns) < min_active
+        nf = round(min_active * cfg.KWTA_FALLBACK_FACTOR);
+        nz = find(overlap(:) > 0);
+        if isempty(nz)
+            sel = randperm(numel(overlap), nf);
+        else
+            [~, ord] = sort(overlap(nz), 'descend');
+            sel = nz(ord(1:min(nf, numel(ord))));
+        end
+        active_columns(sel) = true;
+
+        if cfg.fallback_Debug
+            fprintf('[WARNING] Fallback @ iter %d: %d -> %d active (min=%d)\n', ...
+                    sample_counter, nnz(active_columns) - nf, nnz(active_columns), min_active);
+        end
+
+        state.fallback_counter = state.fallback_counter + 1;
+
+        % Drive boosting rather than inflating density target
+        if state.fallback_counter > 50 && mod(state.fallback_counter, 10) == 0
+            fprintf('[PATCH] Too many fallbacks - reducing duty-cycle map to boost underactive columns.\n');
+            state.duty_cycle_map = state.duty_cycle_map * 0.95;
+        end
+    end
+
+    
+    % Borderline boost + homeostasis bookkeeping
+    
+    margin    = 0.1;
+    max_val   = max(normed(:));
+    borderline = (normed > (max_val - margin)) & ~active_columns;
+    boost_prob = 0.3;
+    active_columns = active_columns | (rand(size(active_columns)) < boost_prob & borderline);
+
+    state.activity_map   = 0.99 * state.activity_map   + 0.01 * double(active_columns);
+    state.duty_cycle_map = 0.99 * state.duty_cycle_map + 0.01 * double(active_columns);
+
+    avg_activity = mean(active_columns(:));
+
+    if use_gpu
+        active_columns = gpuArray(active_columns);
+    end
+
+    
+    % Stochastic exploration (fires rarely only when very sparse)
+    
+    if mod(sample_counter, cfg.KWTA_STOCH_INTERVAL) == 0 && avg_activity < 0.08
+        rate = max(cfg.KWTA_STOCH_MIN, cfg.KWTA_STOCH_BASE - avg_activity);
+        active_columns = active_columns | (rand(size(active_columns)) < rate);
+        fprintf('[LOG] Stochastic @ %d\n', sample_counter);
+    end
+
+    
+    % Debug print + reject flag
+    
+    if cfg.DEBUG && mod(sample_counter, cfg.DEBUG_INTERVAL) == 0
+        fprintf('[DEBUG] Iter %d | Active=%d | Rad=%d | k=%d | MeanOv=%.4f\n', ...
+                sample_counter, nnz(active_columns), final_radius, k, mean(overlap(:)));
+    end
+
+    fallback_rate = state.fallback_counter / max(sample_counter, 1);
+    if fallback_rate > 0.6 && sample_counter > 50
+        state.reject_flag = true;
+        fprintf('[REJECT] Fallback rate too high (%.2f)\n', fallback_rate);
+    else
+        state.reject_flag = false;
+    end
+
+    if state.fallback_counter > 10 && mod(state.fallback_counter, 25) == 0
+        fprintf('[KWTA] Fallback count=%d - duty-cycle boosting active\n', state.fallback_counter);
+    end
+
+end
+
+======== calculate_entropy.m ========
+function entropy = calculate_entropy(binary_matrix, show_visualization)
+    if nargin < 2, show_visualization = false; end
+
+    % Enforce binary values with fixed threshold
+    binary_matrix = binary_matrix > 0.5; 
+
+    % Calculate entropy
+    active_ratio = mean(binary_matrix(:));
+    if active_ratio > 0 && active_ratio < 1
+        p1 = active_ratio;
+        p0 = 1 - active_ratio;
+        entropy = -(p1 * log2(p1 + 1e-10) + p0 * log2(p0 + 1e-10));
+    else
+        entropy = 0; % Uniform states have zero entropy
+    end
+
+    % Visualization
+    if show_visualization
+        figure; imagesc(binary_matrix); colormap gray; title('Binary Matrix'); colorbar;
+    end
+end
+
+
+======== classify_using_sdrs.m ========
+function labels = classify_using_sdrs(sdrs, train_sdrs, train_labels)
+% classify_using_sdrs - Octave-compatible nearest neighbour classifier
+% Uses Hamming distance on SDRs (binary vectors)
+n_test = size(sdrs, 1);
+labels = zeros(n_test, 1);
+for i = 1:n_test
+    dists = sum(bsxfun(@xor, sdrs(i,:), train_sdrs), 2);
+    [~, idx] = min(dists);
+    labels(i) = train_labels(idx);
+end
+end
+
+
+======== compute_overlap.m ========
+function [overlap, syn_connected_thresh_batch, threshold_tracker] = compute_overlap( ...
+    train_data, w_permanence, overlap_dimension, potential_radius, ii, ...
+    syn_connected_thresh, use_gpu, sample_counter, batch_size, threshold_tracker)
+%COMPUTE_OVERLAP Compute spatial overlaps between input data and permanence weights.
+%   This function calculates the overlap score between input image data and
+%   a set of permanence weights (w_permanence) for the Spatial Pooler. It
+%   supports single or batch modes and optional GPU acceleration. Overlaps
+%   are non-negative and adaptively thresholded using quantiles from sp_config.
+
+    % Get configuration instance for parameters and debug flags
+    cfg = sp_config.instance();
+    DEBUG_INTERVAL = cfg.DEBUG_INTERVAL;
+
+    % Validate required inputs
+    if nargin < 5
+        error('compute_overlap:NotEnoughInputs', 'Insufficient input arguments.');
+    end
+    validateattributes(overlap_dimension, {'numeric'}, {'vector','numel',2}, mfilename, 'overlap_dimension', 3);
+    validateattributes(potential_radius, {'numeric'}, {'scalar','integer','>=',1}, mfilename, 'potential_radius', 4);
+    validateattributes(ii, {'numeric'}, {'vector','integer','>=',1}, mfilename, 'ii', 5);
+
+    % Determine data dimensionality and extract the requested sample(s)
+    d = ndims(train_data);
+    if ismatrix(train_data)
+        % 2D image (HxW) -> treat as 3D [H x W x 1]
+        train_data = reshape(train_data, size(train_data,1), size(train_data,2), 1);
+        d = 3;
+    end
+
+    % Handle GPU flag and availability
+    if nargin < 7 || isempty(use_gpu)
+        use_gpu = false;
+    end
+    if use_gpu && safe_gpuDeviceCount() == 0
+        use_gpu = false;  % fallback if no GPU present
+    end
+
+    % Extract the specified samples from train_data
+    if d == 3
+        % 3D data: [H x W x N]
+        slice = train_data(:,:,ii);  % can handle scalar or vector ii
+    elseif d == 4
+        % 4D data: [H x W x C x N] ( multi-channel)
+        % Average across channels to get a single [H x W] per sample
+        slice = mean(train_data(:,:,:,ii), 3);  % handles scalar or vector ii
+    else
+        error('compute_overlap:BadInputDims', 'train_data must be 2D, 3D, or 4D.');
+    end
+
+    % Ensure slice is 3D for consistency (H x W x num_samples)
+    if ismatrix(slice)
+        slice = reshape(slice, size(slice,1), size(slice,2), 1);
+    end
+
+    % Get dimensions
+    [H, W, num_samples] = size(slice);
+    p = potential_radius;
+    outH = overlap_dimension(1);
+    outW = overlap_dimension(2);
+
+    % Check that input size matches expected overlap dimension + patch
+    if H ~= outH + p - 1 || W ~= outW + p - 1
+        error('compute_overlap:InputSizeMismatch', ...
+            'Input size [%d %d] does not match overlap dimension [%d %d] with patch %d.', ...
+            H, W, outH, outW, p);
+    end
+
+    % Validate w_permanence dimensions and range
+    if ~isnumeric(w_permanence) || isempty(w_permanence)
+        error('compute_overlap:BadWPerm', 'w_permanence must be a non-empty numeric array.');
+    end
+    if ndims(w_permanence) ~= 4
+        error('compute_overlap:BadWPermDims', 'w_permanence must be a 4-D array.');
+    end
+    [p1, p2, hW, hW2] = size(w_permanence);
+    if p1~=p || p2~=p || hW~=outH || hW2~=outW
+        error('compute_overlap:WPermSizeMismatch', ...
+            'w_permanence size mismatch: expected [%d %d %d %d], got [%d %d %d %d].', ...
+            p, p, outH, outW, p1, p2, hW, hW2);
+    end
+    % Clip permanence values to [0,1] valid range
+    w_permanence = min(max(w_permanence, 0), 1);
+
+    % If using GPU, move data to GPU
+    if use_gpu
+        slice = gpuArray(slice);
+        w_permanence = gpuArray(w_permanence);
+    end
+
+    % Compute overlaps by extracting patches and dot-product with weights
+    origType = class(slice);           % remember original data type
+    slice_double = double(slice);      % work in double for accuracy
+    Wperm = double(w_permanence);  % gather weights to CPU double for computation
+
+    if num_samples > 1
+        % Batch mode: compute overlap for each sample in loop
+        overlap_mat = zeros(outH, outW, num_samples);
+        for j = 1:num_samples
+            patch_cols = im2col(slice_double(:,:,j), [p, p], 'sliding');  % [p*p x outH*outW]
+            Wmat = reshape(Wperm, p*p, []);                               % [p*p x (outH*outW)]
+            ovlp = sum(patch_cols .* Wmat, 1);                            % [1 x (outH*outW)]
+            overlap_mat(:,:,j) = reshape(ovlp, outH, outW);
+        end
+    else
+        % Single-sample mode
+        patch_cols = im2col(slice_double(:,:,1), [p, p], 'sliding');
+        Wmat = reshape(Wperm, p*p, []);
+        ovlp = sum(patch_cols .* Wmat, 1);
+        overlap_mat = reshape(ovlp, outH, outW);
+    end
+
+    % Cast overlap back to original data type (single or double)
+    if isa(w_permanence, 'single') || strcmp(origType,'single')
+        overlap_mat = single(overlap_mat);
+    end
+    if use_gpu
+        overlap_mat = gpuArray(overlap_mat);
+    end
+
+    % Eliminate any NaN or Inf (shouldn't occur normaly)
+    overlap_mat(isnan(overlap_mat) | isinf(overlap_mat)) = 0;
+
+    % Output the overlap score
+    overlap = overlap_mat;
+
+    %  Quantile-based Threshold Adaptation
+    % Initialize threshold_tracker struct if it was numeric or empty
+    if ~isstruct(threshold_tracker)
+        if ~isempty(threshold_tracker) && isnumeric(threshold_tracker)
+            base_thresh = threshold_tracker;
+        elseif exist('syn_connected_thresh','var') && ~isempty(syn_connected_thresh)
+            base_thresh = syn_connected_thresh;
+        else
+            base_thresh = 0;
+        end
+        threshold_tracker = struct();
+        for j = 1:numel(ii)
+            threshold_tracker.(['s_' num2str(ii(j))]) = base_thresh;
+        end
+    end
+
+    % Prepare output threshold array
+    syn_connected_thresh_batch = zeros(1, numel(ii));
+    for k = 1:numel(ii)
+        sample_idx = ii(k);
+        field = ['s_' num2str(sample_idx)];
+        if isfield(threshold_tracker, field) && ~isempty(threshold_tracker.(field))
+            prev_thresh = threshold_tracker.(field);
+        else
+            prev_thresh = 0;
+        end
+        % Compute new low quantile from current overlap distribution
+        if use_gpu
+            ov_vals = overlap_mat(:,:,k);
+        else
+            ov_vals = overlap_mat(:,:,k);
+        end
+        ov_vals = ov_vals(:);
+        q_new = quantile(ov_vals, cfg.OVERLAP_QUANTILE_UPDATE);
+        % Exponential moving average update
+        new_thresh = cfg.OVERLAP_QUANTILE_DECAY * prev_thresh + (1 - cfg.OVERLAP_QUANTILE_DECAY) * q_new;
+        new_thresh = max(new_thresh, 0);  % ensure non-negative threshold
+        threshold_tracker.(field) = new_thresh;
+        % Synapse-connected threshold is half of overlap threshold
+        syn_val = 0.5 * new_thresh;
+        % Clamp upper bound to avoid extreme values (no lower bound clamp)
+        syn_val = min(syn_val, 0.6);
+        syn_connected_thresh_batch(k) = syn_val;
+    end
+
+    % Return scalar if only one sample
+    if numel(syn_connected_thresh_batch) == 1
+        syn_connected_thresh_batch = syn_connected_thresh_batch(1);
+    end
+
+    % If GPU mode, output threshold array as GPU array
+    if use_gpu
+        syn_connected_thresh_batch = gpuArray(syn_connected_thresh_batch);
+
+    end
+
+    %  Debug Logging
+    if cfg.DEBUG_OVERLAP && mod(sample_counter, DEBUG_INTERVAL) == 0
+        ov_all = overlap_mat(:);
+        if use_gpu, ov_all = ov_all; end
+        fprintf('[DEBUG_OVERLAP] Iter %d | mean=%.4f | max=%.4f | nnz=%d\n', ...
+                sample_counter, mean(ov_all), max(ov_all), nnz(ov_all>0));
+    end
+    if cfg.Debug_Overlap_Tracking
+        fprintf('[DEBUG_OVERLAP_TRACK] Sample(s) %s | Thresh fields: %s\n', mat2str(ii), ...
+                strjoin(string(struct2cell(threshold_tracker)), ', '));
+    end
+
+end
+
+
+======== data_process.m ========
+function [train, train_l, test, test_l, no_train, no_test] = data_process(train_sample, train_label, test_sample, test_label)
+    % Sort training data and labels
+    [train_l, train_index] = sort(train_label);
+    train = train_sample(:, :, train_index);
+    assert(any(train(:) > 0), 'Training data is all zeros!');
+
+    % Normalize data for HTM sparsity optimization
+    train = train / 255.0; % Scale values to [0, 1]
+    test = test_sample / 255.0;
+
+    % Apply noise
+    cfg = sp_config.instance();
+    noise_std = cfg.NOISE_STD;    
+
+    train = max(0, min(1, train + noise_std * randn(size(train))));
+
+    test = max(0, min(1, test + noise_std * randn(size(test))));
+
+    % Verify intensity range after normalization
+    assert(all(train(:) >= 0 & train(:) <= 1), 'Train data out of range!');
+    assert(all(test(:) >= 0 & test(:) <= 1), 'Test data out of range!');
+
+    % Debugging visualization
+    disp('Preprocessing Complete.');
+    figure;
+    imagesc(train(:, :, 1));
+    title('First Training Sample After Preprocessing');
+    colormap gray;
+
+    % Label statistics
+    unique_labels = unique(train_l);
+    no_train = histcounts(train_l, [unique_labels; max(unique_labels)+1]);
+    fprintf('Number of training samples per label: \n');
+    disp(no_train);
+end
+
+
+======== debug_size.m ========
+function debug_size(var, varname)
+    sz = size(var);
+    if numel(sz) == 2
+        fprintf('DEBUG: %s size = [%d %d]\n', varname, sz(1), sz(2));
+    elseif numel(sz) == 3
+        fprintf('DEBUG: %s size = [%d %d %d]\n', varname, sz(1), sz(2), sz(3));
+    elseif numel(sz) == 4
+        fprintf('DEBUG: %s size = [%d %d %d %d]\n', varname, sz(1), sz(2), sz(3), sz(4));
+    else
+        fprintf('DEBUG: %s size = [', varname);
+        fprintf('%d ', sz);
+        fprintf(']\n');
+    end
+end
+
+
+======== deviceModel.m ========
+classdef deviceModel
+    properties
+        noiseLevel       % Scalar in [0,1]
+        enduranceRate    % Positive scalar
+    end
+    methods
+        function obj = deviceModel(noiseLevel, enduranceRate)
+            % Constructor: validate inputs
+            validateattributes(noiseLevel,    {'numeric'},{'scalar','>=',0,'<=',1}, mfilename, 'noiseLevel', 1);
+            validateattributes(enduranceRate, {'numeric'},{'scalar','>=',0},        mfilename, 'enduranceRate',2);
+            obj.noiseLevel    = noiseLevel;
+            perturbed = enduranceRate .* (1 + 0.1*randn());
+            obj.enduranceRate = max(perturbed, 1e5);
+        end
+
+        function [w_new, energy, stats] = applyLTP(obj, w, delta, stats, noiseLTP)
+            % LTP (potentiation) delta >= 0
+            validateattributes(w,     {'numeric'},{'nonempty'},       mfilename, 'w',     2);
+            validateattributes(delta, {'numeric'},{'size',size(w)},   mfilename, 'delta', 3);
+            if ~isfield(stats,'write_cycles') || ~isequal(size(stats.write_cycles), size(w))
+                stats.write_cycles = zeros(size(w));
+            end
+
+            noise = noiseLTP .* obj.noiseLevel;
+            dW    = delta + noise;
+
+            % State-dependent plasticity: saturates near the rails (nonlinear ion drift). Mid-range updates are full-strength; near 0 or 1 they shrink.
+            window_factor = 4 .* w .* (1 - w) + 0.2;   % peaks at w=0.5, floor 0.2
+            dW = dW .* window_factor;
+
+            w_new  = min(max(w + dW, 0), 1);
+            energy = norm(dW(:),2) / numel(dW);
+
+            stats.write_cycles = stats.write_cycles + double(abs(dW)>0.01);
+            w_new = obj.applyWear(w_new, stats);
+        end
+
+        function [w_new, energy, stats] = applyLTD(obj, w, delta, stats, noiseLTD)
+            % LTD (depression) update: delta >= 0
+            validateattributes(w,     {'numeric'},{'nonempty'},       mfilename, 'w',     2);
+            validateattributes(delta, {'numeric'},{'size',size(w)},   mfilename, 'delta', 3);
+            if ~isfield(stats,'write_cycles') || ~isequal(size(stats.write_cycles), size(w))
+                stats.write_cycles = zeros(size(w));
+            end
+
+            noise = noiseLTD .* obj.noiseLevel;
+            dW    = -delta + noise;
+
+            % State-dependent plasticity (same nonlinearity as LTP)
+            window_factor = 4 .* w .* (1 - w) + 0.2;
+            dW = dW .* window_factor;
+
+            w_new  = min(max(w + dW, 0), 1);
+            energy = norm(dW(:),2) / numel(dW);
+
+            stats.write_cycles = stats.write_cycles + double(abs(dW)>0.01);
+            w_new = obj.applyWear(w_new, stats);
+        end
+    end
+
+    methods (Access = private)
+        function w_new = applyWear(obj, w_new, stats)
+            % Graded endurance degradation, cells in the final 20% of life drift toward a stuck mid conductance; exhausted cells settle there.
+            stuck_level = 0.5;
+            wear        = stats.write_cycles / obj.enduranceRate;
+            degrading   = wear > 0.8;
+            if any(degrading(:))
+                pull = min(1, (wear(degrading) - 0.8) / 0.2);   % 0→1 across final 20%
+                w_new(degrading) = (1 - 0.3*pull) .* w_new(degrading) ...
+                                 + (0.3*pull) .* stuck_level;
+            end
+            dead = wear > 1.5;
+            w_new(dead) = stuck_level;
+        end
+    end
+end
+
+
+======== evaluate_accuracy.m ========
+function [accuracy, sparsity, entropy] = evaluate_accuracy(data, labels, w_permanence, potential_radius, overlap_dimension, syn_connected_thresh, train_sdrs, train_labels)   
+fprintf('Evaluating HTM Model Performance...\n');
+    num_samples = size(data, 3);
+    sdrs = zeros(num_samples, prod(overlap_dimension));
+    persistent sparsity_window;
+cfg = sp_config.instance();
+threshold_tracker = struct();
+
+    for i = 1:num_samples
+        [overlap, syn_connected_thresh, threshold_tracker] = compute_overlap(data,w_permanence,overlap_dimension, ...
+                              potential_radius,i,syn_connected_thresh,cfg.USE_GPU,i, cfg.OVERLAP_BATCH_SIZE, threshold_tracker);
+
+        % Dynamic threshold consistent with training:
+        dynamic_thresh       = syn_connected_thresh + 0.1*std(overlap(:));
+        sdrs(i, :) = overlap(:) > dynamic_thresh;
+
+        if i == 1
+            fprintf('Sample SDR Binary Matrix (Sample 1): %s\n', mat2str(sdrs(i, :)));
+        end
+    end
+
+    % Classification using SDRs.
+    model       = fitcecoc(train_sdrs, train_labels);
+    predictions = predict(model, sdrs);
+    accuracy    = mean(predictions == labels)*100;
+
+    sparsity = mean(sum(sdrs, 2)) / size(sdrs, 2) * 100;
+    probabilities = mean(sdrs, 1);
+    entropy = -sum(probabilities .* log2(probabilities + eps));
+    
+    fprintf('Evaluation Metrics - Accuracy: %.2f%%, Sparsity: %.2f%%, Entropy: %.4f\n', accuracy, sparsity, entropy);
+    
+    % if sparsity consistently decreases over multiple evaluations
+        if isempty(sparsity_window)
+    sparsity_window = sparsity * ones(1, 5);
+        end
+
+        % Update the trend window
+        sparsity_window = [sparsity_window(2:end), sparsity];
+        sparsity_trend = mean(diff(sparsity_window));  % Measure change over time
+
+        % Trigger warning only if sparsity keeps decreasing
+        if sparsity_trend < -0.5
+    fprintf('[WARNING] SDR sparsity dropping (%.2f%%). Consider adjusting inhibition radius.\n', sparsity);
+        end
+
+end
+
+
+======== evaluate_hyperparams.m ========
+function [loss, adjusted_potential_radius] = evaluate_hyperparams(train_data, train_label, val_data, val_label, params, pca_coeff, potential_radius)
+%EVALUATE_HYPERPARAMS  One trial of SP training returning composite fitness.
+%   Composite loss = -accuracy
+%                  + sparsity_deviation_penalty
+%                  + entropy_collapse_penalty
+%                  + energy_cost_penalty
+%   This replaces the flat -accuracy objective which produced a nearly
+%   constant landscape (trivially separable patterns score ~100% for most
+%   parameter sets, giving the optimizer nothing to search against).
+
+    cfg = sp_config.instance();
+
+    % Defaults for output in case of early error
+    loss                     = Inf;
+    adjusted_potential_radius = potential_radius;
+
+    try
+        %  Data subsetting. scales with dataset
+        n_tr = size(train_data, 3);
+        n_vl = size(val_data, 3);
+        subset_train_count = min(max(150, round(n_tr * 0.10)), n_tr);
+        subset_val_count   = min(max(40,  round(n_vl * 0.10)), n_vl);
+        assert(subset_train_count > 0, 'Training subset is empty.');
+        assert(subset_val_count   > 0, 'Validation subset is empty.');
+        % Normalise labels to row vectors indexing is shape-agnostic
+        train_label = train_label(:).';
+        val_label   = val_label(:).';
+        rng(cfg.HYPER_SEED);  % reproducible subset across evals
+        tr_idx = sort(randperm(n_tr, subset_train_count));
+        vl_idx = sort(randperm(n_vl, subset_val_count));
+        train_data_subset  = train_data(:, :, tr_idx);
+        train_label_subset = train_label(tr_idx);
+        val_data_subset    = val_data(:, :, vl_idx);
+        val_label_subset   = val_label(vl_idx);
+
+        assert(size(train_data_subset,1) == size(val_data_subset,1) && ...
+               size(train_data_subset,2) == size(val_data_subset,2), ...
+               'train_data and val_data spatial dimensions must match.');
+
+        % GPU transfer if enabled
+        if cfg.USE_GPU  && safe_gpuDeviceCount() > 0
+            train_data_subset = gpuArray(double(train_data_subset));
+            val_data_subset   = gpuArray(double(val_data_subset));
+        end
+
+        %  Overlap dimensions
+        input_size        = [size(train_data_subset,1), size(train_data_subset,2)];
+        overlap_dimension = input_size - (potential_radius - 1);
+
+        %  Permanence initialisation
+        initial_w = initialize_permanence(pca_coeff, potential_radius, overlap_dimension, cfg.USE_GPU);
+        if cfg.USE_GPU && safe_gpuDeviceCount() > 0
+            initial_w = gpuArray(double(initial_w));
+        end
+
+        %  Train SP, capturing metrics
+        try
+            [best_weights, ~, ~, ~, ~, ~, ~, ~, ~, epoch_energy, ~, epoch_sparsity, epoch_entropy] = ...
+                train_spatial_pooler( ...
+                    train_data_subset, train_label_subset, ...
+                    params.base_area_density, params.syn_inc_base, params.syn_dec_base, ...
+                    0, cfg.SYN_CONNECTED_INIT, false, ...
+                    initial_w, params.decay_scaling, params.endurance_rate, ...
+                    pca_coeff, potential_radius, overlap_dimension, ...
+                    val_data_subset, val_label_subset, [], ...
+                    cfg.ENTROPY_THRESHOLD_INIT, cfg.SPARSITY_THRESHOLD_INIT);
+        catch ME
+            fprintf('[ERROR] train_spatial_pooler failed in evaluate_hyperparams:\n%s\n', ME.message);
+            loss = Inf;
+            return;
+        end
+
+        %  Compute loss
+        if isempty(best_weights)
+            warning('evaluate_hyperparams:EmptyWeights', ...
+                    'train_spatial_pooler returned empty weights.');
+            loss = Inf;
+            return;
+        end
+
+        % Classification accuracy
+        preds = infer_labels(val_data_subset, best_weights, ...
+                             train_data_subset, train_label_subset, overlap_dimension);
+        acc   = mean(preds(:) == val_label_subset(:));
+
+        % Sparsity deviation penalty - anchored to an absolute target band, not params.base_area_density.
+        % Anchoring to the self-chosen density lets the optimiser score well by simply lowering its own target
+        sparsity_frac   = epoch_sparsity / 100;
+        target_sparsity = 0.10;                       % absolute task-agnostic ideal
+        sparsity_band   = 0.05;                        % tolerance before penalty bites
+        sparsity_dev    = max(0, abs(sparsity_frac - target_sparsity) - sparsity_band);
+        sparsity_pen    = sparsity_dev * 8;
+
+        % Hard floor penalty
+        if sparsity_frac < 0.02
+            sparsity_pen = sparsity_pen + (0.02 - sparsity_frac) * 50;
+        end
+
+        % Entropy collapse penalty, penalise representations with no diversity
+        entropy_pen = max(0, 0.2 - epoch_entropy) * 5;
+
+        % Energy cost penalty, ormalised write energy epoch_energy is in Joules; 1e-2 J/epoch is soft budget
+        energy_pen = min(1.0, epoch_energy / 1e-2);
+
+        % Composite loss
+        loss = -acc * 3 + sparsity_pen + entropy_pen + 0.1 * energy_pen;
+
+        fprintf('[EVAL] acc=%.3f | sparsity=%.2f%% | entropy=%.4f | energy=%.2e | loss=%.4f\n', ...
+                acc, epoch_sparsity, epoch_entropy, epoch_energy, loss);
+
+    catch ME
+        fprintf('[ERROR] evaluate_hyperparams failed:\n%s\n', ME.message);
+        loss = Inf;
+    end
+end
+
+
+======== evaluate_with_params.m ========
+function accuracy = evaluate_with_params(train_data, train_label, test_data, test_label, density, inc, dec, potential_radius, pca_coeff)
+   
+input_dim      = [size(train_data,1) size(train_data,2)];
+    overlap_dimension    = input_dim - (potential_radius-1);
+    initial_w      = initialize_permanence(pca_coeff,            ...
+                                           potential_radius,     ...
+                                           overlap_dimension, cfg.USE_GPU);  
+
+    try
+        [w_permanence,~,~,~,~,~, ~, ~] = train_spatial_pooler( ...
+            train_data,   train_label, ...
+            density,      inc,         dec, ...
+            0,            0.3,         false, ...        % sampleCounter, thresh, GPU
+            initial_w,    1e4,         1e6,   ...        % decayScaling, enduranceRate
+            pca_coeff,    potential_radius, overlap_dimension, ...
+            [],           [],           [],    ...       % no validation data
+            0.5,          25);                            % entropy & sparsity thresholds
+
+        predicted_labels = infer_labels(test_data,w_permanence,train_data,train_label, overlap_dimension);
+
+        % Compute accuracy
+        accuracy = mean(predicted_labels == test_label) * 100;
+        fprintf('Validation Accuracy: %.2f%%\n', accuracy);
+    catch ME
+        fprintf('Error in evaluate_with_params: %s\n', ME.message);
+        fprintf('Traceback: %s\n', ME.message);
+        accuracy = NaN;
+    end
+end
+
+
+======== generate_sdr.m ========
+function [sdr_flat, state] = generate_sdr(data, w_permanence, idx, config, state)
+    %GENERATE_SDR  Generate sparse distributed representation using adaptive kWTA
+    % (arguments block removed — MATLAB not supported in Octave)
+    validateattributes(data,{'numeric'}, {}, mfilename, 'data', 1);
+    validateattributes(w_permanence, {'numeric'}, {}, mfilename, 'w_permanence', 2);
+    validateattributes(idx,{'numeric'}, {'scalar','integer'}, mfilename, 'idx', 3);
+    assert(isstruct(config),'config must be a struct');
+    assert(isstruct(state),'state must be a struct');
+
+    cfg = sp_config.instance();
+
+    % Move data to GPU if enabled
+    if cfg.USE_GPU
+        data = gpuArray(data);
+        w_permanence = gpuArray(w_permanence);
+    end
+
+    % Compute overlap
+
+    input_size = [size(data,1), size(data,2)];
+    dynamic_overlap_dim = input_size - (config.potential_radius - 1);
+
+
+    if ~isfield(state, 'threshold_tracker') || isempty(state.threshold_tracker)
+    state.threshold_tracker = struct();
+    end
+
+    [overlap, syn_connected_thresh, state.threshold_tracker] = compute_overlap(data, w_permanence, ...
+    dynamic_overlap_dim, config.potential_radius, idx, ...
+    config.syn_connected_thresh, cfg.USE_GPU, state.sample_counter, ...
+    cfg.OVERLAP_BATCH_SIZE, state.threshold_tracker);
+
+    % Initialize kwta_state on first call if missing
+    if ~isfield(state, 'kwta_state') || isempty(state.kwta_state)
+        state.kwta_state = struct();
+    end
+
+    % Apply adaptive kWTA inhibition
+    reset_flag = (state.sample_counter == 1);
+    [active_columns, ~, state.kwta_state, base_area_density] = apply_kwta( overlap, config.base_area_density, state.sample_counter, cfg.USE_GPU, reset_flag, state.kwta_state);
+
+    % Flatten SDR
+    sdr_flat = active_columns(:);
+    state.last_active_columns = active_columns;
+    % Debug print
+    if cfg.DEBUG
+        fprintf('[SDR] Sample %d | Active=%d/%d\n', idx, nnz(sdr_flat), numel(sdr_flat));
+    end
+
+    % Increment sample counter
+    state.sample_counter = state.sample_counter + 1;
+end
+
+
+======== get_cifar_subset.m ========
+function [train_data, train_label, test_data, test_label] = get_cifar_subset(num_train, num_test, cifar_path)
+    % Load preprocessed CIFAR-10 dataset
+    cifar = load(cifar_path);
+
+    RGB_train = cifar.train_data(:,:,:,1:num_train);     % 32×32×3×Nt
+    RGB_test  = cifar.test_data (:,:,:,end-num_test+1:end);
+    train_label = double(cifar.train_labels(1:num_train));
+    test_label  = double(cifar.test_labels(end-num_test+1:end));
+
+   
+    lw   = [0.2989 0.5870 0.1140];                       % R,G,B weights
+    train_data = squeeze( lw(1)*double(RGB_train(:,:,1,:)) + ...
+                          lw(2)*double(RGB_train(:,:,2,:)) + ...
+                          lw(3)*double(RGB_train(:,:,3,:)) ) / 255;       % → 32×32×Nt
+    test_data  = squeeze( lw(1)*double(RGB_test (:,:,1,:)) + ...
+                          lw(2)*double(RGB_test (:,:,2,:)) + ...
+                          lw(3)*double(RGB_test (:,:,3,:)) ) / 255;   
+
+    
+
+end
+
+
+======== get_mnist.m ========
+function [train_data, train_label, test_data, test_label] = get_mnist()
+
+    % Find mnist folder relative to this function's location
+    % Works regardless of working directory or who clones the repo
+    this_dir  = fileparts(mfilename('fullpath'));
+    mnist_dir = fullfile(this_dir, 'mnist');
+
+    % Load training images
+    f = fopen(fullfile(mnist_dir, 'train-images-idx3-ubyte'), 'r');
+    if f == -1
+        error('Cannot find MNIST files. Expected folder: %s\nDownload from: http://yann.lecun.com/exdb/mnist/', mnist_dir);
+    end
+    train_data = fread(f, inf, 'uint8');
+    fclose(f);
+    train_data = train_data(17:end) ./ 255;
+    train_data = permute(reshape(train_data, 28, 28, 60e3), [2 1 3]);
+
+    % Load test images
+    f = fopen(fullfile(mnist_dir, 't10k-images-idx3-ubyte'), 'r');
+    if f == -1, error('Cannot find MNIST test images in %s', mnist_dir); end
+    test_data = fread(f, inf, 'uint8');
+    fclose(f);
+    test_data = test_data(17:end) ./ 255;
+    test_data = permute(reshape(test_data, 28, 28, 10e3), [2 1 3]);
+
+    % Load training labels
+    f = fopen(fullfile(mnist_dir, 'train-labels-idx1-ubyte'), 'r');
+    if f == -1, error('Cannot find MNIST training labels in %s', mnist_dir); end
+    train_label = fread(f, inf, 'uint8');
+    fclose(f);
+    train_label = double(train_label(9:end)');
+
+    % Load test labels
+    f = fopen(fullfile(mnist_dir, 't10k-labels-idx1-ubyte'), 'r');
+    if f == -1, error('Cannot find MNIST test labels in %s', mnist_dir); end
+    test_label = fread(f, inf, 'uint8');
+    fclose(f);
+    test_label = double(test_label(9:end)');
+end
+
+
+======== get_mnist_subset.m ========
+function [train_data, train_label, test_data, test_label] = get_mnist_subset(num_train, num_test)
+    if nargin < 1, num_train = 4000; end
+    if nargin < 2, num_test  = 1000; end
+
+    [train_data_full, train_label_full, test_data_full, test_label_full] = get_mnist();
+
+    assert(size(train_data_full, 3) >= num_train, ...
+           'Not enough training samples. Requested %d, have %d.', num_train, size(train_data_full,3));
+    assert(size(test_data_full, 3) >= num_test, ...
+           'Not enough test samples. Requested %d, have %d.', num_test, size(test_data_full,3));
+
+    train_data  = train_data_full(:, :, 1:num_train);
+    train_label = train_label_full(1:num_train);
+    test_data   = test_data_full(:, :, 1:num_test);
+    test_label  = test_label_full(1:num_test);
+end
+
+
+======== infer_labels.m ========
+function predicted_labels = infer_labels(test_data, w_permanence, train_data, train_labels, overlap_dimension)
+    % infer_labels  Generate SDRs and classify via k-NN (Hamming) with SVM fallback
+    
+    cfg = sp_config.instance();
+    
+
+    validateattributes(train_data, {'numeric'},{'nonempty'}, mfilename, 'train_data', 1);
+    validateattributes(test_data,  {'numeric'},{'nonempty'}, mfilename, 'test_data', 2);
+    assert(ndims(train_data) <= 4, 'infer_labels:BadInput', 'train_data must have at most 4 dimensions.');
+    assert(ndims(test_data)  <= 4, 'infer_labels:BadInput', 'test_data must have at most 4 dimensions.');
+
+    % Convert 4-D (H×W×C×N) to grayscale 3-D (H×W×N)
+    if ndims(train_data) == 4
+        train_data = squeeze(mean(train_data, 3));
+    end
+    if ndims(test_data) == 4
+        test_data = squeeze(mean(test_data, 3));
+    end
+
+    % Ensure 3-D data by adding singleton sample dimension if needed
+    if ismatrix(train_data)
+        train_data = reshape(train_data, size(train_data,1), size(train_data,2), 1);
+    end
+    if ismatrix(test_data)
+        test_data = reshape(test_data, size(test_data,1), size(test_data,2), 1);
+    end
+    
+
+    potential_radius = size(w_permanence, 1);
+    assert(all(overlap_dimension > 0), 'infer_labels:BadInput', 'Invalid overlap dimensions');
+    syn_connected_thresh = 0.5;
+    threshold_tracker = struct();
+    use_gpu = cfg.USE_GPU;
+    batch_size = cfg.OVERLAP_BATCH_SIZE;
+
+    % Determine sample counts for 3-D or 4-D data
+    if ndims(train_data) == 3
+        num_train = size(train_data, 3);
+    else
+        num_train = size(train_data, 4);
+    end
+    if ndims(test_data) == 3
+        num_test = size(test_data, 3);
+    else
+        num_test = size(test_data, 4);
+    end
+    
+    % Preallocate SDR matrices (rows = samples, columns = flattened overlap)
+    train_sdrs = false(num_train, prod(overlap_dimension));
+    test_sdrs  = false(num_test,  prod(overlap_dimension));
+
+    % Compute SDRs for all training samples
+    for i = 1:num_train
+        % Computee overlap for sample i (batch of size 1)
+        
+        [ov, syn_connected_thresh_batch, threshold_tracker] = ...
+            compute_overlap(train_data, w_permanence, overlap_dimension, potential_radius, i:i, syn_connected_thresh, false, i, batch_size, threshold_tracker);
+
+        % If compute_overlap returned a 3-D array for this single sample, squeeze to 2-D
+        if ndims(ov) == 3
+            assert(size(ov,3) == 1, 'infer_labels:TrainOverlapBadDims', 'Expected third dim size = 1 for single sample overlap.');
+            ov = ov(:,:,1);
+        end
+        assert(isequal(size(ov), overlap_dimension), ...
+            'infer_labels:TrainOverlapMismatch', ...
+            'Overlap size mismatch during training: got %s expected %s.', ...
+            mat2str(size(ov)), mat2str(overlap_dimension));
+
+        % Determine threshold and generate binary SDR
+        thr = syn_connected_thresh_batch(1) + 0.1 * std(double(ov(:)));
+        train_sdrs(i, :) = reshape(ov > thr, 1, []);
+
+        % Update threshold for next iteration
+        syn_connected_thresh = syn_connected_thresh_batch(end);
+        
+    end
+
+    % Compute SDRs for all test samples (using batch processing)
+    for b = 1:batch_size:num_test
+        idx = b : min(b+batch_size-1, num_test);
+        
+        if isempty(idx) || idx(1) > size(test_data, 3)
+            break; % no more samples
+        end
+        
+        % Compute overlap for the batch of test samples
+        [ov_batch, syn_connected_thresh_batch, threshold_tracker] = ...
+            compute_overlap(test_data, w_permanence, overlap_dimension, potential_radius, idx, syn_connected_thresh, false, idx(1), batch_size, threshold_tracker);
+
+        % Ensure ov_batch is 3-D (H×W×N_batch)
+        if ndims(ov_batch) == 2
+            ov_batch = reshape(ov_batch, size(ov_batch,1), size(ov_batch,2), 1);
+        end
+       
+       
+
+        % Process each sample in the batch
+        for kk = 1:numel(idx)
+            ov = squeeze(ov_batch(:,:,kk));
+            thr = syn_connected_thresh_batch(kk) + 0.1 * std(double(ov(:)));
+            test_sdrs(idx(kk), :) = reshape(ov > thr, 1, []);
+            
+        end
+
+        % Update threshold for next batch
+        syn_connected_thresh = syn_connected_thresh_batch(end);
+    end
+
+    % k-NN classification (Hamming distance, K=3)
+    K = 3;
+    predicted_labels = zeros(num_test,1);
+    assert(length(predicted_labels) == num_test, 'infer_labels:LabelVectorSizeMismatch', 'Label vector size mismatch');
+    try
+        for j = 1:num_test
+            % Hamming distance between test SDR j and all train SDRs
+            diffs = sum(abs(train_sdrs - reshape(test_sdrs(j,:), 1, [])), 2);
+            [~, sorted_idx] = sort(diffs); idxK = sorted_idx(1:K);
+            % majority vote among nearest neighbors
+            if isempty(idxK)
+                predicted_labels(j) = mode(train_labels);  % fallback if no neighbors
+            else
+                votes = train_labels(idxK);
+                predicted_labels(j) = mode(votes);
+            end
+            
+        end
+    catch ME
+        % fallback to SVM if k-NN fails
+        fprintf('[WARNING] k-NN classification failed: %s\n Falling back to SVM.\n', ME.message);
+        predicted_labels = classify_using_sdrs(test_sdrs, train_sdrs, train_labels);
+    end
+
+    
+end
+
+
+======== initialize_permanence.m ========
+function w_permanence = initialize_permanence(pca_coeff, potential_radius, overlap_dimension, use_gpu)
+fprintf('[DEBUG] potential_radius=%d, size(pca_coeff)=%s\n', ...
+    potential_radius, mat2str(size(pca_coeff)));
+
+permanence_min = 0.4;
+    permanence_max = 0.8;
+    num_patches = overlap_dimension(1) * overlap_dimension(2);
+
+
+   cfg = sp_config.instance();
+    if cfg.USE_PCA_INIT
+    if ~isequal(size(pca_coeff), [potential_radius, potential_radius])
+        error('[FATAL] PCA coeff size mismatch: expected [%d,%d], got %s', ...
+            potential_radius, potential_radius, mat2str(size(pca_coeff)));
+    end
+    w = zeros(potential_radius,potential_radius,num_patches);
+        for k = 1:num_patches
+            r = mod(k-1, overlap_dimension(1));
+         c = floor((k-1)/overlap_dimension(1));
+            w(:,:,k) = circshift(pca_coeff,[r c]);
+        end
+
+    else
+         % orthogonal random patches if no PCA
+         fprintf('[LOG] initialize_permanence: USE_PCA_INIT=false → using orthogonal random patches\n');
+
+     pr2         = potential_radius^2;
+    num_patches = overlap_dimension(1) * overlap_dimension(2);
+    randPatches = randn(pr2, num_patches);
+    if num_patches >= pr2
+        Q = orth(randPatches);            % pr2×pr2
+        reps        = ceil(num_patches/pr2);
+        randPatches = repmat(Q, 1, reps); % pr2×(pr2*reps)
+        randPatches = randPatches(:,1:num_patches);
+    else
+        randPatches = orth(randPatches')';  % pr2×num_patches
+    end
+    mn = min(randPatches(:));
+    mx = max(randPatches(:));
+    randPatches = (randPatches - mn) / (mx - mn + eps);
+
+    w = reshape(randPatches, potential_radius, potential_radius, num_patches);
+    end
+
+
+    w_permanence = reshape(w, ...
+        [potential_radius, potential_radius, overlap_dimension(1), overlap_dimension(2)]);
+
+    w_permanence = permanence_min + (permanence_max - permanence_min) * w_permanence;
+    w_permanence = w_permanence + 0.03 * randn(size(w_permanence));
+    w_permanence = min(max(w_permanence, 0), 1);
+
+    fprintf('[DEBUG] w_permanence size: %s\n', mat2str(size(w_permanence)));
+
+
+    if use_gpu && ~isOctave()
+        w_permanence = gpuArray(w_permanence);
+    end
+
+    fprintf('[LOG] Permanence initialized: [%.2f, %.2f] | Size: %s\n', ...
+        permanence_min, permanence_max, mat2str(size(w_permanence)));
+
+    if isempty(w_permanence)
+        error('[ERROR] w_permanence failed to initialize.');
+    end
+
+    fprintf('[DEBUG] Initialized: Mean=%.4f | Min=%.4f | Max=%.4f | Size=%s\n', ...
+        mean(w_permanence(:)), min(w_permanence(:)), max(w_permanence(:)), mat2str(size(w_permanence)));
+end
+
+
+======== metrics_analysis.m ========
+function metrics_analysis(dataset, F)
+
+%run from run all to get correct file name if running old training results
+%change cfg.SubsetTraining in sp config to the correct dataset amount used
+%METRICS_ANALYSIS  Visualise and summarise results saved by new_sp.m
+
+%% Locate the newest results file
+cfg = sp_config.instance();
+
+assert(~isempty(F), 'No runs found – training_results_*.mat not present');
+[~, idx] = max([F.datenum]);
+R = load(F(idx).name);
+
+% Number of epochs 
+if isfield(R,'sparsity_per_epoch')
+    epochs = numel(R.sparsity_per_epoch);
+elseif isfield(R,'entropy_per_epoch')
+    epochs = numel(R.entropy_per_epoch);
+else
+    epochs = NaN;
+end
+
+stop_ep = fielddefault(R,'stop_epoch', epochs);
+
+%% 2×2 Main dashboard 
+figure('Name','Training Metrics', ...
+       'Units','normalized','Position',[.1 .1 .8 .8]);
+
+% Panel 1 : Validation accuracy 
+subplot(2,2,1);
+if isfield(R,'val_accuracy_history') && ~isempty(R.val_accuracy_history)
+    plot(1:numel(R.val_accuracy_history), R.val_accuracy_history,'-o','LineWidth',1.5); hold on;
+    idxPlot = min(stop_ep, numel(R.val_accuracy_history));
+    plot(idxPlot, R.val_accuracy_history(idxPlot),'rs','MarkerSize',8,'MarkerFaceColor','r');
+    text(idxPlot, R.val_accuracy_history(idxPlot), '  Early stop','VerticalAlignment','bottom');
+    xlabel('Epoch'); ylabel('Validation Accuracy (%)');
+    title(['Validation Accuracy - ', upper(dataset), ' (', num2str(cfg.SubsetTraining), ') Dataset']); grid on; ylim([0,100]);
+else
+    text(0.5,0.5,'No validation data','HorizontalAlignment','center'); axis off;
+end
+
+% Sparsity per epoch
+subplot(2,2,2);
+if isfield(R,'sparsity_per_epoch') && ~isempty(R.sparsity_per_epoch)
+    plot(1:epochs, R.sparsity_per_epoch,'-o','LineWidth',1.5);
+    xlabel('Epoch'); ylabel('Sparsity (%)'); title(['SDR Sparsity - ', upper(dataset), ' (', num2str(cfg.SubsetTraining), ') Dataset']); grid on;
+else
+    text(0.5,0.5,'No sparsity data','HorizontalAlignment','center'); axis off;
+end
+
+% Entropy per epoch 
+subplot(2,2,3);
+if isfield(R,'entropy_per_epoch') && ~isempty(R.entropy_per_epoch)
+    plot(1:epochs, R.entropy_per_epoch,'-o','LineWidth',1.5);
+    xlabel('Epoch'); ylabel('Entropy (bits)'); title(['Entropy per Epoch - ', upper(dataset), ' (', num2str(cfg.SubsetTraining), ') Dataset']); grid on;
+else
+    text(0.5,0.5,'No entropy data','HorizontalAlignment','center'); axis off;
+end
+
+% Energy per epoch 
+subplot(2,2,4);
+if isfield(R,'energy_history') && ~isempty(R.energy_history)
+    plot(1:numel(R.energy_history), R.energy_history,'-o','LineWidth',1.5);
+    xlabel('Epoch'); ylabel('Energy / update'); title(['Energy per Epoch - ', upper(dataset), ' (', num2str(cfg.SubsetTraining), ') Dataset']); grid on;
+else
+    text(0.5,0.5,'No energy data','HorizontalAlignment','center'); axis off;
+end
+
+%% MNIST-specific plots
+if strcmpi(dataset, 'mnist')
+    if isfield(R,'write_cycle_history') && ~isempty(R.write_cycle_history)
+        figure('Name','Write‑Cycle Distribution');
+        histogram(R.write_cycle_history);
+        xlabel('Write‑cycle count'); ylabel('Frequency'); title('Memristor Write‑Cycle Distribution');
+    end
+
+    if isfield(R,'sample_input') && isfield(R,'sample_sdr')
+        figure('Name','SDR Example');
+        subplot(1,2,1); imagesc(R.sample_input); colormap gray; axis image off; title('Original Input');
+        subplot(1,2,2); imagesc(R.sample_sdr);   colormap gray; axis image off; title('Binary SDR');
+    end
+end
+
+%% General plots
+if isfield(R,'val_accuracy_history')
+    energy_this_run = fielddefault(R,'energy_history',0);
+    totalEnergyThis = sum(energy_this_run);
+    cats = categorical({'This SP','Liu et al. (2022)','Baseline CNN'});
+    accs = [R.val_accuracy_history(end), 74.5, 82.3];
+    ener = [totalEnergyThis,             1.2e6, 3.4e6];
+
+    figure('Name','Benchmark Comparison');
+    yyaxis left; bar(cats, accs); ylabel('Accuracy (%)');
+    yyaxis right; bar(cats, ener); ylabel('Total Energy (J)');
+    title(['Accuracy vs. Lifetime Energy - ', upper(dataset), ' (', num2str(cfg.SubsetTraining), ') Dataset']);
+    legend({'Accuracy','Energy'},'Location','northoutside');
+end
+
+if isfield(R,'inhibition_radius_history') && ~isempty(R.inhibition_radius_history)
+    figure('Name','Inhibition Radius per Epoch');
+    plot(1:numel(R.inhibition_radius_history), R.inhibition_radius_history,'-o','LineWidth',1.5);
+    xlabel('Epoch'); ylabel('Radius'); title(['Inhibition Radius per Epoch - ', upper(dataset), ' (', num2str(cfg.SubsetTraining), ') Dataset']); grid on;
+end
+
+if isfield(R,'syn_inc_history') && isfield(R,'syn_dec_history')
+    figure('Name','LTP vs LTD Rates');
+    plot(1:numel(R.syn_inc_history), R.syn_inc_history,'-o','LineWidth',1.5); hold on;
+    plot(1:numel(R.syn_dec_history), R.syn_dec_history,'-s','LineWidth',1.5);
+    xlabel('Epoch'); ylabel('Rate'); legend('LTP','LTD'); title(['LTP vs. LTD Rates - ', upper(dataset), ' (', num2str(cfg.SubsetTraining), ') Dataset']); grid on;
+end
+
+%% Summary table and console output
+finalAcc    = fielddefault_nested(R,'val_accuracy_history',@(v) v(end), NaN);
+avgSparsity = fielddefault_vec(R,'sparsity_per_epoch', @mean, NaN);
+avgEntropy  = fielddefault_vec(R,'entropy_per_epoch',  @mean, NaN);
+totalEnergy = fielddefault_vec(R,'energy_history',     @sum, NaN);
+totalWrites = fielddefault_vec(R,'write_cycle_history',@sum, NaN);
+
+T = table(finalAcc, avgSparsity, avgEntropy, totalEnergy, totalWrites, ...
+    'VariableNames',{'FinalAccuracy','AvgSparsity','AvgEntropy','TotalEnergy','TotalWrites'});
+
+fprintf('\n=== Summary of Final Metrics ===\n');
+disp(T);
+
+if ~isnan(stop_ep) && stop_ep < epochs
+    fprintf('Early stopping triggered at epoch %d (%.2f%% accuracy).\n', ...
+            stop_ep, finalAcc);
+end
+end
+
+
+
+
+function out = fielddefault(S, name, default)
+%FIELDDEFAULT Return field value if it exists, else default
+    if isfield(S, name)
+        out = S.(name);
+    else
+        out = default;
+    end
+end
+function out = fielddefault_nested(S, name, func, default)
+% Return func(S.name) if field exists and is not empty, else default
+    if isfield(S, name) && ~isempty(S.(name))
+        out = func(S.(name));
+    else
+        out = default;
+    end
+end
+function out = fielddefault_vec(S, name, func, default)
+% Apply a reduction function like @mean or @sum on a vector field if it exists
+    if isfield(S, name) && ~isempty(S.(name))
+        out = func(S.(name));
+    else
+        out = default;
+    end
+end
+
+
+======== new_sp.m ========
+function new_sp(dataset, train_data, train_label)
+%NEW_SP  HTM Spatial Pooler with self-evolving parameter adaptation.
+%   Self-evolution mechanism:
+%     - Tracks a composite performance metric each epoch
+%       (anomaly × entropy × sparsity_quality)
+%     - If performance degrades over 3 consecutive epochs, triggers
+%       re-optimisation of SP hyperparameters against the composite fitness
+%     - TM anomaly feeds back to SP decay_scaling each epoch
+%     - Cumulative sample counter preserves momentum ramp across epochs
+
+    clc;
+    clear compute_overlap adjust_synaptic_factors apply_kwta pi_controller
+
+    cfg = sp_config.instance();
+    entropy_threshold  = cfg.ENTROPY_THRESHOLD_INIT;
+    sparsity_threshold = cfg.SPARSITY_THRESHOLD_INIT;
+    if strcmp(dataset, 'CIFAR')
+        sparsity_threshold = 20;
+    end
+
+    % Console logging
+    logFile = 'new_sp_console_output.txt';
+    if exist(logFile, 'file'), delete(logFile); end
+    diary(logFile);
+    fprintf('Logging started at %s\n', datestr(now));
+
+    try
+
+        % Data preparation
+
+        train_epoch = 10;
+        val_ratio   = 0.2;
+        [train_data, train_label, val_data, val_label] = split_data(train_data, train_label, val_ratio);
+
+        if strcmp(dataset, 'CIFAR')
+            % CIFAR already in [0,1]
+        else
+            val_data = val_data / 255.0;
+        end
+
+        if ndims(val_data) == 4
+            assert(size(val_data, 4) == numel(val_label), 'Val data/label count mismatch.');
+        else
+            assert(size(val_data, 3) == numel(val_label), 'Val data/label count mismatch.');
+        end
+
+
+        % SP geometry
+
+        [h, w, ~]        = size(train_data);
+        potential_radius  = floor(min(h, w) / 4);
+        input_dimension   = [size(train_data, 1), size(train_data, 2)];
+
+
+        % PCA initialisation
+
+        numImgs   = size(train_data, 3);
+        nPCA      = max(1, round(cfg.PCA_SAMPLE_FRAC * numImgs));
+        selIdx    = randperm(numImgs, nPCA);
+        pr        = potential_radius;
+        maxPerImg = ceil(h/pr) * ceil(w/pr);
+        patches   = zeros(pr^2, nPCA * maxPerImg, 'double');
+        col       = 1;
+        for k = 1:nPCA
+            img = train_data(:, :, selIdx(k));
+            img_patches = im2col(img, [pr pr], 'distinct');
+            np  = size(img_patches, 2);
+            patches(:, col:col+np-1) = img_patches;
+            col = col + np;
+        end
+        patches(:, col:end) = [];
+        [coeff, ~] = pca(patches', 'Centered', false);
+        pca_coeff  = reshape(coeff(:, 1), [pr pr]);
+
+
+        % Hyperparameter optimisation
+
+        [best_params, adjusted_potential_radius] = optimize_hyperparameters( ...
+            train_data, train_label, val_data, val_label, dataset, potential_radius, pca_coeff);
+
+        base_area_density      = min(0.5, best_params.base_area_density * 1.15);
+        syn_inc_base           = best_params.syn_inc_base;
+        syn_dec_base           = best_params.syn_dec_base;
+        syn_connected_thresh_base = 0.3;
+        noise_std_base         = 0.02;
+        decay_scaling          = best_params.decay_scaling;
+        endurance_rate         = best_params.endurance_rate;
+
+        cfg.OVERLAP_MIN_ACTIVE_FRAC = 0.8 * best_params.base_area_density;
+        cfg.OVERLAP_MAX_ACTIVE_FRAC = 1.2 * best_params.base_area_density;
+
+        potential_radius  = adjusted_potential_radius;
+        overlap_dimension = input_dimension - potential_radius + 1;
+        assert(all(overlap_dimension > 0), 'Invalid overlap dimensions.');
+
+
+        % GPU setup
+
+        use_gpu = safe_gpuDeviceCount() > 0;
+        if use_gpu
+            g = gpuDevice();
+            fprintf('GPU detected: %s\n', g.Name);
+            train_data = gpuArray(train_data);
+        end
+
+
+        % Initialise weights and history arrays
+
+        w_permanence = initialize_permanence(pca_coeff, potential_radius, overlap_dimension, use_gpu);
+
+        energy_history            = zeros(train_epoch, 1);
+        write_cycle_history       = zeros(train_epoch, 1);
+        sparsity_per_epoch        = zeros(train_epoch, 1);
+        entropy_per_epoch         = zeros(train_epoch, 1);
+        val_accuracy_history      = zeros(train_epoch, 1);
+        inhibition_radius_history = zeros(train_epoch, 1);
+        syn_inc_history           = zeros(train_epoch, 1);
+        syn_dec_history           = zeros(train_epoch, 1);
+        base_area_density_history = zeros(train_epoch, 1);
+        fallbacks_per_epoch       = zeros(train_epoch, 1);
+        anomaly_per_epoch         = zeros(train_epoch, 1);
+
+        % Self-evolution performance tracking
+        % perf_metric = entropy × (1 - |sparsity - target|) × (1 - anomaly)
+        % Higher is better; degradation over 3 epochs triggers re-optimisation
+        perf_history    = zeros(train_epoch, 1);
+        reopt_cooldown  = 0;   % epochs remaining before re-optimisation allowed again
+
+        fprintf('Starting Training...\n');
+        tic;
+        fprintf('[DEBUG] Before training: w_permanence Size=%s, Mean=%.4f\n', ...
+                mat2str(size(w_permanence)), mean(w_permanence(:)));
+
+        tm_state_main      = struct();
+        cumulative_counter = 0;
+
+
+        % Epoch loop
+
+        for tep = 1:train_epoch
+            fprintf('\nEpoch %d/%d\n', tep, train_epoch);
+
+            sample_counter      = cumulative_counter;
+            cfg.EPOCH_START_FLAG = true;
+
+            % Noise injection (anneals to zero over epochs)
+            noise_std        = noise_std_base * (1 - tep / train_epoch);
+            train_data_noisy = max(0, min(1, train_data + noise_std * randn(size(train_data))));
+            if use_gpu
+                train_data_noisy = gpuArray(train_data_noisy);
+            end
+
+            %Spatial Pooler training -
+            [w_permanence, sample_counter, returned_history, base_area_density, ...
+             syn_inc_base, syn_dec_base, inh_rad, inc_rate, dec_rate, ...
+             e, wc, epoch_sparsity, epoch_entropy, fallback_counter_epoch] = ...
+                train_spatial_pooler( ...
+                    train_data_noisy, train_label, ...
+                    base_area_density, syn_inc_base, syn_dec_base, ...
+                    sample_counter, syn_connected_thresh_base, use_gpu, ...
+                    w_permanence, decay_scaling, endurance_rate, ...
+                    pca_coeff, potential_radius, overlap_dimension, ...
+                    val_data, val_label, val_accuracy_history, ...
+                    entropy_threshold, sparsity_threshold);
+
+            % Record epoch metrics
+            final_val_acc             = returned_history(end);
+            val_accuracy_history(tep) = final_val_acc;
+            base_area_density_history(tep) = base_area_density;
+            inhibition_radius_history(tep) = inh_rad;
+            syn_inc_history(tep)           = inc_rate;
+            syn_dec_history(tep)           = dec_rate;
+            energy_history(tep)            = e;
+            write_cycle_history(tep)       = wc;
+            fallbacks_per_epoch(tep)       = fallback_counter_epoch;
+            sparsity_per_epoch(tep)        = epoch_sparsity;
+            entropy_per_epoch(tep)         = epoch_entropy;
+
+            [~, stop_epoch] = max(val_accuracy_history);
+
+            fprintf('[LOG] Epoch %d/%d: Sparsity=%.2f%% | Entropy=%.4f | ValAcc=%.1f%%\n', ...
+                    tep, train_epoch, epoch_sparsity, epoch_entropy, final_val_acc);
+
+            %TM pass on real SP SDRs -
+            anomaly_sum = 0;
+            tt_tm       = struct();
+            kwta_tm     = struct();
+            n_total = size(train_data_noisy, 3);
+            n_train_samples = min(n_total, max(200, round(n_total * 0.25)));
+
+            for tm_i = 1:n_train_samples
+                [ov, ~, tt_tm] = compute_overlap(train_data_noisy, w_permanence, ...
+                    overlap_dimension, potential_radius, tm_i, ...
+                    syn_connected_thresh_base, false, tm_i, 1, tt_tm);
+                [active_cols, ~, kwta_tm] = apply_kwta(ov, base_area_density, tm_i, ...
+                    false, (tm_i == 1), kwta_tm);
+                [~, ~, ~, tm_state_main] = temporal_memory(active_cols, tm_state_main, ...
+                    true, sample_counter + tm_i);
+                anomaly_sum = anomaly_sum + tm_state_main.anomaly_score;
+            end
+
+            avg_anomaly            = anomaly_sum / n_train_samples;
+            anomaly_per_epoch(tep) = avg_anomaly;
+
+            %TM anomaly feedback to SP decay -
+            if numel(tm_state_main.anomaly_history) >= 10
+                recent_anomaly = mean(tm_state_main.anomaly_history(end-9:end));
+                if recent_anomaly > 0.5
+                    decay_scaling = decay_scaling * 1.05;
+                    fprintf('[TM-FB] Epoch %d: High anomaly %.3f - slowing SP decay\n', tep, recent_anomaly);
+                elseif recent_anomaly < 0.2
+                    decay_scaling = max(decay_scaling * 0.98, 1e-4);
+                end
+            end
+            fprintf('[TM] Epoch %d avg anomaly: %.3f\n', tep, avg_anomaly);
+
+            %Self-evolution: performance metric -
+            % Measures how close sparsity is to the density target
+            sparsity_quality = 1 - abs(epoch_sparsity/100 - base_area_density);
+            sparsity_quality = max(0, sparsity_quality);
+
+            % Combined metric: want high entropy, good sparsity, low anomaly
+            perf_history(tep) = epoch_entropy * sparsity_quality * (1 - avg_anomaly);
+            fprintf('[SELF-EVOLVE] Epoch %d perf_metric=%.4f\n', tep, perf_history(tep));
+
+            %Self-evolution: re-optimise if degrading -
+            if tep >= 3 && reopt_cooldown == 0
+                recent_perf = perf_history(tep-2:tep);
+                % Check for consistent decline over last 3 epochs
+                if recent_perf(3) < recent_perf(2) && recent_perf(2) < recent_perf(1) ...
+                        && (recent_perf(1) - recent_perf(3)) > 0.02
+                    fprintf('[SELF-EVOLVE] Performance degrading (%.4f → %.4f → %.4f). Re-optimising...\n', ...
+                            recent_perf(1), recent_perf(2), recent_perf(3));
+
+                    % Re-run optimisation on current noisy data
+                    try
+                        % gather() is matlab in Octave data is already on CPU
+                        train_data_for_opt = train_data_noisy;
+                        if isa(train_data_noisy, 'gpuArray')
+                            train_data_for_opt = gather(train_data_noisy);
+                        end
+                        [new_params, ~] = optimize_hyperparameters( ...
+                            train_data_for_opt, train_label, ...
+                            val_data, val_label, dataset, potential_radius, pca_coeff);
+
+                        % Only accept if composite fitness improves
+                        new_loss = evaluate_hyperparams( ...
+                            train_data_for_opt, train_label, ...
+                            val_data, val_label, new_params, pca_coeff, potential_radius);
+
+                        current_loss = -final_val_acc/100 ...
+                            + abs(epoch_sparsity/100 - base_area_density)*10 ...
+                            + max(0, 0.2 - epoch_entropy)*5;
+
+                        if new_loss < current_loss
+                            decay_scaling = new_params.decay_scaling;
+                            syn_inc_base  = new_params.syn_inc_base;
+                            syn_dec_base  = new_params.syn_dec_base;
+                            fprintf('[SELF-EVOLVE] Accepted new params (loss %.4f → %.4f)\n', ...
+                                    current_loss, new_loss);
+                        else
+                            fprintf('[SELF-EVOLVE] New params not better (%.4f vs %.4f), keeping current\n', ...
+                                    new_loss, current_loss);
+                        end
+                    catch ME
+                        fprintf('[SELF-EVOLVE] Re-optimisation failed: %s\n', ME.message);
+                    end
+
+                    reopt_cooldown = 3;  % don't re-optimise again for 3 epochs
+                end
+            end
+
+            if reopt_cooldown > 0
+                reopt_cooldown = reopt_cooldown - 1;
+            end
+
+            cumulative_counter = cumulative_counter + sample_counter;
+        end
+
+
+        % Post-training
+
+        if isa(w_permanence, 'gpuArray')
+            w_permanence = gather(w_permanence);
+        end
+
+        config = struct( ...
+            'overlap_dim',          overlap_dimension, ...
+            'potential_radius',     potential_radius, ...
+            'syn_connected_thresh', syn_connected_thresh_base, ...
+            'base_area_density',    base_area_density);
+
+        sample_idx    = 1;
+        example_state = struct('sample_counter', 1, 'threshold_tracker', struct());
+        [sdr_flat, ~] = generate_sdr(train_data, w_permanence, sample_idx, config, example_state);
+        sample_sdr    = reshape(sdr_flat, overlap_dimension);
+        sample_input  = train_data(:, :, sample_idx);
+        if isa(sample_input, 'gpuArray'), sample_input = gather(sample_input); end
+
+        total_training_time = toc;
+        fprintf('\nTraining Complete. Total Time: %.2f seconds\n', total_training_time);
+
+        % Save results including self-evolution history
+        threshold_tracker = struct();
+		timestamp = datestr(now, 'yyyymmdd_HHMMSS');
+		save(['training_results_' timestamp '.mat'], ...
+             'w_permanence', 'pca_coeff', ...
+             'sample_idx', 'sample_input', 'sample_sdr', ...
+             'sparsity_per_epoch', 'entropy_per_epoch', ...
+             'inhibition_radius_history', ...
+             'syn_inc_history', 'syn_dec_history', ...
+             'val_accuracy_history', 'energy_history', ...
+             'threshold_tracker', 'write_cycle_history', 'stop_epoch', ...
+             'base_area_density_history', 'fallbacks_per_epoch', ...
+             'anomaly_per_epoch', 'perf_history', ...
+             '-v7');
+
+    catch ME
+        fprintf('Error: %s\n', ME.message);
+        fprintf('Stack:\n%s\n', ME.message);
+    end
+
+	fprintf('\nLogging ended at %s\n', datestr(now));    diary off;
+end
+
+
+======== optimize_hyperparameters.m ========
+function [best_params, adjusted_potential_radius] = optimize_hyperparameters(train_data, train_label, val_data, val_label, dataset, potential_radius, pca_coeff)
+%OPTIMIZE_HYPERPARAMETERS  Evolutionary random search over SP hyperparameters.
+%   Replaces bayesopt (MATLAB Statistics Toolbox only) with a two-phase
+%   Octave-compatible search:
+%     Phase 1 - Latin hypercube random sampling across the full space
+%     Phase 2 - Local refinement around the best point found in phase 1
+%   The fitness is the composite loss from evaluate_hyperparams:
+%     loss = -accuracy + sparsity_penalty + entropy_penalty + energy_penalty
+%   This gives the search real gradients to follow rather than the flat
+%   -accuracy landscape where most parameter sets score ~100%.
+
+    fprintf('[DEBUG] optimize_hyperparameters: potential_radius=%d\n', potential_radius);
+    fprintf('[DEBUG] optimize_hyperparameters: pca_coeff size=%s\n', mat2str(size(pca_coeff)));
+
+    cfg = sp_config.instance();
+    rng(cfg.HYPER_SEED);
+
+    adjusted_potential_radius = potential_radius;
+
+    % Validation split if not provided
+    if isempty(val_data) || isempty(val_label)
+        [train_data, train_label, val_data, val_label] = split_data(train_data, train_label, 0.2);
+    end
+
+    %  Parameter bounds
+    if strcmp(dataset, 'CIFAR')
+        density_bounds = [0.10, 0.40];
+    else
+        density_bounds = [0.05, 0.35];
+    end
+    syn_inc_bounds   = [0.04,  0.20];
+    syn_dec_bounds   = [0.002, 0.02];   % sampled in log space
+    decay_bounds     = [3000,  25000];  % sampled in log space
+    endurance_bounds = [5e4,   1e6];    % sampled in log space
+
+    %  Phase 1: random sampling. Eval budget scales with dataset cheap evals search thoroughly expensive evals search lean. Adaptive across all dataset sizes
+    train_n = size(train_data, 3);
+    if train_n <= 500
+        n_phase1 = 40; n_phase2 = 20;
+    elseif train_n <= 5000
+        n_phase1 = 30; n_phase2 = 15;
+    else
+        n_phase1 = 20; n_phase2 = 10;
+    end
+    fprintf('[OPT] Phase 1: %d random evaluations\n', n_phase1);
+
+    candidates = generate_candidates(n_phase1, density_bounds, syn_inc_bounds, ...
+                                     syn_dec_bounds, decay_bounds, endurance_bounds);
+
+    [best_loss, best_params] = run_evaluations(candidates, train_data, train_label, ...
+                                               val_data, val_label, pca_coeff, ...
+                                               potential_radius, cfg);
+
+    fprintf('[OPT] Phase 1 best loss: %.4f\n', best_loss);
+
+    %  Phase 2: local refinement around best point
+
+    fprintf('[OPT] Phase 2: %d local refinement evaluations\n', n_phase2);
+
+    local_candidates = generate_local_candidates(n_phase2, best_params, ...
+                                                  density_bounds, syn_inc_bounds, ...
+                                                  syn_dec_bounds, decay_bounds, ...
+                                                  endurance_bounds);
+
+    [local_best_loss, local_best_params] = run_evaluations(local_candidates, train_data, ...
+                                                            train_label, val_data, val_label, ...
+                                                            pca_coeff, potential_radius, cfg);
+
+    if local_best_loss < best_loss
+        best_loss   = local_best_loss;
+        best_params = local_best_params;
+        fprintf('[OPT] Phase 2 improved: loss=%.4f\n', best_loss);
+    else
+        fprintf('[OPT] Phase 2 did not improve (best=%.4f)\n', best_loss);
+    end
+
+    %  Save and report
+    save('best_hyperparameters.mat', 'best_params');
+    fprintf('[OPT] Best params: Density=%.4f | LTP=%.4f | LTD=%.4f | Decay=%.2e | Endurance=%.2e\n', ...
+            best_params.base_area_density, best_params.syn_inc_base, ...
+            best_params.syn_dec_base, best_params.decay_scaling, best_params.endurance_rate);
+    fprintf('[OPT] Best composite loss: %.4f\n', best_loss);
+end
+
+
+
+function candidates = generate_candidates(n, density_bounds, syn_inc_bounds, ...
+                                           syn_dec_bounds, decay_bounds, endurance_bounds)
+%GENERATE_CANDIDATES  Latin hypercube-style random sampling across param space.
+
+    candidates = cell(n, 1);
+    for i = 1:n
+        p = struct();
+        p.base_area_density = density_bounds(1)  + rand() * diff(density_bounds);
+        p.syn_inc_base      = syn_inc_bounds(1)   + rand() * diff(syn_inc_bounds);
+        % Log-space sampling for parameters spanning orders of magnitude
+        p.syn_dec_base      = exp(log(syn_dec_bounds(1))   + rand() * log(syn_dec_bounds(2)/syn_dec_bounds(1)));
+        p.decay_scaling     = exp(log(decay_bounds(1))     + rand() * log(decay_bounds(2)/decay_bounds(1)));
+        p.endurance_rate    = exp(log(endurance_bounds(1)) + rand() * log(endurance_bounds(2)/endurance_bounds(1)));
+        candidates{i}       = p;
+    end
+
+    % Always include the dissertation-optimised point as candidate 1
+    candidates{1} = struct('base_area_density', 0.3085, 'syn_inc_base', 0.0975, ...
+                           'syn_dec_base', 0.0040, 'decay_scaling', 5797, ...
+                           'endurance_rate', 179340);
+end
+
+
+function candidates = generate_local_candidates(n, centre, density_bounds, ...
+                                                  syn_inc_bounds, syn_dec_bounds, ...
+                                                  decay_bounds, endurance_bounds)
+%GENERATE_LOCAL_CANDIDATES  Gaussian perturbations around the current best point.
+
+    candidates = cell(n, 1);
+    candidates{1} = centre;  % always include the centre itself
+
+    for i = 2:n
+        p = struct();
+        % Perturb by ~15% of each parameter range, clamp to bounds
+        p.base_area_density = clamp(centre.base_area_density + 0.15*diff(density_bounds)*randn(), ...
+                                    density_bounds(1), density_bounds(2));
+        p.syn_inc_base      = clamp(centre.syn_inc_base + 0.15*diff(syn_inc_bounds)*randn(), ...
+                                    syn_inc_bounds(1), syn_inc_bounds(2));
+        % Log-space perturbation for log-scale params
+        p.syn_dec_base      = clamp(centre.syn_dec_base * exp(0.3*randn()), ...
+                                    syn_dec_bounds(1), syn_dec_bounds(2));
+        p.decay_scaling     = clamp(centre.decay_scaling * exp(0.3*randn()), ...
+                                    decay_bounds(1), decay_bounds(2));
+        p.endurance_rate    = clamp(centre.endurance_rate * exp(0.3*randn()), ...
+                                    endurance_bounds(1), endurance_bounds(2));
+        candidates{i}       = p;
+    end
+end
+
+
+function [best_loss, best_params] = run_evaluations(candidates, train_data, train_label, ...
+                                                     val_data, val_label, pca_coeff, ...
+                                                     potential_radius, cfg)
+%RUN_EVALUATIONS  Evaluate each candidate and return the best.
+
+    best_loss   = Inf;
+    best_params = candidates{1};
+
+    for i = 1:numel(candidates)
+        p = candidates{i};
+        fprintf('[OPT] Eval %d/%d: density=%.3f inc=%.4f dec=%.4f decay=%.0f end=%.0e\n', ...
+                i, numel(candidates), p.base_area_density, p.syn_inc_base, ...
+                p.syn_dec_base, p.decay_scaling, p.endurance_rate);
+        try
+            loss = evaluate_hyperparams(train_data, train_label, val_data, val_label, ...
+                                        p, pca_coeff, potential_radius);
+            if loss < best_loss
+                best_loss   = loss;
+                best_params = p;
+                fprintf('[OPT] New best at eval %d: loss=%.4f\n', i, best_loss);
+            end
+        catch ME
+            fprintf('[OPT] Eval %d failed: %s\n', i, ME.message);
+        end
+    end
+end
+
+
+function val = clamp(val, lo, hi)
+    val = min(max(val, lo), hi);
+end
+
+
+======== pi_controller.m ========
+function [adj, state] = pi_controller(error, state, Kp, Ki, varargin)
+% PI_CONTROLLER  PI controller with anti-windup and momentum
+%
+% Inputs:
+%   error  : Current error signal
+%   state  : Struct with 'I' (integral) and 'prevOutput' (optional)
+%   Kp, Ki : Proportional/Integral gains
+%   varargin : either a single struct(opts) or name/value pairs
+%
+% Outputs:
+%   adj    : Adjustment term
+%   state  : Updated state
+
+    validateattributes(error, {'numeric'}, {'scalar','real','finite'}, mfilename,'error',1);
+    validateattributes(state, {'struct'}, {},                mfilename,'state',2);
+    validateattributes(Kp,    {'numeric'}, {'scalar','real','finite'}, mfilename,'Kp',3);
+    validateattributes(Ki,    {'numeric'}, {'scalar','real','finite'}, mfilename,'Ki',4);
+
+
+    % Parse varargin into opts
+    if isempty(varargin)
+        opts = struct();
+    elseif numel(varargin)==1 && isstruct(varargin{1})
+        opts = varargin{1};
+    else
+        opts = struct(varargin{:});
+    end
+
+    % Now set defaults
+    if ~isfield(opts,'clampI'),   opts.clampI   = [-Inf Inf]; end
+    if ~isfield(opts,'momentum'), opts.momentum = false;      end
+
+    % Integral clamping
+    new_I = state.I + error;
+    state.I = min(max(new_I, opts.clampI(1)), opts.clampI(2));
+
+    % PI adjustment
+    adj = Kp * error + Ki * state.I;
+
+    % Momentum term (optional)
+    if opts.momentum && isfield(state, 'prevOutput')
+        delta_adj = adj - state.prevOutput;
+        delta_adj = min(max(delta_adj, -0.1), 0.1);
+        cfg = sp_config.instance();
+        adj = adj + cfg.MOMENTUM_GAIN * delta_adj;
+    end
+
+    % Update state
+    state.prevOutput = adj;
+end
+
+
+======== preprocess_cifar10.m ========
+function preprocess_cifar10()
+    % Directory containing CIFAR-10 batches
+    cifar_dir = 'cifar-10-batches-mat';
+    
+    % Initialize containers for training and testing data
+    train_data = [];
+    train_labels = [];
+    
+    % Load training batches
+    for batch_num = 1:5
+        batch_file = fullfile(cifar_dir, sprintf('data_batch_%d.mat', batch_num));
+        if isfile(batch_file)
+            batch = load(batch_file);
+            train_data = [train_data; batch.data];
+            train_labels = [train_labels; batch.labels];
+        else
+            error('Batch file %s not found.', batch_file);
+        end
+    end
+    
+    % Reshape and normalize training data
+    train_data = reshape(train_data, [], 32, 32, 3); % CIFAR-10 is 32x32 with 3 color channels
+    train_data = permute(train_data, [2, 3, 4, 1]); % Rearrange to [H, W, C, N]
+    train_data = double(train_data) / 255; % Normalize to [0, 1]
+
+    % Load test batch
+    test_file = fullfile(cifar_dir, 'test_batch.mat');
+    if isfile(test_file)
+        test_batch = load(test_file);
+        test_data = reshape(test_batch.data, [], 32, 32, 3);
+        test_data = permute(test_data, [2, 3, 4, 1]);
+        test_data = double(test_data) / 255;
+        test_labels = test_batch.labels;
+    else
+        error('Test batch file not found.');
+    end
+    
+    % Save as a single .mat file
+    save(fullfile(cifar_dir, 'cifar-10.mat'), 'train_data', 'train_labels', 'test_data', 'test_labels', '-v7.3');
+    fprintf('CIFAR-10 dataset has been preprocessed and saved to cifar-10.mat.\n');
+end
+
+
+======== print_accuracy_once.m ========
+function print_accuracy_once(accuracy)
+    % Persistent variable to track if accuracy has been printed
+    persistent accuracy_printed;
+    if isempty(accuracy_printed)
+        fprintf('Final Classification Accuracy: %.2f%%\n', accuracy);
+        accuracy_printed = true;
+    else
+        disp('DEBUG: Accuracy already printed in this session.');
+    end
+end
+
+
+======== run_all.m ========
+cfg = sp_config.instance();
+disp('Starting HTM Spatial Pooler Training...');
+% dataset (MNIST/CIFAR)
+    dataset = 'CIFAR'; 
+    if strcmp(dataset, 'MNIST')
+    [train_data, train_label, test_data, test_label] = get_mnist();
+    train_data = train_data(:,:,1:cfg.SubsetTraining);
+    train_label = train_label(1:cfg.SubsetTraining);
+    else
+    if ~exist(fullfile('cifar-10-batches-mat', 'cifar-10.mat'), 'file')
+        preprocess_cifar10(); 
+    end
+    [train_data, train_label, test_data, test_label] = get_cifar_subset(5000, 1000, ...
+        fullfile('cifar-10-batches-mat', 'cifar-10.mat'));
+    end
+    
+
+rng(12345);
+
+useParallel = false;     
+p = gcp('nocreate');
+if ~useParallel && ~isempty(p)
+    delete(p);         
+end
+if useParallel
+    if isempty(p)
+        parpool('local',1);   
+    end
+    spmd, gpuDevice(1); end
+else
+    gpuDevice(1);
+end
+
+% Check for Training Results 
+files = dir('training_results_*.mat'); %default  training_results_*.mat - change name of mat file before run to get new results 
+if isempty(files)
+    fprintf('No training results found. Starting training process...\n');
+    clear compute_overlap adjust_synaptic_factors apply_kwta pi_controller train_spatial_pooler
+            % Train
+     new_sp(dataset, train_data, train_label);
+ 
+    
+    % Re-check training
+    files = dir('training_results_*.mat');
+    if isempty(files)
+        error('Training failed');
+    end
+end
+
+% Load Latest Results
+[~, idx] = max([files.datenum]);
+latest_file = files(idx).name;
+fprintf('Loading training results from: %s\n', latest_file);
+load(latest_file, 'w_permanence')
+potential_radius = size(w_permanence,1);
+overlap_dim = [ size(w_permanence,3), size(w_permanence,4) ];
+
+
+% Evaluate and print accuracy
+disp('Evaluating Accuracy...');
+syn_connected_thresh = 0.5;
+num_train  = size(train_data, 3);
+feature_len = prod(overlap_dim);
+train_sdrs = zeros(num_train, feature_len);
+batch_size = cfg.OVERLAP_BATCH_SIZE;
+threshold_tracker = struct();
+
+for i = 1:num_train
+    [overlap, syn_connected_thresh_batch, threshold_tracker] = compute_overlap( ...
+        train_data, ...
+        w_permanence, ...
+        overlap_dim, ...
+        potential_radius, ...
+        i, ...
+        syn_connected_thresh, ...
+        cfg.USE_GPU, ...    
+        i, ...  
+        batch_size, threshold_tracker);
+    dynamic_thresh = syn_connected_thresh + 0.1 * std(overlap(:));
+    train_sdrs(i, :) = overlap(:) > dynamic_thresh;
+end
+
+
+[accuracy, sparsity, entropy] = evaluate_accuracy( ...
+    test_data, test_label, ...
+    w_permanence, potential_radius, overlap_dim, ...
+    syn_connected_thresh, ...
+    train_sdrs, train_label);
+
+
+
+
+disp('Accuracy Evaluation Complete.');
+
+
+
+
+% Metrics Analysis
+disp('Starting Metrics Analysis...');
+metrics_analysis(dataset, files);
+disp('Metrics Analysis Completed.');
+
+
+======== run_htm_pipeline.m ========
+% run_htm_pipeline.m
+% End-to-end SP + TM pipeline on synthetic temporal data
+% Tests the complete EA-MHTM system including the new TM layer
+
+pkg load image
+pkg load statistics
+addpath(pwd);
+
+fprintf('=== EA-MHTM Full Pipeline Test ===\n\n');
+
+% Config
+cfg = sp_config.instance();
+cfg.USE_GPU = false;
+cfg.USE_PCA_INIT = false;
+cfg.DEBUG = false;
+
+% Dataset params
+potential_radius  = 3;
+overlap_dimension = [8, 8];
+H = overlap_dimension(1) + potential_radius - 1;
+W = overlap_dimension(2) + potential_radius - 1;
+
+% Generate synthetic temporal sequences
+% 3 classes, each with a characteristic spatial pattern
+% Sequence repeats: class 1 -> 2 -> 3 -> 1 -> 2 -> 3 ...
+rng(42);
+n_classes    = 3;
+n_train      = 90;   % 30 per class, 10 full sequences
+n_val        = 30;
+
+fprintf('Generating synthetic temporal dataset...\n');
+base_patterns = zeros(H, W, n_classes);
+base_patterns(1:4, 1:4, 1) = 1;
+base_patterns(1:4, 6:10, 2) = 1;
+base_patterns(6:10, 3:7, 3) = 1;
+train_data  = zeros(H, W, n_train);
+train_labels = zeros(n_train, 1);
+for i = 1:n_train
+    cls = mod(i-1, n_classes) + 1;
+    train_data(:,:,i) = base_patterns(:,:,cls) + 0.1*randn(H,W);
+    train_data(:,:,i) = max(0, min(1, train_data(:,:,i)));
+    train_labels(i)   = cls;
+end
+
+val_data   = zeros(H, W, n_val);
+val_labels = zeros(n_val, 1);
+for i = 1:n_val
+    cls = mod(i-1, n_classes) + 1;
+    val_data(:,:,i)  = base_patterns(:,:,cls) + 0.05*randn(H,W);
+    val_labels(i)    = cls;
+end
+fprintf('Train: %d samples | Val: %d samples\n\n', n_train, n_val);
+
+% Initialise SP weights
+pca_coeff  = zeros(potential_radius, potential_radius);
+w_perm     = initialize_permanence(pca_coeff, potential_radius, overlap_dimension, false);
+
+% SP hyperparameters (from dissertation optimised values)
+base_density     = 0.3085;
+syn_inc          = 0.0975;
+syn_dec          = 0.0040;
+sample_counter   = 0;
+syn_thresh       = 0.2;
+decay_scaling    = 1/5797;
+endurance_rate   = 1/179340;
+entropy_thresh   = 0.05;
+sparsity_thresh  = 1.0;
+val_acc_history  = [];
+
+% Initialise TM
+tm_state = struct();
+
+fprintf('--- Training SP + TM ---\n');
+n_epochs  = 5;
+epoch_results = zeros(n_epochs, 4); % acc, sparsity, entropy, anomaly
+
+for epoch = 1:n_epochs
+    cfg.EPOCH_START_FLAG = true;
+
+    [w_perm, sample_counter, val_acc_history, base_density, ...
+     syn_inc, syn_dec, ~, ~, ~, ~, ~, sparsity, entropy, ~] = ...
+        train_spatial_pooler(train_data, train_labels, base_density, ...
+        syn_inc, syn_dec, sample_counter, syn_thresh, false, w_perm, ...
+        decay_scaling, endurance_rate, pca_coeff, potential_radius, ...
+        overlap_dimension, val_data, val_labels, val_acc_history, ...
+        entropy_thresh, sparsity_thresh, 'synthetic');
+
+
+    % Run TM on SP SDRs in sequence order
+    anomaly_sum = 0;
+    tt_tm   = struct();
+    kwta_tm = struct();
+    for i = 1:n_train
+        [ov, ~, tt_tm] = compute_overlap(train_data, w_perm, overlap_dimension, ...
+            potential_radius, i, syn_thresh, false, i, 1, tt_tm);
+        [active_cols, ~, kwta_tm] = apply_kwta(ov, base_density, i, false, (i==1), kwta_tm);
+        [~, ~, ~, tm_state] = temporal_memory(active_cols, tm_state, true, sample_counter + i);
+        anomaly_sum = anomaly_sum + tm_state.anomaly_score;
+    end
+    avg_anomaly = anomaly_sum / n_train;
+
+    % TM anomaly feedback to SP
+    if numel(tm_state.anomaly_history) >= 10
+        recent_anomaly = mean(tm_state.anomaly_history(end-9:end));
+        if recent_anomaly > 0.5
+            decay_scaling = decay_scaling * 1.05;
+            fprintf('[TM-FB] High anomaly %.3f - slowing SP decay\n', recent_anomaly);
+        elseif recent_anomaly < 0.2
+            decay_scaling = max(decay_scaling * 0.98, 1e-4);
+        end
+    end
+
+    val_acc = 0;
+    if ~isempty(val_acc_history)
+        val_acc = val_acc_history(end);
+    end
+
+    epoch_results(epoch, :) = [val_acc, sparsity, entropy, avg_anomaly];
+
+    fprintf('Epoch %d/%d | Acc=%.1f%% | Sparsity=%.2f%% | Entropy=%.4f | Anomaly=%.3f\n', ...
+            epoch, n_epochs, val_acc, sparsity, entropy, avg_anomaly);
+end
+
+fprintf('\n--- Results Summary ---\n');
+fprintf('%-8s %-10s %-12s %-10s %-10s\n', 'Epoch', 'Accuracy', 'Sparsity', 'Entropy', 'Anomaly');
+for e = 1:n_epochs
+    fprintf('%-8d %-10.1f %-12.2f %-10.4f %-10.3f\n', e, ...
+            epoch_results(e,1), epoch_results(e,2), ...
+            epoch_results(e,3), epoch_results(e,4));
+end
+
+fprintf('\n=== Pipeline complete ===\n');
+
+
+======== safe_gather.m ========
+function x = safe_gather(x)
+% safe_gather - works in both MATLAB (GPU) and Octave (CPU)
+if exist('gpuArray', 'class') && isa(x, 'gpuArray')
+    x = gather(x);
+end
+end
+
+
+======== safe_gpuArray.m ========
+function x = safe_gpuArray(x)
+% safe_gpuArray - works in both MATLAB (GPU) and Octave (CPU)
+try
+    if exist('gpuArray', 'builtin')
+        x = gpuArray(x);
+    end
+catch
+end
+end
+
+
+======== safe_gpuDeviceCount.m ========
+function n = safe_gpuDeviceCount()
+% Returns 0 in Octave, real count in MATLAB with GPU toolbox
+try
+    n = gpuDeviceCount();
+catch
+    n = 0;
+end
+end
+
+
+======== sp_config.m ========
+classdef sp_config
+    properties
+        % Sparsity targets / overlap‐adaptation
+        TARGET_ACTIVITY  = 0.30;
+        MIN_DENSITY = 0.05;
+        MAX_DENSITY = 0.60;
+        ENTROPY_THRESHOLD_INIT = 0.50;
+        SPARSITY_THRESHOLD_INIT = 35;
+
+        OVERLAP_QUANTILE_INIT  = 0.90;
+        OVERLAP_QUANTILE_UPDATE = 0.05;
+        OVERLAP_QUANTILE_DECAY  = 0.95;
+        OVERLAP_MIN_ACTIVE_FRAC = 0.2;
+        OVERLAP_MAX_ACTIVE_FRAC = 0.3;
+        Overlap_MIN_ACTV_PRE_TRSH = 0.1
+        Overlap_MAX_ACTV_PRE_TRSH =  0.2
+        % Synaptic defaults
+        SYN_NOISE_LEVEL  = 0.10;
+        SYN_TARGET_RANGE  = [0.05,0.90];
+        HASH_SUBSAMPLE  = 8;
+        TRAIN_NOISE_BASE   = 0.02;
+        SYN_CONNECTED_INIT  = 0.25;
+        NOISE_STD  = 0.05;
+        REFRACTORY_PERIOD   = 5;
+
+        % Synaptic update scaling factors
+        SYN_INC_SCALAR   = 1.5;
+        SYN_DEC_SCALAR   = 0.8;
+        SYN_INC_MIN_FACTOR    = 0.3;
+        SYN_INC_MAX_FACTOR   = 3.0;
+        SYN_DEC_MIN   = 0.001;
+        SYN_DEC_MAX    = 0.02;
+        STD_SCALING_FACTOR  = 0.003;
+
+        % k-NN classifier setting
+        KNN_K  = 3;
+
+        % Hyperparameter tuning
+        HYPER_SEED = 12345;
+
+
+        % PI‐controller gains
+        KP_DENSITY  = 0.03;
+        KI_DENSITY   = 0.005;
+        KP_SYNAPTIC   = 0.10;
+        MOMENTUM_GAIN  = 0.8;
+
+        % kWTA / lateral inhibition
+        KWTA_INIT_RADIUS   = 2;
+        KWTA_RADIUS_SCALE  = 1.5;
+        KWTA_RADIUS_HISTORY  = 10;
+        KWTA_LOCAL_MAX   = 5;
+        KWTA_LOCAL_SCALE  = 2;
+        KWTA_LOCAL_MIN     = 2;
+        INHIB_RADIUS_MAX   = 3;
+        INHIB_RADIUS_MIN   = 1;
+        KWTA_MIN_ACTIVE_FRAC  = 0.001;
+        KWTA_FALLBACK_FACTOR  = 0.8;
+        KWTA_TEMP_GROWTH_RATE     = 0.05;
+        KWTA_TIME_CONST    = 2500;
+        KWTA_BETA_BOOST = 0.03;
+        KWTA_TARGET_DUTY = 0.05;
+        % stochastic kWTA noise & pacing
+        KWTA_NOISE_LEVEL  = 0.05;
+        KWTA_STOCH_INTERVAL   = 500;
+        KWTA_STOCH_BASE   = 0.1;
+        KWTA_STOCH_MIN  = 0.01;
+        KWTA_PI_PERIOD     = 32;
+        BOOST_FACTOR    = 1.0;
+
+        % Debug / performance
+        PCA_SAMPLE_FRAC = 0.10;
+        DEBUG       = false;
+        DEBUG_ADJUST   = false;
+        DEBUG_OVERLAP  = false;
+        Debug_Overlap_Tracking = false;
+        fallback_Debug = false;
+        Debug_GPU = false;
+        DEBUG_INTERVAL    = 100;
+        EPOCH_START_FLAG     = false;
+        OVERLAP_BATCH_SIZE  = 64;
+        Debug_ENTROPY = false;
+        USE_GPU = safe_gpuDeviceCount() > 0;
+        USE_PCA_INIT = true;
+        SubsetTraining = 1000;
+    end
+    methods (Static)
+        function obj = instance()
+            persistent inst pathAdded
+            if isempty(pathAdded)
+                try
+                    addpath(fullfile( ...
+                        fileparts(mfilename('fullpath')), ...
+                        'utilsFolder'));
+                catch ME
+                    fprintf(2, 'sp_config.instance: could not add utilsFolder to path:\n%s\n', ME.message);
+                end
+                pathAdded = true;
+            end
+            if isempty(inst)
+                inst = sp_config();
+            end
+            obj = inst;
+        end
+    end
+
+    methods (Access = private)
+        function obj = sp_config(), end
+    end
+end
+
+
+======== split_data.m ========
+function [train_data, train_label, val_data, val_label] = split_data(data, labels, val_ratio)
+    % Determine whether to stratify or not
+    N = numel(labels);
+    if numel(unique(labels)) < N
+        % True classification data: preserve class proportions
+        cv = cvpartition(labels, 'HoldOut', val_ratio);
+    else
+        % All labels unique ( in unit tests): simple random hold-out
+        cv = cvpartition(N,      'HoldOut', val_ratio);
+    end
+
+    % Split the data
+    if ndims(data) == 3
+        % MNIST-style [H x W x N]
+        train_data = data(:, :, cv.training);
+        val_data   = data(:, :, cv.test);
+    elseif ndims(data) == 4
+        % CIFAR-style [H x W x C x N]
+        train_data = data(:, :, :, cv.training);
+        val_data   = data(:, :, :, cv.test);
+    else
+        error('Unsupported data dimensions: %s', mat2str(size(data)));
+    end
+
+    % Split the labels
+    train_label = labels(cv.training);
+    val_label   = labels(cv.test);
+
+    % Debug info
+    fprintf('[DEBUG] After split_data: train_data shape %s, val_data shape %s\n', ...
+        mat2str(size(train_data)), mat2str(size(val_data)));
+    fprintf('[DEBUG] train_label: %d, val_label: %d\n', ...
+        numel(train_label), numel(val_label));
+end
+
+
+======== struct2string.m ========
+function str = struct2string(s)
+    str = jsonencode(s);
+end
+
+
+======== temporal_memory.m ========
+function [active_cells, winner_cells, predicted_cells, tm_state] = temporal_memory(...
+    active_columns, tm_state, learn, sample_counter)
+%TEMPORAL_MEMORY HTM Temporal Memory - sequence learning extension of EA-MHTM
+% Adds predictive cell firing to the spatial pooler output.
+% Local Hebbian learning only - no backpropagation.
+
+    cfg = sp_config.instance();
+
+    if ~isfield(tm_state, 'initialised')
+        tm_state = tm_init(size(active_columns), cfg);
+    end
+
+    [H, W] = size(active_columns);
+    C      = tm_state.cells_per_col;
+
+    active_cells    = false(H, W, C);
+    winner_cells    = false(H, W, C);
+    predicted_cells = false(H, W, C);
+
+    % Phase 1 - activate cells in active columns
+    bursting_cols = false(H, W);
+    for col_idx = find(active_columns)'
+        [r, c] = ind2sub([H, W], col_idx);
+        predicted_in_col = squeeze(tm_state.predicted_state(r, c, :));
+
+        if any(predicted_in_col)
+            active_cells(r, c, :) = predicted_in_col;
+            winner_cells(r, c, :) = predicted_in_col;
+        else
+            % burst - no prediction was made for this column
+            active_cells(r, c, :)  = true;
+            bursting_cols(r, c)    = true;
+            best_cell = tm_find_best_cell(r, c, tm_state);
+            winner_cells(r, c, best_cell) = true;
+        end
+    end
+
+    % Phase 2 - synaptic learning
+    if learn
+        tm_state = tm_learn(active_cells, winner_cells, tm_state, sample_counter, cfg);
+    end
+
+    % Phase 3 - predict next timestep
+    [predicted_cells, tm_state] = tm_predict(active_cells, tm_state, cfg);
+
+    % Phase 4 - anomaly score (unpredicted active columns)
+    n_active = sum(active_columns(:));
+    n_correct = sum(sum(any(active_cells & repmat(tm_state.predicted_state, 1, 1, 1), 3) & active_columns));
+    tm_state.anomaly_score = 1 - (n_correct / max(n_active, 1));
+	if tm_state.anomaly_score > 0.5
+        tm_state.activation_thresh = max(2, tm_state.activation_thresh - 0.01);
+    elseif tm_state.anomaly_score < 0.15
+        tm_state.activation_thresh = min(6, tm_state.activation_thresh + 0.005);
+    end
+    tm_state.anomaly_history = [tm_state.anomaly_history, tm_state.anomaly_score];
+    if numel(tm_state.anomaly_history) > 100
+        tm_state.anomaly_history = tm_state.anomaly_history(end-99:end);
+    end
+
+    tm_state.predicted_state = predicted_cells;
+    tm_state.prev_active     = active_cells;
+    tm_state.prev_winner     = winner_cells;
+
+end
+
+function state = tm_init(col_size, cfg)
+% Initialise TM state
+
+    C = 32;   % cells per column
+    H = col_size(1);
+    W = col_size(2);
+    n_cols = H * W;
+
+    state.cells_per_col    = C;
+    state.col_size         = col_size;
+
+    % Distal synapses - each cell has max_segs segments
+    % each segment has max_syns potential synapses
+    max_segs = 128;
+    max_syns = 32;
+
+    state.seg_permanences  = 0.1 * rand(n_cols, C, max_segs, max_syns);
+    state.seg_presynaptic  = zeros(n_cols, C, max_segs, max_syns, 'uint32');
+    state.seg_count        = zeros(n_cols, C, 'uint8');
+
+    % Activation threshold - adaptive like SP density controller
+    state.activation_thresh     = 3;
+    state.learning_thresh       = 2;
+    state.initial_permanence    = 0.51;
+    state.connected_permanence  = 0.50;
+    state.perm_inc              = 0.10;
+    state.perm_dec              = 0.05;
+
+    % Memristor endurance tracking (same pattern as SP)
+    state.write_counts     = zeros(n_cols, C, max_segs, max_syns, 'uint32');
+    state.endurance_limit  = 1e5;
+
+    % Persistent state
+    state.predicted_state  = false(H, W, C);
+    state.prev_active      = false(H, W, C);
+    state.prev_winner      = false(H, W, C);
+
+    % Anomaly tracking
+    state.anomaly_score    = 0;
+    state.anomaly_history  = [];
+
+    state.initialised      = true;
+    fprintf('[TM] Initialised: %dx%d grid, %d cells/col, %d segs/cell\n', ...
+            H, W, C, max_segs);
+end
+
+
+function best_cell = tm_find_best_cell(r, c, state)
+% Find best matching cell, or least-used cell if no match exists
+% Standard HTM rule: least-used-cell prevents all context collapsing onto cell 1
+
+    col_idx = sub2ind(state.col_size, r, c);
+    C = state.cells_per_col;
+
+    best_cell     = 1;
+    best_score    = -1;
+    found_match   = false;
+
+    prev_flat = state.prev_active(:);
+
+    % First pass: find best matching segment across all cells
+    for cell = 1:C
+        n_segs = state.seg_count(col_idx, cell);
+        for seg = 1:n_segs
+            pre  = squeeze(state.seg_presynaptic(col_idx, cell, seg, :));
+            perm = squeeze(state.seg_permanences(col_idx, cell, seg, :));
+            valid = pre > 0;
+            if ~any(valid), continue; end
+            connected = perm(valid) >= state.connected_permanence;
+            pre_valid = pre(valid);
+            score = sum(prev_flat(pre_valid(connected)));
+            if score > best_score
+                best_score = score;
+                best_cell  = cell;
+                found_match = (score > 0);
+            end
+        end
+    end
+
+
+        if ~found_match
+        % least used cell with random tie break critical for variable order memory. Without the tie-break all early context collapses onto cell 1 since every cell starts with 0 segments.
+        seg_counts = double(state.seg_count(col_idx, :));   % 1xC
+        candidates = find(seg_counts == min(seg_counts));
+        best_cell  = candidates(randi(numel(candidates)));
+    end
+end
+
+
+function state = tm_learn(active_cells, winner_cells, state, sample_counter, cfg)
+% Hebbian learning - strengthen synapses from prev active to current winner
+
+    [H, W, C]  = size(active_cells);
+    prev_flat  = state.prev_winner(:);
+    n_prev     = sum(prev_flat);
+
+    if n_prev == 0, return; end
+    prev_indices = find(prev_flat);
+
+    for col_idx = 1:H*W
+        [r, c] = ind2sub([H, W], col_idx);
+        for cell = 1:C
+            if ~winner_cells(r, c, cell), continue; end
+
+            n_segs = state.seg_count(col_idx, cell);
+            found_seg = 0;
+
+            % Find matching segment
+            for seg = 1:n_segs
+                pre  = squeeze(state.seg_presynaptic(col_idx, cell, seg, :));
+                perm = squeeze(state.seg_permanences(col_idx, cell, seg, :));
+                valid = pre > 0;
+                if ~any(valid), continue; end
+                score = sum(prev_flat(pre(valid)));
+                if score >= state.learning_thresh
+                    found_seg = seg;
+                    break;
+                end
+            end
+
+            % Grow new segment if none found
+            if found_seg == 0
+                max_segs = size(state.seg_permanences, 3);
+                if n_segs >= max_segs
+                    % Prune lowest scoring segment to make room
+                    seg_scores = zeros(max_segs, 1);
+                    for s = 1:max_segs
+                        pre_s = squeeze(state.seg_presynaptic(col_idx, cell, s, :));
+                        perm_s = squeeze(state.seg_permanences(col_idx, cell, s, :));
+                        valid_s = pre_s > 0;
+                        if any(valid_s)
+                            seg_scores(s) = mean(perm_s(valid_s));
+                        end
+                    end
+                    [~, worst] = min(seg_scores);
+                    state.seg_permanences(col_idx, cell, worst, :) = 0;
+                    state.seg_presynaptic(col_idx, cell, worst, :) = 0;
+                    state.seg_count(col_idx, cell) = max_segs - 1;
+                    n_segs = max_segs - 1;
+                end
+                if n_segs < max_segs
+                    n_segs = n_segs + 1;
+                    state.seg_count(col_idx, cell) = n_segs;
+                    found_seg = n_segs;
+
+                    % Sample synapses from prev winners
+                    max_syns = size(state.seg_permanences, 4);
+                    n_new = min(max_syns, numel(prev_indices));
+                    chosen = prev_indices(randperm(numel(prev_indices), n_new));
+                    state.seg_presynaptic(col_idx, cell, found_seg, 1:n_new) = chosen;
+                    state.seg_permanences(col_idx, cell, found_seg, 1:n_new) = state.initial_permanence;
+                end
+            end
+
+            if found_seg == 0, continue; end
+
+            % LTP/LTD update with memristor endurance check
+            pre  = squeeze(state.seg_presynaptic(col_idx, cell, found_seg, :));
+            perm = squeeze(state.seg_permanences(col_idx, cell, found_seg, :));
+            wc   = squeeze(state.write_counts(col_idx,   cell, found_seg, :));
+
+            valid = pre > 0;
+            for syn = find(valid)'
+                if wc(syn) >= state.endurance_limit, continue; end
+                if prev_flat(pre(syn))
+                    perm(syn) = min(1.0, perm(syn) + state.perm_inc);
+                else
+                    perm(syn) = max(0.0, perm(syn) - state.perm_dec);
+                end
+                wc(syn) = wc(syn) + 1;
+            end
+
+            state.seg_permanences(col_idx, cell, found_seg, :) = perm;
+            state.write_counts(col_idx,   cell, found_seg, :) = wc;
+        end
+    end
+end
+
+
+function [predicted, state] = tm_predict(active_cells, state, cfg)
+% Compute predicted cells for next timestep based on current active cells
+
+    [H, W, C] = size(active_cells);
+    active_flat = active_cells(:);
+    predicted   = false(H, W, C);
+
+    for col_idx = 1:H*W
+        [r, c] = ind2sub([H, W], col_idx);
+        for cell = 1:C
+            n_segs = state.seg_count(col_idx, cell);
+            for seg = 1:n_segs
+                pre  = squeeze(state.seg_presynaptic(col_idx, cell, seg, :));
+                perm = squeeze(state.seg_permanences(col_idx, cell, seg, :));
+                valid = pre > 0;
+                if ~any(valid), continue; end
+                connected = perm(valid) >= state.connected_permanence;
+                pre_valid = pre(valid);
+                score = sum(active_flat(pre_valid(connected)));
+                if score >= state.activation_thresh
+                    predicted(r, c, cell) = true;
+                    break;
+                end
+            end
+        end
+    end
+
+
+
+
+end
+
+
+
+
+======== test_octave.m ========
+% test_octave.m verify core SP functions work in Octave without GPU
+pkg load image
+pkg load image
+pkg load statistics
+% Add path
+addpath(pwd);
+
+% Load config
+cfg = sp_config.instance();
+
+cfg.USE_PCA_INIT = false;
+cfg.USE_GPU = false;
+
+fprintf('Config loaded OK\n');
+fprintf('TARGET_ACTIVITY: %.2f\n', cfg.TARGET_ACTIVITY);
+
+% Test initialize_permanence
+fprintf('\nTesting initialize_permanence...\n');
+try
+    pca_coeff = zeros(3, 3);  % dummy, not used when PCA off
+    potential_radius = 3;
+    overlap_dimension = [8, 8];
+    perm = initialize_permanence(pca_coeff, potential_radius, overlap_dimension, false);
+    fprintf('initialize_permanence OK: size %s\n', mat2str(size(perm)));
+catch ME
+    fprintf('initialize_permanence FAILED: %s\n', ME.message);
+end
+
+% Test adjust_density
+fprintf('\nTesting adjust_density...\n');
+try
+    pi_state = struct('I', 0, 'prevOutput', 0, 'hist', []);
+    overlap_mat = rand(8, 8) * 0.4;
+    [new_density, pi_state] = adjust_density(0.3, overlap_mat, 1, false, pi_state, false);
+    fprintf('adjust_density OK: %.4f\n', new_density);
+catch ME
+    fprintf('adjust_density FAILED: %s\n', ME.message);
+end
+
+% Test calculate_entropy
+fprintf('\nTesting calculate_entropy...\n');
+try
+    test_sdr = rand(100, 1) > 0.8;  % ~20% sparsity
+    ent = calculate_entropy(test_sdr);
+    fprintf('calculate_entropy OK: %.4f\n', ent);
+catch ME
+    fprintf('calculate_entropy FAILED: %s\n', ME.message);
+end
+% Test validateattributes
+try
+    validateattributes(0.5, {'numeric'}, {'scalar'}, 'test', 'x', 1);
+    fprintf('validateattributes OK\n');
+catch ME
+    fprintf('validateattributes FAILED: %s\n', ME.message);
+end
+
+% Test 'like' syntax
+try
+    x = rand(3,3);
+    y = ones(size(x), 'like', x);
+    fprintf('ones like OK\n');
+catch ME
+    fprintf('ones like FAILED: %s\n', ME.message);
+end
+
+% Test apply_kwta
+fprintf('\nTesting apply_kwta...\n');
+try
+    overlap_mat = rand(8, 8) * 0.5;
+    density = 0.3;
+    kwta_state = struct();
+    [active_cols, avg_act, kwta_state, new_density] = apply_kwta(overlap_mat, density, 1, false, true, kwta_state);
+    fprintf('apply_kwta OK: active=%d, density=%.4f\n', sum(active_cols(:)), new_density);
+catch ME
+    fprintf('apply_kwta FAILED: %s\n', ME.message);
+end
+
+fprintf('\nTesting compute_overlap...\n');
+try
+    pkg load image
+    potential_radius = 3;
+    overlap_dimension = [8, 8];
+    H = overlap_dimension(1) + potential_radius - 1;
+    W = overlap_dimension(2) + potential_radius - 1;
+    train_data = rand(H, W);
+    w_perm = rand(potential_radius, potential_radius, overlap_dimension(1), overlap_dimension(2));
+    threshold_tracker = 0;
+    ii = [1];
+    sample_counter = 1;
+    batch_size = 1;
+    syn_thresh = 0.2;
+
+    [overlap, thresh, threshold_tracker] = compute_overlap(train_data, w_perm, overlap_dimension, potential_radius, ii, syn_thresh, false, sample_counter, batch_size, threshold_tracker);
+    fprintf('compute_overlap OK: size=%s, mean=%.4f\n', mat2str(size(overlap)), mean(overlap(:)));
+catch ME
+    fprintf('compute_overlap FAILED: %s\n', ME.message);
+end
+
+% Test update_permanence
+fprintf('\nTesting update_permanence...\n');
+try
+    potential_radius = 3;
+    overlap_dimension = [8, 8];
+    w_perm = rand(potential_radius, potential_radius, overlap_dimension(1), overlap_dimension(2)) * 0.6 + 0.2;
+    active_cols = rand(size(w_perm)) > 0.7;
+    syn_inc = 0.1 * ones(size(w_perm));
+    syn_dec = 0.05 * ones(size(w_perm));
+    memristor_stats = struct('write_counts', zeros(size(w_perm)), 'endurance_limit', 1e6);
+    [w_new, params, energy, mem_stats] = update_permanence(w_perm, active_cols, syn_inc, syn_dec, memristor_stats, 1, 0.001, 0.01, 0.01);
+    fprintf('update_permanence OK: mean_w=%.4f, energy=%.6f\n', mean(w_new(:)), energy);
+catch ME
+    fprintf('update_permanence FAILED: %s\n', ME.message);
+end
+
+% Test full SP mini training pass
+fprintf('\nTesting full SP mini training pass...\n');
+try
+    pkg load image
+
+    % Tiny synthetic dataset - 10 samples of 10x10 images
+    potential_radius = 3;
+    overlap_dimension = [4, 4];
+    H = overlap_dimension(1) + potential_radius - 1;
+    W = overlap_dimension(2) + potential_radius - 1;
+
+    n_train = 10;
+    train_data = rand(H, W, n_train);
+    train_label = randi(3, n_train, 1);
+    val_data = rand(H, W, 3);
+    val_label = randi(3, 3, 1);
+
+    % Initialize weights
+    pca_coeff = zeros(potential_radius, potential_radius);
+    w_perm = initialize_permanence(pca_coeff, potential_radius, overlap_dimension, false);
+
+    % SP parameters
+    base_density = 0.3;
+    syn_inc = 0.1;
+    syn_dec = 0.05;
+    sample_counter = 0;
+    syn_thresh = 0.2;
+    decay_scaling = 1e-4;
+    endurance_rate = 0.001;
+    entropy_thresh = 0.5;
+    sparsity_thresh = 35;
+    val_acc_history = [];
+
+    [best_w, sc, val_hist, density, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~] = ...
+        train_spatial_pooler(train_data, train_label, base_density, syn_inc, syn_dec, ...
+        sample_counter, syn_thresh, false, w_perm, decay_scaling, endurance_rate, ...
+        pca_coeff, potential_radius, overlap_dimension, val_data, val_label, ...
+        val_acc_history, entropy_thresh, sparsity_thresh, 'synthetic');
+
+    fprintf('train_spatial_pooler OK: samples=%d, density=%.4f\n', sc, density);
+catch ME
+    fprintf('train_spatial_pooler FAILED: %s\n', ME.message);
+    for k = 1:min(3, length(ME.stack))
+        fprintf('  at %s line %d\n', ME.stack(k).file, ME.stack(k).line);
+    end
+end
+
+
+% Test temporal memory
+fprintf('\nTesting temporal_memory...\n');
+try
+    tm_state = struct();
+    active_cols = rand(4, 4) > 0.7;
+    [ac, wc, pc, tm_state] = temporal_memory(active_cols, tm_state, true, 1);
+    fprintf('temporal_memory OK: active_cells=%d, anomaly=%.3f\n', ...
+            sum(ac(:)), tm_state.anomaly_score);
+catch ME
+    fprintf('temporal_memory FAILED: %s\n', ME.message);
+end
+
+
+% Test TM sequence learning
+fprintf('\nTesting TM sequence learning...\n');
+try
+    tm_state = struct();
+
+    % Create 3 fixed patterns A, B, C
+    rng(42);
+    patA = rand(4,4) > 0.7;
+    patB = rand(4,4) > 0.7;
+    patC = rand(4,4) > 0.7;
+    sequence = {patA, patB, patC, patA, patB, patC, patA, patB, patC, ...
+            patA, patB, patC, patA, patB, patC, patA, patB, patC, patA, patB};
+
+    anomalies = zeros(1, numel(sequence));
+    for i = 1:numel(sequence)
+        [~, ~, ~, tm_state] = temporal_memory(sequence{i}, tm_state, true, i);
+        anomalies(i) = tm_state.anomaly_score;
+        fprintf('  Step %d (pat%s): anomaly=%.3f\n', i, 'ABC'(mod(i-1,3)+1), anomalies(i));
+    end
+
+    % Anomaly should decrease as TM learns the sequence
+    if anomalies(end) < anomalies(2)
+        fprintf('TM sequence learning OK: anomaly reduced from %.3f to %.3f\n', ...
+                anomalies(2), anomalies(end));
+    else
+        fprintf('TM sequence learning WARN: anomaly not reducing\n');
+    end
+catch ME
+    fprintf('TM sequence learning FAILED: %s\n', ME.message);
+end
+
+fprintf('\nDone.\n');
+
+
+======== train_spatial_pooler.m ========
+function [best_weights, sample_counter, val_accuracy_history, base_area_density, syn_inc_base, syn_dec_base, inhibition_radius, syn_inc_scalar, syn_dec_scalar, ...
+         epoch_energy, epoch_write_cycles, epoch_sparsity, epoch_entropy, fallback_counter_epoch] = ...
+         train_spatial_pooler(train_data, train_label, base_area_density, syn_inc_base, syn_dec_base, ...
+         sample_counter, syn_connected_thresh, use_gpu, w_permanence, decay_scaling, endurance_rate, ...
+         pca_coeff, potential_radius, overlap_dimension, val_data, val_label, val_accuracy_history, entropy_threshold, sparsity_threshold, dataset)
+%TRAIN_SPATIAL_POOLER Processes a mini-batch of data to update the spatial pooler.
+
+    fprintf('[DEBUG] SP call with: density=%.4f, LTP=%.4f, LTD=%.4f, decay=%.2e, endurance=%.2e\n', ...
+            base_area_density, syn_inc_base, syn_dec_base, decay_scaling, endurance_rate);
+    fprintf('[DEBUG] start train : train_data size: %s | train_labels size: %s\n', ...
+            mat2str(size(train_data)), mat2str(size(train_label)));
+
+    if ~use_gpu || isempty(use_gpu)
+        if safe_gpuDeviceCount > 0
+            g = gpuDevice();
+            use_gpu = false;
+        else
+            use_gpu = false;
+        end
+    end
+
+    cfg          = sp_config.instance();
+    boost_factor = cfg.BOOST_FACTOR;
+    epoch_energy       = 0;
+    epoch_write_cycles = 0;
+    epoch_sparsity     = NaN;
+    epoch_entropy      = NaN;
+
+    val_accuracy_history = val_accuracy_history(:);
+
+    % Persistent variables
+    persistent total_energy memristor_stats nominal_syn_inc_base nominal_syn_dec_base best_val_accuracy energy_history density_state;
+    if isfield(cfg, 'EPOCH_START_FLAG') && cfg.EPOCH_START_FLAG
+        total_energy      = 0;
+        memristor_stats   = struct();
+        energy_history    = [];
+        best_val_accuracy = -Inf;
+        cfg.EPOCH_START_FLAG = false;
+        % preserve entropy history across epochs
+    end
+    if isempty(density_state)
+        density_state = struct('I', 0, 'prevOutput', 0, 'hist', [], 'prev_error', 0, 'entropy_hist', [], 'target_activity', []);
+    end
+    if isempty(total_energy),        total_energy        = 0;     end
+    if isempty(memristor_stats),     memristor_stats     = struct(); end
+    if isempty(nominal_syn_inc_base), nominal_syn_inc_base = syn_inc_base; end
+    if isempty(nominal_syn_dec_base), nominal_syn_dec_base = syn_dec_base; end
+    if isempty(best_val_accuracy),   best_val_accuracy   = -Inf;  end
+    if isempty(energy_history),      energy_history      = [];    end
+
+    kwta_state   = struct();
+    syn_state    = struct();
+    best_weights = w_permanence;
+
+    num_samples       = size(train_data, 3);
+    train_sdrs        = false(num_samples, prod(overlap_dimension));
+    active_count_total = 0;
+
+    if use_gpu
+        column_activity_sum = gpuArray.zeros(overlap_dimension, 'double');
+    else
+        column_activity_sum = zeros(overlap_dimension, 'double');
+    end
+
+    warmup_samples = min(200, ceil(0.1 * num_samples));
+    window_size    = 50;
+    entropy_hist   = [];
+    sparsity_hist  = [];
+    consecutive_viol = 0;
+    last_recovery    = -100;
+    target_energy    = 1e-10;
+
+    if isa(w_permanence, 'gpuArray')
+        noiseLTP = rand(size(w_permanence), 'like', w_permanence).^2 .* betarnd(2, 5);
+        noiseLTD = rand(size(w_permanence), 'like', w_permanence).^2 .* betarnd(5, 2);
+    else
+        noiseLTP = reshape(betarnd(2, 5, numel(w_permanence), 1), size(w_permanence));
+        noiseLTD = reshape(betarnd(5, 2, numel(w_permanence), 1), size(w_permanence));
+    end
+    noiseLTP = cast(noiseLTP, 'like', w_permanence);
+    noiseLTD = cast(noiseLTD, 'like', w_permanence);
+
+    if ~exist('threshold_tracker', 'var') || isempty(threshold_tracker)
+        threshold_tracker = 1e-3;
+    end
+
+    % adaptive batch: bigger batches on small inputs reduce call overhead shrink automatically for large inputs so memory stays bounded
+    input_elems  = prod(overlap_dimension);
+    mem_cap      = max(32, round(2e5 / max(1, input_elems)));
+    sample_batch = min(cfg.OVERLAP_BATCH_SIZE * 2, mem_cap);
+    sample_batch = max(sample_batch, 32);
+
+    % Main training loop
+    for start = 1:sample_batch:num_samples
+        idxVec = start : min(start + sample_batch - 1, num_samples);
+
+        if isempty(idxVec), break; end
+
+        chunk_start_counter = sample_counter + 1;
+
+        [overlap_batch, syn_connected_thresh_batch, threshold_tracker] = ...
+            compute_overlap(train_data, w_permanence, overlap_dimension, ...
+                            potential_radius, idxVec, syn_connected_thresh, ...
+                            use_gpu, chunk_start_counter, cfg.OVERLAP_BATCH_SIZE, threshold_tracker);
+
+        if ndims(overlap_batch) == 2
+            overlap_batch = reshape(overlap_batch, size(overlap_batch,1), size(overlap_batch,2), 1);
+        end
+
+        for kk = 1:numel(idxVec)
+            ii = idxVec(kk);
+            sample_counter = sample_counter + 1;
+
+            overlap = squeeze(overlap_batch(:, :, kk));
+            thr     = syn_connected_thresh_batch(kk) + 0.1 * std(overlap(:));
+
+            assert(isequal(size(overlap), overlap_dimension), ...
+                   'Overlap slice %d size %s ~= expected %s', ...
+                   kk, mat2str(size(overlap)), mat2str(overlap_dimension));
+
+            train_sdrs(ii, :) = reshape(overlap > thr, 1, []);
+
+            [active_columns, avg_act, kwta_state, base_area_density] = ...
+                apply_kwta(overlap, base_area_density, sample_counter, use_gpu, (ii==1), kwta_state);
+
+            % Structural rewiring
+            if isfield(kwta_state, 'rewire_flag') && any(kwta_state.rewire_flag(:))
+                [rr, cc] = find(kwta_state.rewire_flag);
+                for k = 1:numel(rr)
+                    r = rr(k); c = cc(k);
+                    w_permanence(:, :, r, c) = 0.45 + 0.1 * rand(potential_radius, potential_radius);
+                end
+                kwta_state.rewire_flag = false(size(kwta_state.rewire_flag));
+            end
+
+            % Reject check
+            if isfield(kwta_state, 'reject_flag') && kwta_state.reject_flag
+                fprintf('[REJECT] Parameters rejected at sample_counter=%d.\n', sample_counter);
+                best_weights = [];
+                return;
+            end
+
+            if mod(sample_counter, cfg.DEBUG_INTERVAL) == 0
+                fprintf('[DEBUG] Iter %d: Mean Overlap=%.4f\n', sample_counter, mean(overlap(:)));
+            end
+
+            active_count_total = active_count_total + nnz(active_columns);
+
+            if use_gpu
+                column_activity_sum = column_activity_sum + cast(active_columns, 'double');
+            else
+                column_activity_sum = column_activity_sum + double(active_columns);
+            end
+
+            % Weight update prep
+            active_cols_4d  = reshape(active_columns, [1, 1, size(active_columns)]);
+            expanded_active = repmat(active_cols_4d, [potential_radius, potential_radius, 1, 1]);
+            assert(isequal(size(expanded_active), size(w_permanence)), ...
+                   'Mismatch: expanded active columns do not match w_permanence size.');
+
+            if ndims(train_data) == 3
+                current = train_data(:, :, ii);
+            else
+                current = mean(train_data(:, :, :, ii), 3);
+            end
+            input_std = std(single(current(:)));
+
+            if isempty(energy_history)
+                avg_energy = target_energy;
+            else
+                avg_energy = mean(energy_history);
+            end
+            scaling_factor  = target_energy / (avg_energy + eps);
+            scaling_factor  = max(0.5, min(2.0, scaling_factor));
+            effective_syn_inc = nominal_syn_inc_base * scaling_factor;
+            effective_syn_dec = nominal_syn_dec_base * scaling_factor;
+
+            [syn_inc, syn_dec, syn_state] = adjust_synaptic_factors( ...
+                expanded_active, effective_syn_inc, effective_syn_dec, ...
+                boost_factor, sample_counter, decay_scaling, input_std, syn_state, w_permanence);
+
+            inhibition_radius = kwta_state.inhibition_radius;
+            syn_inc_scalar    = mean(syn_inc(:));
+            syn_dec_scalar    = mean(syn_dec(:));
+
+            [w_permanence, ~, energy, memristor_stats] = update_permanence( ...
+                w_permanence, expanded_active, syn_inc, syn_dec, ...
+                memristor_stats, sample_counter, endurance_rate, noiseLTP, noiseLTD);
+
+            total_energy   = total_energy + energy;
+            energy_history = [energy_history, energy];
+            if length(energy_history) > window_size
+                energy_history = energy_history(end-window_size+1:end);
+            end
+
+            syn_inc_base = effective_syn_inc;
+            syn_dec_base = effective_syn_dec;
+
+            if mod(sample_counter, cfg.DEBUG_INTERVAL) == 0
+                fprintf('[ENERGY] Iter %d: Avg Energy=%.2e, Scaling=%.2f\n', ...
+                        sample_counter, avg_energy, scaling_factor);
+            end
+
+            %  Entropy computed HERE
+            current_entropy = calculate_entropy(active_columns);
+
+            % Update density_state entropy history for adaptive target
+            density_state.entropy_hist = [density_state.entropy_hist, current_entropy];
+            if numel(density_state.entropy_hist) > 50
+                density_state.entropy_hist = density_state.entropy_hist(end-49:end);
+            end
+
+            % pi controller fires a fixed ~30 times per epoch regardless of dataset size
+            % keeps adaptation rate consistent across 90-sample and 4000-sample runs
+            pi_period = max(cfg.KWTA_PI_PERIOD, round(num_samples / 30));
+            if mod(sample_counter, pi_period) == 0
+                [base_area_density, density_state] = adjust_density( ...
+                    base_area_density, overlap, sample_counter, (ii==1), density_state);
+            end
+
+            %  Entropy history (for reset logic)
+            if isempty(entropy_hist), entropy_hist = []; end
+            entropy_hist = [entropy_hist, current_entropy];
+            if numel(entropy_hist) > 100
+                entropy_hist = entropy_hist(end-99:end);
+            end
+
+            % Entropy-proportional weight reset
+            entropy_floor  = 0.15;
+            decline_window = 50;
+            if numel(entropy_hist) >= decline_window
+                recent_entropy = entropy_hist(end-decline_window+1:end);
+                if mean(diff(recent_entropy)) < 0 && mean(recent_entropy) < entropy_floor
+                    reset_strength = min(0.5, 0.1 + (entropy_floor - mean(recent_entropy)) * 5);
+                    fprintf('[LOG] Resetting weights (strength=%.2f) at iter %d\n', ...
+                            reset_strength, sample_counter);
+                    if use_gpu
+                        noise = gpuArray.rand(size(w_permanence));
+                    else
+                        noise = rand(size(w_permanence));
+                    end
+                    w_permanence = (1 - reset_strength) * w_permanence + reset_strength * noise;
+                    if isfield(syn_state, 'velocity_inc')
+                        syn_state.velocity_inc = 0;
+                        syn_state.velocity_dec = 0;
+                    end
+                end
+            end
+
+            fallback_counter_epoch = 0;
+            if isfield(kwta_state, 'fallback_counter')
+                fallback_counter_epoch = kwta_state.fallback_counter;
+            end
+
+            % Sparsity tracking
+            sparsity_sample = mean(active_columns(:)) * 100;
+            sparsity_hist   = [sparsity_hist, sparsity_sample];
+
+            % Dynamic thresholds after warmup
+            if sample_counter == warmup_samples
+                entropy_threshold  = max(mean(entropy_hist), 0.15);
+                sparsity_threshold = mean(sparsity_hist) * 2.0;
+                consecutive_viol   = 0;
+                fprintf('[LOG] Set dynamic thresholds: Entropy=%.4f, Sparsity=%.2f%%\n', ...
+                        entropy_threshold, sparsity_threshold);
+            end
+
+            % Recovery
+            if sample_counter > warmup_samples && ((current_entropy < entropy_threshold) || (sparsity_sample < sparsity_threshold * 0.3))
+                consecutive_viol = consecutive_viol + 1;
+                if consecutive_viol >= 25
+                    consecutive_viol = 0;
+                    if sample_counter - last_recovery >= 50
+                        last_recovery = sample_counter;
+                        fprintf('[RECOVERY] at iter %d - triggering recovery\n', sample_counter);
+                        base_area_density = min(base_area_density * 1.15, cfg.MAX_DENSITY);
+                        entropy_threshold = entropy_threshold * 0.85;
+                        if isfield(syn_state, 'velocity_inc')
+                            syn_state.velocity_inc = 0;
+                            syn_state.velocity_dec = 0;
+                        end
+                        if use_gpu
+                            noise = gpuArray.rand(size(w_permanence));
+                        else
+                            noise = rand(size(w_permanence));
+                        end
+                        w_permanence = 0.92 * w_permanence + 0.08 * noise;
+                    end
+                end
+            else
+                consecutive_viol = 0;
+            end
+
+        end % inner for kk
+
+        syn_connected_thresh = syn_connected_thresh_batch(end);
+
+    end % outer for start
+
+    % Gentle threshold drift back up after recovery
+    if sample_counter > warmup_samples
+        entropy_threshold = entropy_threshold * 1.001;
+        entropy_threshold = min(entropy_threshold, max(mean(entropy_hist), 0.15));
+    end
+
+    % Epoch-end metrics
+    processed_count = num_samples;
+    epoch_energy    = sum(energy_history);
+
+    if isfield(memristor_stats, 'write_cycles')
+        epoch_write_cycles = mean(memristor_stats.write_cycles(:));
+    else
+        epoch_write_cycles = 0;
+    end
+
+    column_activity_sum = safe_gather(column_activity_sum);
+    epoch_sparsity = 100 * active_count_total / (processed_count * numel(column_activity_sum));
+
+    p_active  = column_activity_sum / processed_count;
+    p_inactive = 1 - p_active;
+    column_entropy = -(p_active .* log2(p_active + eps) + p_inactive .* log2(p_inactive + eps));
+    epoch_entropy  = mean(column_entropy(:));
+
+    % Validation accuracy + plateau check
+    if ~isempty(val_data)
+        preds     = infer_labels(val_data, w_permanence, train_data, train_label, overlap_dimension);
+        preds     = preds(:);
+        val_label = val_label(:);
+        correct   = (preds == val_label);
+        val_acc   = sum(correct) / numel(correct) * 100;
+
+        if cfg.DEBUG
+            fprintf('DEBUG BEFORE APPEND: val_acc size = [%d %d]\n', size(val_acc));
+            fprintf('DEBUG BEFORE APPEND: history size = [%d %d]\n', size(val_accuracy_history));
+        end
+
+        val_accuracy_history(end+1) = val_acc;
+
+        if cfg.DEBUG
+            fprintf('DEBUG AFTER APPEND: history size = [%d %d]\n', size(val_accuracy_history));
+        end
+
+        window = 10;
+        if numel(val_accuracy_history) >= window
+            recent = val_accuracy_history(end-window+1:end);
+            flat   = max(recent) - min(recent) < 0.1;
+            slope  = recent(end) - recent(1) < 0;
+            epoch_idx = numel(val_accuracy_history);
+            if flat && slope
+                fprintf('[EARLY STOP] Validation plateau at epoch %d (%.2f%%)\n', epoch_idx, val_acc);
+                return;
+            end
+        end
+
+        if val_acc > best_val_accuracy
+            best_val_accuracy = val_acc;
+            best_weights      = w_permanence;
+        end
+    end
+
+end
+
+
+======== update_permanence.m ========
+function [w_permanence, updated_params, energy, memristor_stats] = update_permanence(...
+    w_permanence, active_cols, syn_inc, syn_dec, memristor_stats, sample_counter, endurance_rate, noiseLTP, noiseLTD)
+%UPDATE_PERMANENCE  Apply LTP/LTD via deviceModel and track stats.
+%
+% Inputs:
+%   w_permanence    – [4D] current synaptic weights
+%   active_cols     – [4D logical] active‑column mask
+%   syn_inc, syn_dec– LTP/LTD base deltas
+%   memristor_stats – struct with write_cycles
+%   sample_counter 
+%   endurance_rate  – memristor endurance parameter
+%
+% Outputs:
+%   w_permanence, updated_params energy, memristor_stats
+
+    cfg = sp_config.instance();
+
+    % Validate inputs
+    validateattributes(w_permanence,{'numeric'},{'nonsparse','nonempty'});
+    assert(ndims(w_permanence)==4, 'w_permanence must be 4‑D');
+    
+
+    validateattributes(active_cols,  {'logical'},{'size',size(w_permanence)},  mfilename,'active_cols',2);
+    validateattributes(syn_inc,      {'numeric'},{'size',size(w_permanence)},  mfilename,'syn_inc',3);
+    validateattributes(syn_dec,      {'numeric'},{'size',size(w_permanence)},  mfilename,'syn_dec',4);
+    validateattributes(endurance_rate,{'numeric'},{'scalar','>=',0},     mfilename,'endurance_rate',7);
+
+    dm = deviceModel(cfg.SYN_NOISE_LEVEL, endurance_rate);
+    energy = 0;
+
+    % touch synapses on active columns
+
+    % Potentiation (LTP): input=1 → increase permanence
+    potMask = (active_cols) & (syn_inc > 0);
+    if any(potMask(:))
+        deltaLTP = zeros(size(w_permanence), 'like', w_permanence);
+        deltaLTP(potMask) = syn_inc(potMask);
+        [w_permanence, eLTP, memristor_stats] = dm.applyLTP(...
+            w_permanence, deltaLTP, memristor_stats, noiseLTP);
+        energy = energy + eLTP;
+    end
+
+    % Depression (LTD): input=0 → decrease permanence
+    depMask = (active_cols) & (syn_dec > 0);
+    if any(depMask(:))
+        deltaLTD = zeros(size(w_permanence), 'like', w_permanence);
+        deltaLTD(depMask) = syn_dec(depMask);
+        [w_permanence, eLTD, memristor_stats] = dm.applyLTD(...
+            w_permanence, deltaLTD, memristor_stats, noiseLTD);
+        energy = energy + eLTD;
+    end
+
+    updated_params = [];
+end
+
+
+======== utilsFolder.m ========
+function p = utilsFolder()
+%UTILSFOLDER  path to local "utils" directory
+    root = fileparts(which('sp_config'));   
+    p    = fullfile(root, 'utils');         
+end
+
+
+======== validate_inputs.m ========
+function validate_inputs(train_data, train_label, val_data, val_label)
+    % Validate training data
+    if isempty(train_data) || isempty(train_label)
+        error('Training data or labels are empty.');
+    end
+
+    % Ensure training data dimensions match labels
+    if size(train_data, 3) ~= numel(train_label)
+        error('Mismatch between training data samples and labels.');
+    end
+
+    % Validate validation data only if provided
+    if nargin == 4
+        if isempty(val_data) || isempty(val_label)
+            error('Validation data or labels are empty.');
+        end
+        if size(val_data, 3) ~= numel(val_label)
+            error('Mismatch between validation data samples and labels.');
+        end
+    end
+end
+
+

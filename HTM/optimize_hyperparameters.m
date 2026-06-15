@@ -22,7 +22,7 @@ function [best_params, adjusted_potential_radius] = optimize_hyperparameters(tra
         [train_data, train_label, val_data, val_label] = split_data(train_data, train_label, 0.2);
     end
 
-    %  Parameter bounds 
+    %  Parameter bounds
     if strcmp(dataset, 'CIFAR')
         density_bounds = [0.10, 0.40];
     else
@@ -33,8 +33,15 @@ function [best_params, adjusted_potential_radius] = optimize_hyperparameters(tra
     decay_bounds     = [3000,  25000];  % sampled in log space
     endurance_bounds = [5e4,   1e6];    % sampled in log space
 
-    %  Phase 1: random sampling 
-    n_phase1 = 40;
+    %  Phase 1: random sampling. Eval budget scales with dataset cheap evals search thoroughly expensive evals search lean. Adaptive across all dataset sizes
+    train_n = size(train_data, 3);
+    if train_n <= 500
+        n_phase1 = 40; n_phase2 = 20;
+    elseif train_n <= 5000
+        n_phase1 = 30; n_phase2 = 15;
+    else
+        n_phase1 = 20; n_phase2 = 10;
+    end
     fprintf('[OPT] Phase 1: %d random evaluations\n', n_phase1);
 
     candidates = generate_candidates(n_phase1, density_bounds, syn_inc_bounds, ...
@@ -46,8 +53,8 @@ function [best_params, adjusted_potential_radius] = optimize_hyperparameters(tra
 
     fprintf('[OPT] Phase 1 best loss: %.4f\n', best_loss);
 
-    %  Phase 2: local refinement around best point 
-    n_phase2 = 20;
+    %  Phase 2: local refinement around best point
+
     fprintf('[OPT] Phase 2: %d local refinement evaluations\n', n_phase2);
 
     local_candidates = generate_local_candidates(n_phase2, best_params, ...
@@ -67,7 +74,7 @@ function [best_params, adjusted_potential_radius] = optimize_hyperparameters(tra
         fprintf('[OPT] Phase 2 did not improve (best=%.4f)\n', best_loss);
     end
 
-    %  Save and report 
+    %  Save and report
     save('best_hyperparameters.mat', 'best_params');
     fprintf('[OPT] Best params: Density=%.4f | LTP=%.4f | LTD=%.4f | Decay=%.2e | Endurance=%.2e\n', ...
             best_params.base_area_density, best_params.syn_inc_base, ...

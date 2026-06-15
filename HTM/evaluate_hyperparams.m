@@ -15,16 +15,23 @@ function [loss, adjusted_potential_radius] = evaluate_hyperparams(train_data, tr
     adjusted_potential_radius = potential_radius;
 
     try
-        %  Data subsetting
-        subset_train_count = min(200, size(train_data, 3));
-        subset_val_count   = min(50,  size(val_data,   3));
+        %  Data subsetting. scales with dataset
+        n_tr = size(train_data, 3);
+        n_vl = size(val_data, 3);
+        subset_train_count = min(max(150, round(n_tr * 0.10)), n_tr);
+        subset_val_count   = min(max(40,  round(n_vl * 0.10)), n_vl);
         assert(subset_train_count > 0, 'Training subset is empty.');
         assert(subset_val_count   > 0, 'Validation subset is empty.');
-
-        train_data_subset  = train_data(:, :, 1:subset_train_count);
-        train_label_subset = train_label(1:subset_train_count);
-        val_data_subset    = val_data(:, :, 1:subset_val_count);
-        val_label_subset   = val_label(1:subset_val_count);
+        % Normalise labels to row vectors indexing is shape-agnostic
+        train_label = train_label(:).';
+        val_label   = val_label(:).';
+        rng(cfg.HYPER_SEED);  % reproducible subset across evals
+        tr_idx = sort(randperm(n_tr, subset_train_count));
+        vl_idx = sort(randperm(n_vl, subset_val_count));
+        train_data_subset  = train_data(:, :, tr_idx);
+        train_label_subset = train_label(tr_idx);
+        val_data_subset    = val_data(:, :, vl_idx);
+        val_label_subset   = val_label(vl_idx);
 
         assert(size(train_data_subset,1) == size(val_data_subset,1) && ...
                size(train_data_subset,2) == size(val_data_subset,2), ...
@@ -76,20 +83,27 @@ function [loss, adjusted_potential_radius] = evaluate_hyperparams(train_data, tr
                              train_data_subset, train_label_subset, overlap_dimension);
         acc   = mean(preds(:) == val_label_subset(:));
 
-        % Sparsity deviation penalty - penalise both collapse and over-density
-        % Target is params.base_area_density since that's what the SP was asked for
-        target_sparsity = max(0.02, params.base_area_density);
-        sparsity_pen    = abs(epoch_sparsity / 100 - target_sparsity) * 10;
+        % Sparsity deviation penalty - anchored to an absolute target band, not params.base_area_density.
+        % Anchoring to the self-chosen density lets the optimiser score well by simply lowering its own target
+        sparsity_frac   = epoch_sparsity / 100;
+        target_sparsity = 0.10;                       % absolute task-agnostic ideal
+        sparsity_band   = 0.05;                        % tolerance before penalty bites
+        sparsity_dev    = max(0, abs(sparsity_frac - target_sparsity) - sparsity_band);
+        sparsity_pen    = sparsity_dev * 8;
 
-        % Entropy collapse penalty - penalise representations with no diversity
+        % Hard floor penalty
+        if sparsity_frac < 0.02
+            sparsity_pen = sparsity_pen + (0.02 - sparsity_frac) * 50;
+        end
+
+        % Entropy collapse penalty, penalise representations with no diversity
         entropy_pen = max(0, 0.2 - epoch_entropy) * 5;
 
-        % Energy cost penalty - normalised write energy (memristor endurance proxy)
-        % epoch_energy is in Joules; 1e-2 J/epoch is a soft budget
+        % Energy cost penalty, ormalised write energy epoch_energy is in Joules; 1e-2 J/epoch is soft budget
         energy_pen = min(1.0, epoch_energy / 1e-2);
 
-        % Composite loss (minimised by optimizer)
-        loss = -acc + sparsity_pen + entropy_pen + 0.1 * energy_pen;
+        % Composite loss
+        loss = -acc * 3 + sparsity_pen + entropy_pen + 0.1 * energy_pen;
 
         fprintf('[EVAL] acc=%.3f | sparsity=%.2f%% | entropy=%.4f | energy=%.2e | loss=%.4f\n', ...
                 acc, epoch_sparsity, epoch_entropy, epoch_energy, loss);

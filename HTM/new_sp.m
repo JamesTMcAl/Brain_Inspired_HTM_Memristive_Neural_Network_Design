@@ -185,7 +185,8 @@ function new_sp(dataset, train_data, train_label)
             anomaly_sum = 0;
             tt_tm       = struct();
             kwta_tm     = struct();
-            n_train_samples = size(train_data_noisy, 3);
+            n_total = size(train_data_noisy, 3);
+            n_train_samples = min(n_total, max(200, round(n_total * 0.25)));
 
             for tm_i = 1:n_train_samples
                 [ov, ~, tt_tm] = compute_overlap(train_data_noisy, w_permanence, ...
