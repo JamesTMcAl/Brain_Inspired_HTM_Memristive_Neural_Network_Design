@@ -103,7 +103,31 @@ function [loss, adjusted_potential_radius] = evaluate_hyperparams(train_data, tr
         energy_pen = min(1.0, epoch_energy / 1e-2);
 
         % Composite loss
-        loss = -acc * 3 + sparsity_pen + entropy_pen + 0.1 * energy_pen;
+        % With meta-fitness ON, the term weights adapt over evaluations toward whichever penalty has been dominating,
+        % the system learns *how to evaluate itself* rather than using fixed weights and defaults reproduce the fixed-weight baseline exactly.
+        persistent meta_w;
+        if isempty(meta_w)
+            meta_w = struct('acc', 3.0, 'sparsity', 1.0, 'entropy', 1.0, 'energy', 0.1);
+        end
+
+        if cfg.EVOLVE_META_FITNESS
+            % Nudge weight toward the penalty term currently contributing most,
+            % so the search prioritises fixing the worst-behaved dimension.
+            pens = [sparsity_pen, entropy_pen, 0.1*energy_pen];
+            [~, worst] = max(pens);
+            r = cfg.EVOLVE_META_RATE;
+            if worst == 1, meta_w.sparsity = meta_w.sparsity * (1 + r); end
+            if worst == 2, meta_w.entropy  = meta_w.entropy  * (1 + r); end
+            if worst == 3, meta_w.energy   = meta_w.energy   * (1 + r); end
+            % Renormalise penalty weights so they don't drift unbounded
+            tot = meta_w.sparsity + meta_w.entropy + meta_w.energy;
+            meta_w.sparsity = 3 * meta_w.sparsity / tot;
+            meta_w.entropy  = 3 * meta_w.entropy  / tot;
+            meta_w.energy   = 3 * meta_w.energy   / tot;
+        end
+
+        loss = -acc * meta_w.acc + sparsity_pen * meta_w.sparsity ...
+             + entropy_pen * meta_w.entropy + energy_pen * meta_w.energy;
 
         fprintf('[EVAL] acc=%.3f | sparsity=%.2f%% | entropy=%.4f | energy=%.2e | loss=%.4f\n', ...
                 acc, epoch_sparsity, epoch_entropy, epoch_energy, loss);

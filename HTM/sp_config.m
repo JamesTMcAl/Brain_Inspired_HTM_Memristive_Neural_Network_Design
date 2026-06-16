@@ -68,6 +68,18 @@ classdef sp_config
         KWTA_PI_PERIOD     = 32;
         BOOST_FACTOR    = 1.0;
 
+        % self-evolution toggles
+        EVOLVE_PERSIST = true;   % seed optimiser from best-ever params across runs
+        EVOLVE_META_FITNESS = true;   % adapt composite-fitness weights toward failing term
+        EVOLVE_GROW_TM = true;   % grow TM capacity when anomaly stays high
+
+        % self-evolution constants
+        EVOLVE_GROW_ANOMALY_THRESH = 0.45;  % avg anomaly above this = under-capacity
+        EVOLVE_GROW_PATIENCE       = 3;     % epochs of high anomaly before growing
+        EVOLVE_GROW_FACTOR         = 1.25;  % capacity multiplier per growth event
+        EVOLVE_TM_CELLS_MAX        = 64;    % ceiling on cells/column
+        EVOLVE_META_RATE           = 0.10;  % how fast fitness weights shift
+
         % Debug / performance
         PCA_SAMPLE_FRAC = 0.10;
         DEBUG       = false;

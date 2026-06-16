@@ -100,10 +100,23 @@ function candidates = generate_candidates(n, density_bounds, syn_inc_bounds, ...
         candidates{i}       = p;
     end
 
-    % Always include the dissertation-optimised point as candidate 1
-    candidates{1} = struct('base_area_density', 0.3085, 'syn_inc_base', 0.0975, ...
-                           'syn_dec_base', 0.0040, 'decay_scaling', 5797, ...
-                           'endurance_rate', 179340);
+    % candidate 1 seed. With persistence ON, seed from the best params found in any previous run (lets evolution accumulate across sessions)
+    % Falls back to the dissertation-optimised point if no history exists or the toggle is off.
+    cfg_seed = sp_config.instance();
+    diss_seed = struct('base_area_density', 0.3085, 'syn_inc_base', 0.0975, ...
+                       'syn_dec_base', 0.0040, 'decay_scaling', 5797, ...
+                       'endurance_rate', 179340);
+    if cfg_seed.EVOLVE_PERSIST && exist('best_hyperparameters.mat', 'file')
+        try
+            S = load('best_hyperparameters.mat', 'best_params');
+            candidates{1} = S.best_params;
+            fprintf('[EVOLVE-PERSIST] Seeded candidate 1 from previous best params\n');
+        catch
+            candidates{1} = diss_seed;
+        end
+    else
+        candidates{1} = diss_seed;
+    end
 end
 
 

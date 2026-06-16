@@ -133,6 +133,7 @@ function new_sp(dataset, train_data, train_label)
 
         tm_state_main      = struct();
         cumulative_counter = 0;
+        tm_high_anomaly_epochs = 0;   % for structural growth
 
 
         % Epoch loop
@@ -214,7 +215,31 @@ function new_sp(dataset, train_data, train_label)
             end
             fprintf('[TM] Epoch %d avg anomaly: %.3f\n', tep, avg_anomaly);
 
-            %Self-evolution: performance metric -
+            % Structural growth
+            % if temporal surprise stays high, the TM is under-capacity for the sequence complexity.
+            % Grow cells/column the HTM analogue of neurogenesis and persistent counter tracks how long anomaly has been elevated
+            if cfg.EVOLVE_GROW_TM
+                if tep <= 2
+                    % establishs the dataset's own baseline in early epochs
+                    anomaly_baseline = avg_anomaly;
+                else
+                    % EMA baseline of recent anomaly
+                    anomaly_baseline = 0.8 * anomaly_baseline + 0.2 * avg_anomaly;
+                end
+                stalled = (tep > 2) && (avg_anomaly > anomaly_baseline * 0.95);
+                if stalled
+                    tm_high_anomaly_epochs = tm_high_anomaly_epochs + 1;
+                else
+                    tm_high_anomaly_epochs = 0;
+                end
+                if tm_high_anomaly_epochs >= cfg.EVOLVE_GROW_PATIENCE
+                    tm_state_main = grow_tm_capacity(tm_state_main, cfg);
+                    tm_high_anomaly_epochs = 0;
+                end
+            end
+
+
+            %Self-evolution: performance metric
             % Measures how close sparsity is to the density target
             sparsity_quality = 1 - abs(epoch_sparsity/100 - base_area_density);
             sparsity_quality = max(0, sparsity_quality);
